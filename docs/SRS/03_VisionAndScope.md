@@ -105,6 +105,4 @@ Phát triển hệ thống FamilyConnect hoàn chỉnh theo mô hình kiến tr�
 4. **Trải nghiệm người dùng (UX/UI):** Cây gia phả hiển thị trực quan, mượt mà; Trợ lý AI trả lời chính xác quan hệ dòng họ và thông tin gia tộc.
 5. **Chất lượng tài liệu:** Tài liệu SRS và tài liệu kỹ thuật được cập nhật đầy đủ, rõ ràng trên GitHub Repository.
 
----
-
 eview và Merge.
