@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Build output
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+coverage/
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+
+# Database
+*.sqlite3
+*.db
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Temp
+tmp/
+temp/
+*.tmp
