@@ -107,14 +107,4 @@ Phát triển hệ thống FamilyConnect hoàn chỉnh theo mô hình kiến tr�
 
 ---
 
-## 6. Definition of Done (Tiêu chí hoàn thành Task)
-
-- [x] Hoàn thành Product Vision.
-- [x] Hoàn thành Business Goals.
-- [x] Xác định In Scope và Out of Scope.
-- [x] Xác định Assumptions và Constraints.
-- [x] Hoàn thành Success Criteria.
-- [ ] Cập nhật tài liệu `docs/SRS/03_VisionAndScope.md`.
-- [ ] Commit và Push lên GitHub.
-- [ ] Tạo Pull Request.
-- [ ] Pull Request được Review và Merge.
+eview và Merge.
