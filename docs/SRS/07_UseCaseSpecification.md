@@ -1,6 +1,10 @@
-# BÁO CÁO ĐẶC TẢ USE CASE (USE CASE SPECIFICATION)
-**Dự án:** FamilyConnect - Nền tảng Cộng đồng Gia đình số tích hợp Trí tuệ nhân tạo  
-**Tài liệu:** `docs/SRS/07_UseCaseSpecification.md`
+# 07. Use Case Specification
+
+> **Dự án:** FamilyConnect, Nền tảng Cộng đồng Gia đình số tích hợp Trí tuệ nhân tạo
+> **Tài liệu:** Đặc tả Use Case (Use Case Specification)
+> **Jira:** [FT8-10](https://familyconnect.atlassian.net/browse/FT8-10), Đặc tả Use Case
+> **Thuộc Epic:** FT8-4, Phân tích yêu cầu hệ thống (Sprint 1)
+> **Trạng thái:** Draft v1.0
 
 ---
 
