@@ -1,5 +1,13 @@
 # 10. Business Process Model
 
+> **Dự án:** FamilyConnect, Nền tảng Cộng đồng Gia đình số tích hợp Trí tuệ nhân tạo
+> **Tài liệu:** Mô hình Quy trình Nghiệp vụ (Business Process Model)
+> **Jira:** [FT8-13](https://familyconnect.atlassian.net/browse/FT8-13), Mô hình hóa quy trình nghiệp vụ (BPM)
+> **Thuộc Epic:** FT8-4, Phân tích yêu cầu hệ thống (Sprint 1)
+> **Trạng thái:** Draft v1.0
+
+---
+
 Tài liệu này mô tả chi tiết các quy trình nghiệp vụ (Business Processes) chính của hệ thống FamilyConnect. Các quy trình này mô tả luồng xử lý từ góc nhìn người dùng, đảm bảo tính nhất quán với Functional Requirements và Use Case.
 
 ## 10.1. Danh sách các quy trình nghiệp vụ
