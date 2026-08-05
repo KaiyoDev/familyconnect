@@ -4,7 +4,7 @@
 > **Tài liệu:** Mô hình Quy trình Nghiệp vụ (Business Process Model)
 > **Jira:** [FT8-13](https://familyconnect.atlassian.net/browse/FT8-13), Mô hình hóa quy trình nghiệp vụ (BPM)
 > **Thuộc Epic:** FT8-4, Phân tích yêu cầu hệ thống (Sprint 1)
-> **Trạng thái:** Draft v1.0
+> **Trạng thái:** Final v1.0
 
 ---
 
