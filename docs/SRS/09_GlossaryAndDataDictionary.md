@@ -1,9 +1,9 @@
 # 09. Glossary and Data Dictionary
 
-> **Dự án:** FamilyConnect — Nền tảng Cộng đồng Gia đình số tích hợp Trí tuệ nhân tạo
+> **Dự án:** FamilyConnect, Nền tảng Cộng đồng Gia đình số tích hợp Trí tuệ nhân tạo
 > **Tài liệu:** Glossary & Data Dictionary
-> **Jira:** [FT8-12](https://familyconnect.atlassian.net/browse/FT8-12) — Xây dựng Glossary & Data Dictionary
-> **Thuộc Epic:** FT8-4 — Phân tích yêu cầu hệ thống (Sprint 1)
+> **Jira:** [FT8-12](https://familyconnect.atlassian.net/browse/FT8-12), Xây dựng Glossary & Data Dictionary
+> **Thuộc Epic:** FT8-4, Phân tích yêu cầu hệ thống (Sprint 1)
 > **Trạng thái:** Draft v1.0
 
 ---
@@ -28,7 +28,7 @@ Tài liệu này định nghĩa các thuật ngữ, khái niệm cốt lõi đư
 | **AI Assistant** | Trợ lý trí tuệ nhân tạo tích hợp trong hệ thống, hỗ trợ tìm kiếm ngữ nghĩa, giải thích mối quan hệ gia phả, tóm tắt nội dung và đưa ra gợi ý. | AI-assisted Services | Sử dụng công nghệ LLM và Semantic Search. |
 | **LLM** | (Large Language Model) Mô hình ngôn ngữ lớn làm nền tảng cho AI Assistant: hiểu câu hỏi, sinh câu trả lời, tóm tắt và giải thích quan hệ. | AI-assisted Services | Chi phí gọi API LLM cần được tối ưu hóa theo ràng buộc nguồn lực. |
 | **Guest** | Người chưa đăng ký/đăng nhập. Chỉ xem thông tin giới thiệu và đăng ký tài khoản. | User & Security | Actor đầu tiên trong vòng đời người dùng; sau khi đăng ký trở thành Family Member. |
-| **Event Owner** | Người tạo ra sự kiện, giữ quyền quản lý sự kiện đó (sửa, hủy, quản lý người tham gia). Family Owner có quyền quản lý mọi sự kiện trong gia đình. | Events | Khác với Family Owner — phạm vi chỉ trong một sự kiện. |
+| **Event Owner** | Người tạo ra sự kiện, giữ quyền quản lý sự kiện đó (sửa, hủy, quản lý người tham gia). Family Owner có quyền quản lý mọi sự kiện trong gia đình. | Events | Khác với Family Owner, phạm vi chỉ trong một sự kiện. |
 | **RSVP** | Trạng thái xác nhận tham gia sự kiện của thành viên (Tham gia / Không tham gia / Có thể). | Events | Viết tắt từ tiếng Pháp "RÉpondez S'il Vous Plaît". |
 | **RBAC** | (Role-Based Access Control) Cơ chế kiểm soát truy cập dựa trên vai trò của người dùng trong hệ thống (Admin, Family Owner, Member, Guest). | User & Security | Đảm bảo tính bảo mật và riêng tư dữ liệu gia đình. |
 | **JWT** | (JSON Web Token) Cơ chế xác thực: hệ thống cấp access token + refresh token khi đăng nhập thành công để duy trì phiên làm việc an toàn. | User & Security | Bắt buộc theo ràng buộc công nghệ (Technology Constraints). |
@@ -58,7 +58,7 @@ Dưới đây là chi tiết các Thực thể dữ liệu (Entities) chính và
 11. **AuditLog**: Nhật ký thao tác hệ thống dành cho Admin.
 12. **Notification**: Thông báo đến người dùng (in-app/email/push).
 
-> **Ghi chú thiết kế:** Danh sách trên là các thực thể cốt lõi (core entities) ở mức khái niệm. Khi triển khai chi tiết (Database Design — Work Package 1), mỗi Entity có thể được chuẩn hóa thành nhiều bảng vật lý; ví dụ hồ sơ nghề nghiệp/học vấn của Family Directory (`Profession`, `Education`) có thể tách thành các bảng riêng (EmploymentProfile, EducationProfile) để hỗ trợ nhiều vị trí/công ty và nhiều bằng cấp, thay vì lưu cố định một giá trị trên FamilyMember.
+> **Ghi chú thiết kế:** Danh sách trên là các thực thể cốt lõi (core entities) ở mức khái niệm. Khi triển khai chi tiết (Database Design, Work Package 1), mỗi Entity có thể được chuẩn hóa thành nhiều bảng vật lý; ví dụ hồ sơ nghề nghiệp/học vấn của Family Directory (`Profession`, `Education`) có thể tách thành các bảng riêng (EmploymentProfile, EducationProfile) để hỗ trợ nhiều vị trí/công ty và nhiều bằng cấp, thay vì lưu cố định một giá trị trên FamilyMember.
 
 ---
 
@@ -208,7 +208,7 @@ Bình luận trên một bài viết.
 | `Content` | VARCHAR(1000) | Nội dung bình luận | Yes | Non-empty, ≤ 1000 ký tự | `"Chúc mừng năm mới!"` |
 | `CreatedAt` | TIMESTAMP | Thời điểm bình luận | Yes | Default: `CURRENT_TIMESTAMP` | `2026-08-05 09:20:00` |
 
-> **Ghi chú:** Cảm xúc (React: like, yêu thích, buồn...) và chia sẻ tin tức có thể được mô hình hóa dưới dạng các bảng riêng (`PostReaction`, `Share`) hoặc trường đếm trên `Post` — quyết định chi tiết thuộc Database Design.
+> **Ghi chú:** Cảm xúc (React: like, yêu thích, buồn...) và chia sẻ tin tức có thể được mô hình hóa dưới dạng các bảng riêng (`PostReaction`, `Share`) hoặc trường đếm trên `Post`, quyết định chi tiết thuộc Database Design.
 
 ---
 
@@ -294,11 +294,11 @@ Bảng đối chiếu đảm bảo mọi yêu cầu chức năng (Functional Req
 
 Tài liệu này cung cấp các sản phẩm sau:
 
-1. **Glossary** — Danh sách đầy đủ các thuật ngữ hệ thống với định nghĩa, module liên quan và ghi chú, dùng chung cho toàn bộ nhóm phát triển (Developers, Stakeholders, Users).
-2. **Data Dictionary** — Từ điển dữ liệu mô tả chi tiết từng thực thể dữ liệu chính (Entity) và danh sách thuộc tính (Attribute) kèm kiểu dữ liệu, mô tả, tính bắt buộc, ràng buộc và ví dụ minh họa.
-3. **Danh sách Entity** — 13 thực thể cốt lõi: `User`, `Family`, `FamilyBranch`, `FamilyMember`, `Relationship`, `Post`, `Comment`, `Event`, `EventRSVP`, `HeritageItem`, `Image`, `AuditLog`, `Notification`.
-4. **Danh sách thuộc tính dữ liệu** — Bảng chi tiết thuộc tính của từng thực thể (Field Name, Data Type, Description, Required, Constraints, Example).
-5. **Ma trận đối chiếu** — Bảng ánh xạ giữa Functional Requirements (9 module) ↔ Glossary ↔ Data Dictionary nhằm đảm bảo tính thống nhất và không có thuật ngữ trùng/mâu thuẫn.
+1. **Glossary**, Danh sách đầy đủ các thuật ngữ hệ thống với định nghĩa, module liên quan và ghi chú, dùng chung cho toàn bộ nhóm phát triển (Developers, Stakeholders, Users).
+2. **Data Dictionary**, Từ điển dữ liệu mô tả chi tiết từng thực thể dữ liệu chính (Entity) và danh sách thuộc tính (Attribute) kèm kiểu dữ liệu, mô tả, tính bắt buộc, ràng buộc và ví dụ minh họa.
+3. **Danh sách Entity**, 13 thực thể cốt lõi: `User`, `Family`, `FamilyBranch`, `FamilyMember`, `Relationship`, `Post`, `Comment`, `Event`, `EventRSVP`, `HeritageItem`, `Image`, `AuditLog`, `Notification`.
+4. **Danh sách thuộc tính dữ liệu**, Bảng chi tiết thuộc tính của từng thực thể (Field Name, Data Type, Description, Required, Constraints, Example).
+5. **Ma trận đối chiếu**, Bảng ánh xạ giữa Functional Requirements (9 module) ↔ Glossary ↔ Data Dictionary nhằm đảm bảo tính thống nhất và không có thuật ngữ trùng/mâu thuẫn.
 
 ---
 
@@ -306,7 +306,7 @@ Tài liệu này cung cấp các sản phẩm sau:
 
 - [x] Hoàn thành Glossary (đầy đủ thuật ngữ từ 9 module Functional Requirements).
 - [x] Hoàn thành Data Dictionary (đủ 13 Entity và thuộc tính chi tiết).
-- [x] Các thuật ngữ thống nhất với Functional Requirements (không trùng, không mâu thuẫn — xem mục 3).
+- [x] Các thuật ngữ thống nhất với Functional Requirements (không trùng, không mâu thuẫn, xem mục 3).
 - [x] Cập nhật tài liệu `docs/SRS/09_GlossaryAndDataDictionary.md`.
 - [ ] Commit và Push lên GitHub.
 - [ ] Tạo Pull Request (`feature/FT8-12-glossary-data-dictionary` → `develop`).

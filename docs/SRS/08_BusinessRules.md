@@ -1,9 +1,9 @@
 # 08. Business Rules
 
-> **Dự án:** FamilyConnect — Nền tảng Cộng đồng Gia đình số tích hợp Trí tuệ nhân tạo
+> **Dự án:** FamilyConnect, Nền tảng Cộng đồng Gia đình số tích hợp Trí tuệ nhân tạo
 > **Tài liệu:** Phân tích Business Rules (Business Rules Specification)
-> **Jira:** [FT8-11](https://familyconnect.atlassian.net/browse/FT8-11) — Phân tích Business Rules
-> **Thuộc Epic:** FT8-4 — Phân tích yêu cầu hệ thống (Sprint 1)
+> **Jira:** [FT8-11](https://familyconnect.atlassian.net/browse/FT8-11), Phân tích Business Rules
+> **Thuộc Epic:** FT8-4, Phân tích yêu cầu hệ thống (Sprint 1)
 > **Trạng thái:** Draft v1.0
 
 ---
@@ -12,7 +12,7 @@
 
 ### 1.1 Mục đích
 
-Tài liệu này đặc tả toàn bộ Business Rules của hệ thống FamilyConnect — nền tảng cộng đồng gia đình số tích hợp trí tuệ nhân tạo. Business Rules (BR) mô tả các quy tắc nghiệp vụ, ràng buộc và chính sách mà hệ thống phải thực thi, được rút trích từ đề tài và các yêu cầu hệ thống, nhằm đảm bảo:
+Tài liệu này đặc tả toàn bộ Business Rules của hệ thống FamilyConnect, nền tảng cộng đồng gia đình số tích hợp trí tuệ nhân tạo. Business Rules (BR) mô tả các quy tắc nghiệp vụ, ràng buộc và chính sách mà hệ thống phải thực thi, được rút trích từ đề tài và các yêu cầu hệ thống, nhằm đảm bảo:
 
 - Các quy tắc nghiệp vụ được mô tả rõ ràng, nhất quán và có thể truy vết.
 - Mỗi Business Rule có mã định danh duy nhất và được liên kết với Functional Requirement (FR) và Use Case (UC) tương ứng.
@@ -45,11 +45,11 @@ Tổng cộng: **34 Business Rules**.
 
 ### 1.4 Tài liệu tham chiếu
 
-- [04_FunctionalRequirements.md](./04_FunctionalRequirements.md) (FT8-6) — nguồn mapping `Related Requirements`.
-- [09_GlossaryAndDataDictionary.md](./09_GlossaryAndDataDictionary.md) (FT8-12) — nguồn thuật ngữ và thực thể dữ liệu.
-- [03_VisionAndScope.md](./03_VisionAndScope.md) (FT8-5) — phạm vi và ràng buộc dự án.
-- [02_StakeholderAnalysis.md](./02_StakeholderAnalysis.md) (FT8-3) — vai trò và quyền hạn Stakeholder.
-- Use Case Specification (FT8-8, FT8-10) — nguồn traceability `Related Use Case` (sẽ bổ sung khi hoàn tất).
+- [04_FunctionalRequirements.md](./04_FunctionalRequirements.md) (FT8-6), nguồn mapping `Related Requirements`.
+- [09_GlossaryAndDataDictionary.md](./09_GlossaryAndDataDictionary.md) (FT8-12), nguồn thuật ngữ và thực thể dữ liệu.
+- [03_VisionAndScope.md](./03_VisionAndScope.md) (FT8-5), phạm vi và ràng buộc dự án.
+- [02_StakeholderAnalysis.md](./02_StakeholderAnalysis.md) (FT8-3), vai trò và quyền hạn Stakeholder.
+- Use Case Specification (FT8-8, FT8-10), nguồn traceability `Related Use Case` (sẽ bổ sung khi hoàn tất).
 
 > **Ghi chú traceability:** `Related Use Case` được đánh dấu `UC-*` (mã tham chiếu). Khi Use Case Specification (FT8-10) hoàn tất, cần đối chiếu để đảm bảo mỗi Business Rule khớp với ít nhất một Use Case.
 
@@ -67,25 +67,25 @@ Tổng cộng: **34 Business Rules**.
 | BR-US-004 | Quyền truy cập theo vai trò (RBAC) | High |
 | BR-US-005 | Một người dùng chỉ có một hồ sơ cá nhân | Medium |
 
-**BR-US-001 — Email phải là duy nhất**
+**BR-US-001, Email phải là duy nhất**
 
 - **Description:** Hệ thống không cho phép tồn tại hai tài khoản người dùng có cùng địa chỉ email. Email được sử dụng làm định danh đăng nhập duy nhất (Unique Identifier).
 - **Category:** User Management
-- **Source:** Đề tài mục (c) — User registration and authentication; `User.Email` trong Data Dictionary.
+- **Source:** Đề tài mục (c), User registration and authentication; `User.Email` trong Data Dictionary.
 - **Related Requirements:** FR-US-01, FR-US-02, FR-US-04
 - **Related Use Case:** UC-01 (Đăng ký tài khoản)
 - **Priority:** High
 
-**BR-US-002 — Mật khẩu phải đạt độ mạnh tối thiểu**
+**BR-US-002, Mật khẩu phải đạt độ mạnh tối thiểu**
 
 - **Description:** Mật khẩu phải có tối thiểu 8 ký tự, chứa cả chữ và số. Mật khẩu được lưu trữ dạng mã hóa (BCrypt/Argon2), không bao giờ lưu dạng văn bản thuần.
 - **Category:** User Management
-- **Source:** Yêu cầu bảo mật đề tài mục (d) — Secure Authentication (JWT); Đặc tả FR-US-01 (Main Flow, bước 2).
+- **Source:** Yêu cầu bảo mật đề tài mục (d), Secure Authentication (JWT); Đặc tả FR-US-01 (Main Flow, bước 2).
 - **Related Requirements:** FR-US-01, FR-US-02, FR-US-04
 - **Related Use Case:** UC-01 (Đăng ký tài khoản), UC-02 (Đăng nhập)
 - **Priority:** High
 
-**BR-US-003 — Tài khoản phải kích hoạt trước khi đăng nhập**
+**BR-US-003, Tài khoản phải kích hoạt trước khi đăng nhập**
 
 - **Description:** Tài khoản mới tạo ở trạng thái *Pending Activation*. Hệ thống chỉ cho phép đăng nhập khi tài khoản ở trạng thái *Active*. Đường dẫn kích hoạt hết hạn sau 24 giờ.
 - **Category:** User Management
@@ -94,16 +94,16 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-01 (Đăng ký tài khoản), UC-02 (Đăng nhập)
 - **Priority:** High
 
-**BR-US-004 — Quyền truy cập theo vai trò (RBAC)**
+**BR-US-004, Quyền truy cập theo vai trò (RBAC)**
 
 - **Description:** Hệ thống phân quyền theo vai trò: Guest, Family Member, Family Owner, Administrator. Mỗi thao tác yêu cầu xác thực (JWT) và kiểm tra quyền tương ứng với vai trò của người dùng. Không vai trò nào được vượt quyền của vai trò cấp trên.
 - **Category:** User Management
-- **Source:** Đề tài mục (c) — Role-Based Access Control (RBAC); mục (d) — Secure Authentication (JWT).
+- **Source:** Đề tài mục (c), Role-Based Access Control (RBAC); mục (d), Secure Authentication (JWT).
 - **Related Requirements:** FR-US-05
 - **Related Use Case:** UC-03 (Phân quyền truy cập)
 - **Priority:** High
 
-**BR-US-005 — Một người dùng chỉ có một hồ sơ cá nhân**
+**BR-US-005, Một người dùng chỉ có một hồ sơ cá nhân**
 
 - **Description:** Mỗi tài khoản người dùng (`User`) chỉ được phép có một hồ sơ cá nhân duy nhất trên hệ thống. Thông tin hồ sơ (tên, số điện thoại, địa chỉ) thuộc về đúng người dùng đó.
 - **Category:** User Management
@@ -112,7 +112,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-04 (Quản lý hồ sơ cá nhân)
 - **Priority:** Medium
 
-**BR-US-006 — Phiên làm việc phải được kết thúc khi đăng xuất hoặc hết hạn token**
+**BR-US-006, Phiên làm việc phải được kết thúc khi đăng xuất hoặc hết hạn token**
 
 - **Description:** Khi người dùng đăng xuất, hệ thống phải hủy phiên làm việc hiện tại (access token và refresh token) và không cho phép phiên đó tiếp tục truy cập. Token hết hạn sau thời gian quy định phải bị vô hiệu hóa.
 - **Category:** User Management
@@ -133,7 +133,7 @@ Tổng cộng: **34 Business Rules**.
 | BR-FG-006 | Dữ liệu phả hệ không thể xóa vĩnh viễn khi còn lịch sử liên quan | Medium |
 | BR-FG-007 | Thông tin hiển thị trên cây gia phả và tra cứu quan hệ phải chính xác theo dữ liệu đã ghi | Medium |
 
-**BR-FG-001 — Chỉ Family Owner mới được duyệt thành viên**
+**BR-FG-001, Chỉ Family Owner mới được duyệt thành viên**
 
 - **Description:** Hệ thống chỉ cho phép người có vai trò Family Owner phê duyệt hoặc từ chối yêu cầu tham gia gia đình của thành viên mới. Family Member không có quyền này.
 - **Category:** Family Management
@@ -142,7 +142,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-05 (Phê duyệt thành viên)
 - **Priority:** High
 
-**BR-FG-002 — Mỗi Family chỉ có một Family Owner**
+**BR-FG-002, Mỗi Family chỉ có một Family Owner**
 
 - **Description:** Mỗi gia đình (Family) chỉ có duy nhất một Family Owner ở bất kỳ thời điểm nào. Việc chuyển quyền Owner chỉ được thực hiện bởi Owner hiện tại, và sau khi chuyển, người nhận trở thành Owner mới.
 - **Category:** Family Management
@@ -151,7 +151,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-06 (Quản lý gia đình)
 - **Priority:** High
 
-**BR-FG-003 — Mỗi FamilyMember chỉ thuộc một nhánh**
+**BR-FG-003, Mỗi FamilyMember chỉ thuộc một nhánh**
 
 - **Description:** Tại một thời điểm, một FamilyMember thuộc đúng một FamilyBranch trong một Family. Khi chuyển nhánh, lịch sử thay đổi được ghi lại trong Audit Log.
 - **Category:** Family Management
@@ -160,7 +160,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-07 (Quản lý nhánh gia đình)
 - **Priority:** Medium
 
-**BR-FG-004 — Quan hệ cha mẹ – con phải hợp lệ về thế hệ**
+**BR-FG-004, Quan hệ cha mẹ – con phải hợp lệ về thế hệ**
 
 - **Description:** Hệ thống chỉ cho phép tạo quan hệ cha/mẹ – con (Parent-Child) khi cha/mẹ thuộc thế hệ trước con và không tồn tại quan hệ trùng lặp. Không cho phép tạo quan hệ tạo thành chu trình (loop) trong cây phả hệ.
 - **Category:** Family Management
@@ -169,7 +169,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-08 (Quản lý quan hệ cha mẹ – con)
 - **Priority:** High
 
-**BR-FG-005 — Mỗi người chỉ có tối đa một cặp hôn nhân đồng thời**
+**BR-FG-005, Mỗi người chỉ có tối đa một cặp hôn nhân đồng thời**
 
 - **Description:** Hệ thống chỉ cho phép một FamilyMember có tối đa một quan hệ hôn nhân (Marriage) đang hiệu lực tại một thời điểm. Quan hệ hôn nhân mới chỉ được tạo sau khi quan hệ cũ kết thúc (ly hôn/ly thân).
 - **Category:** Family Management
@@ -178,7 +178,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-09 (Quản lý hôn nhân)
 - **Priority:** Medium
 
-**BR-FG-006 — Dữ liệu phả hệ không thể xóa vĩnh viễn khi còn lịch sử liên quan**
+**BR-FG-006, Dữ liệu phả hệ không thể xóa vĩnh viễn khi còn lịch sử liên quan**
 
 - **Description:** FamilyMember, Relationship hoặc FamilyBranch đã có dữ liệu lịch sử liên quan (hôn nhân, con cái, tư liệu di sản) không được xóa vĩnh viễn; hệ thống chuyển sang trạng thái *Archived* để bảo toàn tính toàn vẹn của cây phả hệ.
 - **Category:** Family Management
@@ -187,7 +187,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-06 (Quản lý gia đình), UC-07 (Quản lý nhánh gia đình)
 - **Priority:** Medium
 
-**BR-FG-007 — Thông tin hiển thị trên cây gia phả và tra cứu quan hệ phải chính xác theo dữ liệu đã ghi**
+**BR-FG-007, Thông tin hiển thị trên cây gia phả và tra cứu quan hệ phải chính xác theo dữ liệu đã ghi**
 
 - **Description:** Mọi thông tin hiển thị trên cây gia phả tương tác (Interactive Genealogy Tree) và kết quả tra cứu quan hệ (Relationship Query) phải được truy xuất trực tiếp từ dữ liệu quan hệ đã xác thực (BR-FG-004, BR-FG-005). Hệ thống không cho phép hiển thị quan hệ chưa được phê duyệt hoặc dữ liệu mâu thuẫn.
 - **Category:** Family Management
@@ -205,7 +205,7 @@ Tổng cộng: **34 Business Rules**.
 | BR-COM-003 | Thông báo chỉ được tạo bởi Family Owner hoặc Ban liên lạc | High |
 | BR-COM-004 | Nội dung vi phạm bị kiểm duyệt bởi Administrator | Medium |
 
-**BR-COM-001 — Chỉ thành viên đã xác thực mới được đăng nội dung**
+**BR-COM-001, Chỉ thành viên đã xác thực mới được đăng nội dung**
 
 - **Description:** Hệ thống chỉ cho phép Family Member đã xác thực (Active) đăng bài viết, bình luận, phản ứng và chia sẻ hình ảnh trong phạm vi gia đình. Guest chỉ được xem nội dung công khai.
 - **Category:** Community
@@ -214,7 +214,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-10 (Đăng và quản lý bài viết), UC-11 (Bình luận và thả cảm xúc)
 - **Priority:** High
 
-**BR-COM-002 — Người tạo bài viết được xóa bài viết của mình**
+**BR-COM-002, Người tạo bài viết được xóa bài viết của mình**
 
 - **Description:** Một bài viết chỉ có thể bị xóa bởi chính tác giả (Family Member đã tạo) hoặc Administrator. Family Owner không có quyền xóa bài viết của thành viên khác trừ khi được phân quyền kiểm duyệt.
 - **Category:** Community
@@ -223,7 +223,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-10 (Đăng và quản lý bài viết)
 - **Priority:** Medium
 
-**BR-COM-003 — Thông báo chỉ được tạo bởi Family Owner hoặc Ban liên lạc**
+**BR-COM-003, Thông báo chỉ được tạo bởi Family Owner hoặc Ban liên lạc**
 
 - **Description:** Thông báo gia đình (Announcement) chỉ được tạo bởi Family Owner hoặc thành viên có vai trò Ban liên lạc. Thông báo được ghim lên đầu luồng tin và gửi thông báo đẩy cho toàn bộ thành viên.
 - **Category:** Community
@@ -232,7 +232,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-12 (Tạo thông báo gia đình)
 - **Priority:** High
 
-**BR-COM-004 — Nội dung vi phạm bị kiểm duyệt bởi Administrator**
+**BR-COM-004, Nội dung vi phạm bị kiểm duyệt bởi Administrator**
 
 - **Description:** Nội dung (bài viết, bình luận, hình ảnh) bị báo cáo hoặc vi phạm chính sách cộng đồng được gỡ bỏ hoặc ẩn bởi Administrator. Mọi hành động kiểm duyệt được ghi vào Audit Log.
 - **Category:** Community
@@ -241,7 +241,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-13 (Kiểm duyệt nội dung)
 - **Priority:** Medium
 
-**BR-EVT-005 — Hình ảnh sự kiện chỉ được thêm bởi người tham gia và Event Owner**
+**BR-EVT-005, Hình ảnh sự kiện chỉ được thêm bởi người tham gia và Event Owner**
 
 - **Description:** Hệ thống chỉ cho phép người đã xác nhận tham dự sự kiện (RSVP = Tham gia) hoặc Event Owner thêm hình ảnh vào thư viện ảnh sự kiện (Event Gallery). Hình ảnh được gán nhãn người tải lên và thời gian tải lên.
 - **Category:** Events
@@ -260,7 +260,7 @@ Tổng cộng: **34 Business Rules**.
 | BR-EVT-004 | Thời điểm bắt đầu phải trước thời điểm kết thúc | High |
 | BR-EVT-005 | Hình ảnh sự kiện chỉ được thêm bởi người tham gia và Event Owner | Medium |
 
-**BR-EVT-001 — Chỉ Family Member mới được tạo sự kiện**
+**BR-EVT-001, Chỉ Family Member mới được tạo sự kiện**
 
 - **Description:** Hệ thống chỉ cho phép Family Member đã xác thực tạo sự kiện gia đình. Guest không có quyền tạo sự kiện.
 - **Category:** Events
@@ -269,7 +269,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-14 (Tạo sự kiện gia đình)
 - **Priority:** High
 
-**BR-EVT-002 — Mỗi thành viên chỉ xác nhận RSVP một lần**
+**BR-EVT-002, Mỗi thành viên chỉ xác nhận RSVP một lần**
 
 - **Description:** Với mỗi sự kiện, mỗi FamilyMember chỉ được phép có một trạng thái RSVP (Tham gia / Không tham gia / Có thể). RSVP mới sẽ thay thế RSVP cũ, không tạo bản ghi trùng.
 - **Category:** Events
@@ -278,7 +278,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-15 (Xác nhận tham dự)
 - **Priority:** High
 
-**BR-EVT-003 — Chỉ Event Owner hoặc Family Owner được hủy sự kiện**
+**BR-EVT-003, Chỉ Event Owner hoặc Family Owner được hủy sự kiện**
 
 - **Description:** Một sự kiện chỉ có thể bị hủy bởi Event Owner (người tạo) hoặc Family Owner. Khi hủy, hệ thống thông báo cho toàn bộ người tham gia đã xác nhận RSVP.
 - **Category:** Events
@@ -287,7 +287,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-14 (Tạo sự kiện gia đình), UC-16 (Quản lý người tham gia)
 - **Priority:** Medium
 
-**BR-EVT-004 — Thời điểm bắt đầu phải trước thời điểm kết thúc**
+**BR-EVT-004, Thời điểm bắt đầu phải trước thời điểm kết thúc**
 
 - **Description:** Hệ thống chỉ cho phép lưu sự kiện khi thời điểm bắt đầu (StartTime) nhỏ hơn thời điểm kết thúc (EndTime). Nhắc nhở sự kiện chỉ được gửi sau khi sự kiện được tạo và trước thời điểm bắt đầu.
 - **Category:** Events
@@ -304,7 +304,7 @@ Tổng cộng: **34 Business Rules**.
 | BR-HER-002 | Tư liệu di sản phải được duyệt trước khi công khai | Medium |
 | BR-HER-003 | Tư liệu được phân loại và gắn thẻ ngữ cảnh | Low |
 
-**BR-HER-001 — Chỉ Family Member mới được đóng góp tư liệu di sản**
+**BR-HER-001, Chỉ Family Member mới được đóng góp tư liệu di sản**
 
 - **Description:** Hệ thống chỉ cho phép Family Member đã xác thực tải lên tư liệu lịch sử, câu chuyện gia đình và hình ảnh vào kho lưu trữ di sản. Guest chỉ được xem nội dung công khai.
 - **Category:** Family Heritage
@@ -313,7 +313,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-17 (Đóng góp tư liệu di sản)
 - **Priority:** Medium
 
-**BR-HER-002 — Tư liệu di sản phải được duyệt trước khi công khai**
+**BR-HER-002, Tư liệu di sản phải được duyệt trước khi công khai**
 
 - **Description:** Tư liệu di sản do thành viên đóng góp ở trạng thái *Pending Review* và chỉ được công khai sau khi được Family Owner hoặc Administrator duyệt. Tư liệu bị từ chối không hiển thị trong kho lưu trữ.
 - **Category:** Family Heritage
@@ -322,7 +322,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-18 (Duyệt tư liệu di sản)
 - **Priority:** Medium
 
-**BR-HER-003 — Tư liệu được phân loại và gắn thẻ ngữ cảnh**
+**BR-HER-003, Tư liệu được phân loại và gắn thẻ ngữ cảnh**
 
 - **Description:** Mỗi tư liệu di sản phải được phân loại (loại tư liệu) và gắn tối thiểu một thẻ ngữ cảnh (thế hệ, thành viên, sự kiện, địa điểm) để hỗ trợ tìm kiếm và trực quan hóa trên kho lưu trữ số.
 - **Category:** Family Heritage
@@ -331,7 +331,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-17 (Đóng góp tư liệu di sản)
 - **Priority:** Low
 
-**BR-DIR-001 — Chỉ Family Member được xem danh bạ thành viên và thông tin liên hệ**
+**BR-DIR-001, Chỉ Family Member được xem danh bạ thành viên và thông tin liên hệ**
 
 - **Description:** Hệ thống chỉ cho phép Family Member đã xác thực truy cập danh bạ thành viên (Family Directory), xem hồ sơ nghề nghiệp, học vấn và tìm kiếm thành viên. Thông tin liên hệ cá nhân chỉ hiển thị cho thành viên cùng gia đình; Guest không được truy cập.
 - **Category:** Family Directory
@@ -340,7 +340,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-25 (Xem danh bạ thành viên), UC-26 (Tìm kiếm thành viên)
 - **Priority:** High
 
-**BR-DASH-001 — Dữ liệu báo cáo và thống kê phải được truy xuất từ dữ liệu đã xác thực**
+**BR-DASH-001, Dữ liệu báo cáo và thống kê phải được truy xuất từ dữ liệu đã xác thực**
 
 - **Description:** Mọi số liệu hiển thị trên dashboard và báo cáo (thống kê gia đình, hoạt động cộng đồng, sự kiện, nhân khẩu) phải được tính toán trực tiếp từ dữ liệu hệ thống đã được xác thực (không lấy dữ liệu tạm). Báo cáo chỉ xuất được cho dữ liệu trong phạm vi quyền của người dùng.
 - **Category:** Dashboard & Reporting
@@ -357,7 +357,7 @@ Tổng cộng: **34 Business Rules**.
 | BR-AI-002 | Kết quả AI phải được gán nhãn và không thay thế quyết định con người | Medium |
 | BR-AI-003 | AI Service phải có cơ chế fallback khi không khả dụng | High |
 
-**BR-AI-001 — AI chỉ truy cập dữ liệu trong phạm vi quyền của người dùng**
+**BR-AI-001, AI chỉ truy cập dữ liệu trong phạm vi quyền của người dùng**
 
 - **Description:** Mọi kết quả từ AI (tìm kiếm ngữ nghĩa, trợ lý tri thức, giải thích quan hệ, gợi ý) chỉ được xây dựng trên dữ liệu mà người dùng hiện tại có quyền truy cập theo RBAC. Hệ thống không bao giờ để lộ dữ liệu gia đình ngoài phạm vi quyền.
 - **Category:** AI Services
@@ -366,7 +366,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-19 (Tìm kiếm ngữ nghĩa), UC-20 (Trợ lý tri thức gia đình)
 - **Priority:** High
 
-**BR-AI-002 — Kết quả AI phải được gán nhãn và không thay thế quyết định con người**
+**BR-AI-002, Kết quả AI phải được gán nhãn và không thay thế quyết định con người**
 
 - **Description:** Nội dung do AI sinh ra (tóm tắt, giải thích, gợi ý) phải được gán nhãn rõ ràng là nội dung AI-generated. Kết quả AI không tự động thực hiện thay đổi dữ liệu; mọi thay đổi cần xác nhận của người dùng.
 - **Category:** AI Services
@@ -375,7 +375,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-20 (Trợ lý tri thức gia đình), UC-21 (Tóm tắt nội dung)
 - **Priority:** Medium
 
-**BR-AI-003 — AI Service phải có cơ chế fallback khi không khả dụng**
+**BR-AI-003, AI Service phải có cơ chế fallback khi không khả dụng**
 
 - **Description:** Khi AI Service không khả dụng (lỗi, quá tải, mất kết nối LLM), hệ thống phải tự động fallback về tìm kiếm từ khóa thông thường và thông báo cho người dùng về trạng thái giảm chức năng.
 - **Category:** AI Services
@@ -384,7 +384,7 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-19 (Tìm kiếm ngữ nghĩa)
 - **Priority:** High
 
-**BR-ADM-004 — Sao lưu và phục hồi dữ liệu chỉ được thực hiện bởi Administrator**
+**BR-ADM-004, Sao lưu và phục hồi dữ liệu chỉ được thực hiện bởi Administrator**
 
 - **Description:** Hệ thống chỉ cho phép Administrator thực hiện sao lưu (Backup) và phục hồi (Restore) dữ liệu. Mọi thao tác sao lưu/phục hồi được ghi vào Audit Log và phải được xác nhận trước khi thực hiện để tránh mất dữ liệu.
 - **Category:** Administration
@@ -401,7 +401,7 @@ Tổng cộng: **34 Business Rules**.
 | BR-ADM-002 | Mọi thao tác nhạy cảm phải được ghi vào Audit Log | High |
 | BR-ADM-003 | Chỉ Administrator mới được cấu hình hệ thống | Medium |
 
-**BR-ADM-001 — Chỉ Administrator mới được quản lý tài khoản người dùng**
+**BR-ADM-001, Chỉ Administrator mới được quản lý tài khoản người dùng**
 
 - **Description:** Hệ thống chỉ cho phép Administrator thực hiện khóa/mở khóa tài khoản, đặt lại vai trò và xử lý tài khoản vi phạm. Family Owner không có quyền này.
 - **Category:** Administration
@@ -410,16 +410,16 @@ Tổng cộng: **34 Business Rules**.
 - **Related Use Case:** UC-22 (Quản lý người dùng)
 - **Priority:** High
 
-**BR-ADM-002 — Mọi thao tác nhạy cảm phải được ghi vào Audit Log**
+**BR-ADM-002, Mọi thao tác nhạy cảm phải được ghi vào Audit Log**
 
 - **Description:** Hệ thống ghi nhật ký kiểm toán (Audit Log) cho mọi thao tác nhạy cảm: đăng nhập, đăng xuất, tạo/sửa/xóa dữ liệu phả hệ, thay đổi vai trò, kiểm duyệt nội dung. Nhật ký chỉ được tra cứu bởi Administrator và không thể bị sửa đổi.
 - **Category:** Administration
-- **Source:** Đề tài mục (d) — Audit Logging; `Audit Log` trong Glossary.
+- **Source:** Đề tài mục (d), Audit Logging; `Audit Log` trong Glossary.
 - **Related Requirements:** FR-ADM-03, FR-ADM-02
 - **Related Use Case:** UC-23 (Xem nhật ký kiểm toán)
 - **Priority:** High
 
-**BR-ADM-003 — Chỉ Administrator mới được cấu hình hệ thống**
+**BR-ADM-003, Chỉ Administrator mới được cấu hình hệ thống**
 
 - **Description:** Hệ thống chỉ cho phép Administrator thay đổi cấu hình hệ thống (thông số nền tảng, AI Service, thông báo, sao lưu). Mọi thay đổi cấu hình được ghi vào Audit Log.
 - **Category:** Administration

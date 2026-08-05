@@ -69,7 +69,7 @@ Phát triển hệ thống FamilyConnect hoàn chỉnh theo mô hình kiến tr�
 ### 3.2. Ngoài phạm vi triển khai (Out of Scope - Phiên bản hiện tại)
 * Tính năng thanh toán trực tuyến hoặc quyên góp Quỹ dòng họ trực tiếp qua cổng thanh toán (Payment Gateway integration).
 * Tính năng nhận diện khuôn mặt tự động trong ảnh gia đình (Facial Recognition tagging).
-* Số hóa tự động gia phả bằng hình ảnh/chữ viết tay cổ (OCR chữ Hán Nôm) — sẽ xem xét ở giai đoạn sau.
+* Số hóa tự động gia phả bằng hình ảnh/chữ viết tay cổ (OCR chữ Hán Nôm), sẽ xem xét ở giai đoạn sau.
 * Cuộc gọi video/thoại riêng tư tích hợp (Tạm thời sử dụng liên kết ứng dụng bên thứ 3).
 
 ---

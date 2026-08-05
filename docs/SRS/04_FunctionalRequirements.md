@@ -1,9 +1,9 @@
 # 4. Functional Requirements
 
-> **Dự án:** FamilyConnect — Nền tảng Cộng đồng Gia đình số tích hợp Trí tuệ nhân tạo
+> **Dự án:** FamilyConnect, Nền tảng Cộng đồng Gia đình số tích hợp Trí tuệ nhân tạo
 > **Tài liệu:** Đặc tả yêu cầu chức năng (Functional Requirements Specification)
-> **Jira:** [FT8-6](https://familyconnect.atlassian.net/browse/FT8-6) — Phân tích yêu cầu chức năng
-> **Thuộc Epic:** FT8-4 — Phân tích yêu cầu hệ thống (Sprint 1)
+> **Jira:** [FT8-6](https://familyconnect.atlassian.net/browse/FT8-6), Phân tích yêu cầu chức năng
+> **Thuộc Epic:** FT8-4, Phân tích yêu cầu hệ thống (Sprint 1)
 > **Trạng thái:** Draft v1.0
 
 ---
@@ -12,7 +12,7 @@
 
 ### 4.1.1 Mục đích
 
-Tài liệu này đặc tả toàn bộ yêu cầu chức năng (Functional Requirements — FR) của hệ thống FamilyConnect — một nền tảng cộng đồng gia đình số tích hợp trí tuệ nhân tạo. Nội dung được phân tích và mở rộng từ đề tài được giao, nhằm:
+Tài liệu này đặc tả toàn bộ yêu cầu chức năng (Functional Requirements, FR) của hệ thống FamilyConnect, một nền tảng cộng đồng gia đình số tích hợp trí tuệ nhân tạo. Nội dung được phân tích và mở rộng từ đề tài được giao, nhằm:
 
 - Xác định đầy đủ, rõ ràng và có thể đo lường được các chức năng hệ thống phải cung cấp.
 - Làm cơ sở để xây dựng Use Case Diagram, Use Case Specification (FT8-8, FT8-10), Business Rules (FT8-11) và thiết kế hệ thống ở các giai đoạn tiếp theo.
@@ -50,7 +50,7 @@ Tổng cộng: **49 yêu cầu chức năng**. Không có chức năng nào ngo�
 | FR | Functional Requirement |
 | RBAC | Role-Based Access Control |
 | JWT | JSON Web Token |
-| RSVP | Répondez S'il Vous Plaît — xác nhận tham dự |
+| RSVP | Répondez S'il Vous Plaît, xác nhận tham dự |
 | AI | Artificial Intelligence |
 | LLM | Large Language Model |
 | Owner | Trưởng gia tộc (Family Owner) |
@@ -181,7 +181,7 @@ Tổng cộng: **49 yêu cầu chức năng**. Không có chức năng nào ngo�
 
 ## 4.4 Đặc tả yêu cầu chức năng
 
-### 4.4.1 Module 1 — User & Security
+### 4.4.1 Module 1, User & Security
 
 **Tên module:** User & Security
 
@@ -236,10 +236,10 @@ Guest truy cập trang đăng ký và gửi biểu mẫu đăng ký tài khoản
 
 **Alternate Flow**
 
-- **A1 — Email đã tồn tại:** Tại bước 4, nếu email đã được đăng ký, hệ thống báo lỗi "Email đã được sử dụng" và yêu cầu Guest nhập email khác hoặc chuyển đến trang đăng nhập.
-- **A2 — Dữ liệu không hợp lệ:** Tại bước 4, nếu mật khẩu không đủ mạnh hoặc biểu mẫu thiếu trường bắt buộc, hệ thống hiển thị thông báo lỗi tương ứng bên cạnh từng trường; Guest sửa lại và gửi lại.
-- **A3 — Đường dẫn kích hoạt hết hạn hoặc không hợp lệ:** Tại bước 7, nếu đường dẫn hết hạn (sau 24 giờ) hoặc sai token, hệ thống hiển thị thông báo lỗi và cho phép Guest yêu cầu gửi lại email kích hoạt.
-- **A4 — Email kích hoạt không đến:** Guest yêu cầu hệ thống gửi lại email kích hoạt; hệ thống tạo token mới và gửi lại.
+- **A1, Email đã tồn tại:** Tại bước 4, nếu email đã được đăng ký, hệ thống báo lỗi "Email đã được sử dụng" và yêu cầu Guest nhập email khác hoặc chuyển đến trang đăng nhập.
+- **A2, Dữ liệu không hợp lệ:** Tại bước 4, nếu mật khẩu không đủ mạnh hoặc biểu mẫu thiếu trường bắt buộc, hệ thống hiển thị thông báo lỗi tương ứng bên cạnh từng trường; Guest sửa lại và gửi lại.
+- **A3, Đường dẫn kích hoạt hết hạn hoặc không hợp lệ:** Tại bước 7, nếu đường dẫn hết hạn (sau 24 giờ) hoặc sai token, hệ thống hiển thị thông báo lỗi và cho phép Guest yêu cầu gửi lại email kích hoạt.
+- **A4, Email kích hoạt không đến:** Guest yêu cầu hệ thống gửi lại email kích hoạt; hệ thống tạo token mới và gửi lại.
 
 **Postconditions**
 
@@ -290,15 +290,15 @@ Guest mở trang đăng nhập và gửi thông tin đăng nhập.
 
 **Alternate Flow**
 
-- **A1 — Sai mật khẩu:** Hệ thống báo lỗi "Email hoặc mật khẩu không đúng" (không tiết lộ trường nào sai) và tăng bộ đếm thất bại; sau 5 lần thất bại liên tiếp, tài khoản tạm khóa 15 phút.
-- **A2 — Tài khoản chưa kích hoạt:** Hệ thống hiển thị thông báo yêu cầu kích hoạt tài khoản và cho phép gửi lại email kích hoạt.
-- **A3 — Tài khoản bị khóa:** Hệ thống hiển thị thông báo tài khoản bị khóa và hướng dẫn liên hệ Administrator.
-- **A4 — Access token hết hạn trong phiên:** Hệ thống dùng refresh token để cấp lại access token; nếu refresh token hết hạn, yêu cầu người dùng đăng nhập lại.
+- **A1, Sai mật khẩu:** Hệ thống báo lỗi "Email hoặc mật khẩu không đúng" (không tiết lộ trường nào sai) và tăng bộ đếm thất bại; sau 5 lần thất bại liên tiếp, tài khoản tạm khóa 15 phút.
+- **A2, Tài khoản chưa kích hoạt:** Hệ thống hiển thị thông báo yêu cầu kích hoạt tài khoản và cho phép gửi lại email kích hoạt.
+- **A3, Tài khoản bị khóa:** Hệ thống hiển thị thông báo tài khoản bị khóa và hướng dẫn liên hệ Administrator.
+- **A4, Access token hết hạn trong phiên:** Hệ thống dùng refresh token để cấp lại access token; nếu refresh token hết hạn, yêu cầu người dùng đăng nhập lại.
 
 **Postconditions**
 
 1. Người dùng có phiên đăng nhập hợp lệ (access token + refresh token).
-2. Giao diện hiển thị theo vai trò của người dùng (RBAC — FR-US-05).
+2. Giao diện hiển thị theo vai trò của người dùng (RBAC, FR-US-05).
 
 **Expected Result**
 
@@ -341,8 +341,8 @@ Người dùng nhấn nút "Đăng xuất" trên giao diện.
 
 **Alternate Flow**
 
-- **A1 — Token đã hết hạn:** Hệ thống vẫn xóa token cục bộ và chuyển về trang đăng nhập mà không báo lỗi.
-- **A2 — Phiên bị thu hồi từ xa:** Nếu Administrator đã khóa tài khoản (FR-ADM-01), yêu cầu đăng xuất được xem là thành công.
+- **A1, Token đã hết hạn:** Hệ thống vẫn xóa token cục bộ và chuyển về trang đăng nhập mà không báo lỗi.
+- **A2, Phiên bị thu hồi từ xa:** Nếu Administrator đã khóa tài khoản (FR-ADM-01), yêu cầu đăng xuất được xem là thành công.
 
 **Postconditions**
 
@@ -393,9 +393,9 @@ Guest nhấn liên kết "Quên mật khẩu?" trên trang đăng nhập.
 
 **Alternate Flow**
 
-- **A1 — Email không tồn tại:** Hệ thống vẫn hiển thị thông báo chung "Nếu email tồn tại, bạn sẽ nhận được hướng dẫn" để tránh lộ thông tin tài khoản.
-- **A2 — Token hết hạn hoặc đã sử dụng:** Hệ thống báo lỗi và cho phép Guest gửi lại yêu cầu đặt lại.
-- **A3 — Mật khẩu mới yếu:** Hệ thống yêu cầu nhập lại theo chính sách (≥ 8 ký tự, có chữ và số).
+- **A1, Email không tồn tại:** Hệ thống vẫn hiển thị thông báo chung "Nếu email tồn tại, bạn sẽ nhận được hướng dẫn" để tránh lộ thông tin tài khoản.
+- **A2, Token hết hạn hoặc đã sử dụng:** Hệ thống báo lỗi và cho phép Guest gửi lại yêu cầu đặt lại.
+- **A3, Mật khẩu mới yếu:** Hệ thống yêu cầu nhập lại theo chính sách (≥ 8 ký tự, có chữ và số).
 
 **Postconditions**
 
@@ -420,7 +420,7 @@ Hệ thống áp dụng mô hình kiểm soát truy cập dựa trên vai trò (
 
 **Primary Actor**
 
-Administrator (gán vai trò) — mọi người dùng chịu sự ràng buộc của RBAC
+Administrator (gán vai trò), mọi người dùng chịu sự ràng buộc của RBAC
 
 **Supporting Actors**
 
@@ -445,9 +445,9 @@ Người dùng thực hiện một thao tác bất kỳ trên hệ thống; ho�
 
 **Alternate Flow**
 
-- **A1 — Vai trò bị thay đổi giữa phiên:** Hệ thống đọc lại quyền từ database cho các thao tác nhạy cảm; nếu quyền đã bị thu hồi, yêu cầu bị từ chối ngay.
-- **A2 — Token không hợp lệ/hết hạn:** Trả về mã lỗi 401, yêu cầu đăng nhập lại.
-- **A3 — Người dùng không thuộc gia đình:** Các thao tác trong phạm vi gia đình bị từ chối với lỗi "Không có quyền truy cập gia đình này".
+- **A1, Vai trò bị thay đổi giữa phiên:** Hệ thống đọc lại quyền từ database cho các thao tác nhạy cảm; nếu quyền đã bị thu hồi, yêu cầu bị từ chối ngay.
+- **A2, Token không hợp lệ/hết hạn:** Trả về mã lỗi 401, yêu cầu đăng nhập lại.
+- **A3, Người dùng không thuộc gia đình:** Các thao tác trong phạm vi gia đình bị từ chối với lỗi "Không có quyền truy cập gia đình này".
 
 **Postconditions**
 
@@ -496,8 +496,8 @@ Người dùng mở trang hồ sơ cá nhân và chỉnh sửa thông tin.
 
 **Alternate Flow**
 
-- **A1 — Dữ liệu không hợp lệ:** Hệ thống báo lỗi theo từng trường, giữ nguyên các giá trị khác, người dùng sửa lại và gửi lại.
-- **A2 — Email không được phép sửa:** Email là định danh đăng nhập, không thay đổi được tại màn hình này (thay đổi thuộc quyền Administrator, FR-ADM-01).
+- **A1, Dữ liệu không hợp lệ:** Hệ thống báo lỗi theo từng trường, giữ nguyên các giá trị khác, người dùng sửa lại và gửi lại.
+- **A2, Email không được phép sửa:** Email là định danh đăng nhập, không thay đổi được tại màn hình này (thay đổi thuộc quyền Administrator, FR-ADM-01).
 
 **Postconditions**
 
@@ -549,9 +549,9 @@ Family Owner nhận thông báo về yêu cầu tham gia mới và mở trang x�
 
 **Alternate Flow**
 
-- **A1 — Từ chối yêu cầu:** Hệ thống lưu lý do từ chối; người yêu cầu nhận thông báo và có thể gửi lại yêu cầu mới sau 24 giờ.
-- **A2 — Yêu cầu trùng:** Nếu người yêu cầu đã là thành viên của gia đình, hệ thống chặn gửi yêu cầu trùng lặp.
-- **A3 — Hết thời gian chờ:** Yêu cầu *Pending* quá 14 ngày được tự động đóng; người yêu cầu phải gửi lại.
+- **A1, Từ chối yêu cầu:** Hệ thống lưu lý do từ chối; người yêu cầu nhận thông báo và có thể gửi lại yêu cầu mới sau 24 giờ.
+- **A2, Yêu cầu trùng:** Nếu người yêu cầu đã là thành viên của gia đình, hệ thống chặn gửi yêu cầu trùng lặp.
+- **A3, Hết thời gian chờ:** Yêu cầu *Pending* quá 14 ngày được tự động đóng; người yêu cầu phải gửi lại.
 
 **Postconditions**
 
@@ -568,11 +568,11 @@ High
 
 ---
 
-### 4.4.2 Module 2 — Family & Genealogy Management
+### 4.4.2 Module 2, Family & Genealogy Management
 
 **Tên module:** Family & Genealogy Management
 
-**Mục đích:** Quản lý cấu trúc dữ liệu lõi của nền tảng — gia đình, nhánh, thành viên và các mối quan hệ huyết thống/hôn nhân. Dữ liệu được tổ chức dưới dạng đồ thị gia đình (family graph), làm nền tảng cho cây gia phả tương tác, tra cứu quan hệ và các dịch vụ AI.
+**Mục đích:** Quản lý cấu trúc dữ liệu lõi của nền tảng, gia đình, nhánh, thành viên và các mối quan hệ huyết thống/hôn nhân. Dữ liệu được tổ chức dưới dạng đồ thị gia đình (family graph), làm nền tảng cho cây gia phả tương tác, tra cứu quan hệ và các dịch vụ AI.
 
 **Danh sách chức năng:**
 
@@ -624,10 +624,10 @@ Người dùng chọn "Tạo gia đình" trên giao diện và gửi biểu mẫ
 
 **Alternate Flow**
 
-- **A1 — Cập nhật thông tin gia đình:** Family Owner mở trang thông tin, sửa mô tả/khu vực và lưu; hệ thống ghi nhận thay đổi vào audit log.
-- **A2 — Chuyển quyền Owner:** Family Owner chọn thành viên kế nhiệm; hệ thống yêu cầu xác nhận, đổi vai trò và thông báo cho thành viên mới.
-- **A3 — Tên trùng trong hệ thống:** Cho phép trùng tên (không có ràng buộc toàn cục) nhưng cảnh báo nếu tên trùng với gia đình cùng khu vực.
-- **A4 — Giải tán gia đình:** Family Owner gửi yêu cầu giải tán; hệ thống chuyển gia đình sang trạng thái *Inactive* (dữ liệu không xóa) và thông báo toàn bộ thành viên.
+- **A1, Cập nhật thông tin gia đình:** Family Owner mở trang thông tin, sửa mô tả/khu vực và lưu; hệ thống ghi nhận thay đổi vào audit log.
+- **A2, Chuyển quyền Owner:** Family Owner chọn thành viên kế nhiệm; hệ thống yêu cầu xác nhận, đổi vai trò và thông báo cho thành viên mới.
+- **A3, Tên trùng trong hệ thống:** Cho phép trùng tên (không có ràng buộc toàn cục) nhưng cảnh báo nếu tên trùng với gia đình cùng khu vực.
+- **A4, Giải tán gia đình:** Family Owner gửi yêu cầu giải tán; hệ thống chuyển gia đình sang trạng thái *Inactive* (dữ liệu không xóa) và thông báo toàn bộ thành viên.
 
 **Postconditions**
 
@@ -636,7 +636,7 @@ Người dùng chọn "Tạo gia đình" trên giao diện và gửi biểu mẫ
 
 **Expected Result**
 
-Family Owner quản trị được vòng đời gia đình: tạo, cập nhật, chuyển quyền, giải tán — mọi thay đổi được ghi nhật ký.
+Family Owner quản trị được vòng đời gia đình: tạo, cập nhật, chuyển quyền, giải tán, mọi thay đổi được ghi nhật ký.
 
 **Priority**
 
@@ -679,9 +679,9 @@ Family Owner mở trang quản lý nhánh của gia đình và tạo nhánh mớ
 
 **Alternate Flow**
 
-- **A1 — Sửa/xóa nhánh:** Family Owner sửa tên, mô tả hoặc trưởng nhánh; khi xóa nhánh, các thành viên trở về trạng thái không thuộc nhánh (dữ liệu thành viên không bị xóa theo).
-- **A2 — Tên nhánh trùng:** Hệ thống báo lỗi và yêu cầu đặt tên khác.
-- **A3 — Gán thành viên đã thuộc nhánh khác:** Hệ thống cảnh báo và yêu cầu xác nhận chuyển nhánh.
+- **A1, Sửa/xóa nhánh:** Family Owner sửa tên, mô tả hoặc trưởng nhánh; khi xóa nhánh, các thành viên trở về trạng thái không thuộc nhánh (dữ liệu thành viên không bị xóa theo).
+- **A2, Tên nhánh trùng:** Hệ thống báo lỗi và yêu cầu đặt tên khác.
+- **A3, Gán thành viên đã thuộc nhánh khác:** Hệ thống cảnh báo và yêu cầu xác nhận chuyển nhánh.
 
 **Postconditions**
 
@@ -733,10 +733,10 @@ Family Owner mở trang thành viên gia đình và thực hiện thao tác thê
 
 **Alternate Flow**
 
-- **A1 — Sửa hồ sơ thành viên:** Family Owner cập nhật thông tin (đặc biệt khi có thành viên mới sinh hoặc qua đời); thay đổi được ghi audit log.
-- **A2 — Đình chỉ thành viên:** Family Owner chọn đình chỉ; hệ thống chuyển trạng thái *Suspended*, thu hồi quyền truy cập dữ liệu gia đình, thông báo cho thành viên.
-- **A3 — Xóa thành viên khỏi gia đình:** Hệ thống yêu cầu xác nhận; nếu thành viên có quan hệ được tham chiếu trong cây gia phả, hệ thống cảnh báo dữ liệu quan hệ liên quan sẽ bị xóa theo.
-- **A4 — Thành viên trùng:** Nếu hồ sơ đã tồn tại trong gia đình (cùng tên + ngày sinh), hệ thống cảnh báo để tránh tạo trùng lặp.
+- **A1, Sửa hồ sơ thành viên:** Family Owner cập nhật thông tin (đặc biệt khi có thành viên mới sinh hoặc qua đời); thay đổi được ghi audit log.
+- **A2, Đình chỉ thành viên:** Family Owner chọn đình chỉ; hệ thống chuyển trạng thái *Suspended*, thu hồi quyền truy cập dữ liệu gia đình, thông báo cho thành viên.
+- **A3, Xóa thành viên khỏi gia đình:** Hệ thống yêu cầu xác nhận; nếu thành viên có quan hệ được tham chiếu trong cây gia phả, hệ thống cảnh báo dữ liệu quan hệ liên quan sẽ bị xóa theo.
+- **A4, Thành viên trùng:** Nếu hồ sơ đã tồn tại trong gia đình (cùng tên + ngày sinh), hệ thống cảnh báo để tránh tạo trùng lặp.
 
 **Postconditions**
 
@@ -789,10 +789,10 @@ Family Owner mở hồ sơ thành viên và chọn "Thiết lập quan hệ cha 
 
 **Alternate Flow**
 
-- **A1 — Vi phạm ràng buộc vòng lặp:** Hệ thống từ chối và giải thích rằng quan hệ sẽ tạo mâu thuẫn thế hệ.
-- **A2 — Đã đủ 2 cha/mẹ:** Hệ thống báo lỗi và đề nghị sửa quan hệ hiện có.
-- **A3 — Gỡ quan hệ:** Family Owner gỡ cạnh cha–con; hệ thống yêu cầu xác nhận và cập nhật lại thế hệ.
-- **A4 — Nhầm lẫn vai trò:** Hệ thống cho phép đổi hướng quan hệ (cha/mẹ ↔ con) bằng thao tác sửa.
+- **A1, Vi phạm ràng buộc vòng lặp:** Hệ thống từ chối và giải thích rằng quan hệ sẽ tạo mâu thuẫn thế hệ.
+- **A2, Đã đủ 2 cha/mẹ:** Hệ thống báo lỗi và đề nghị sửa quan hệ hiện có.
+- **A3, Gỡ quan hệ:** Family Owner gỡ cạnh cha–con; hệ thống yêu cầu xác nhận và cập nhật lại thế hệ.
+- **A4, Nhầm lẫn vai trò:** Hệ thống cho phép đổi hướng quan hệ (cha/mẹ ↔ con) bằng thao tác sửa.
 
 **Postconditions**
 
@@ -845,9 +845,9 @@ Family Owner mở hồ sơ thành viên và chọn "Thiết lập quan hệ hôn
 
 **Alternate Flow**
 
-- **A1 — Đã có hôn nhân đang hoạt động:** Hệ thống chặn và yêu cầu kết thúc quan hệ hiện tại (ly hôn/góa) trước.
-- **A2 — Kết thúc hôn nhân:** Family Owner cập nhật trạng thái thành *Divorced* (kèm ngày) hoặc *Widowed*; cạnh quan hệ được đánh dấu lịch sử, không xóa khỏi đồ thị.
-- **A3 — Thành viên ngoài gia đình:** Nếu đối tượng chưa có hồ sơ, hệ thống dẫn qua luồng thêm thành viên (FR-FG-03) rồi quay lại thiết lập hôn nhân.
+- **A1, Đã có hôn nhân đang hoạt động:** Hệ thống chặn và yêu cầu kết thúc quan hệ hiện tại (ly hôn/góa) trước.
+- **A2, Kết thúc hôn nhân:** Family Owner cập nhật trạng thái thành *Divorced* (kèm ngày) hoặc *Widowed*; cạnh quan hệ được đánh dấu lịch sử, không xóa khỏi đồ thị.
+- **A3, Thành viên ngoài gia đình:** Nếu đối tượng chưa có hồ sơ, hệ thống dẫn qua luồng thêm thành viên (FR-FG-03) rồi quay lại thiết lập hôn nhân.
 
 **Postconditions**
 
@@ -881,7 +881,7 @@ Không có.
 **Preconditions**
 
 1. Family Member đã đăng nhập (FR-US-02).
-2. Family Member thuộc gia đình đang xem (đã được xác thực — FR-US-07).
+2. Family Member thuộc gia đình đang xem (đã được xác thực, FR-US-07).
 
 **Trigger**
 
@@ -898,10 +898,10 @@ Family Member mở trang "Gia phả" của gia đình.
 
 **Alternate Flow**
 
-- **A1 — Cây quá lớn:** Hệ thống tải dữ liệu theo cụm (lazy loading) — chỉ tải nhánh đang hiển thị; hiển thị trạng thái đang tải khi mở rộng nhánh mới.
-- **A2 — Lọc theo nhánh:** Family Member lọc cây theo nhánh gia đình (FR-FG-02) hoặc theo thế hệ; hệ thống chỉ hiển thị các thành viên khớp bộ lọc.
-- **A3 — Không có dữ liệu:** Gia đình mới chưa có thành viên ngoài Owner, hệ thống hiển thị cây tối thiểu và gợi ý thêm thành viên.
-- **A4 — Lỗi tải dữ liệu:** Hệ thống hiển thị thông báo lỗi kèm nút "Thử lại".
+- **A1, Cây quá lớn:** Hệ thống tải dữ liệu theo cụm (lazy loading), chỉ tải nhánh đang hiển thị; hiển thị trạng thái đang tải khi mở rộng nhánh mới.
+- **A2, Lọc theo nhánh:** Family Member lọc cây theo nhánh gia đình (FR-FG-02) hoặc theo thế hệ; hệ thống chỉ hiển thị các thành viên khớp bộ lọc.
+- **A3, Không có dữ liệu:** Gia đình mới chưa có thành viên ngoài Owner, hệ thống hiển thị cây tối thiểu và gợi ý thêm thành viên.
+- **A4, Lỗi tải dữ liệu:** Hệ thống hiển thị thông báo lỗi kèm nút "Thử lại".
 
 **Postconditions**
 
@@ -951,8 +951,8 @@ Family Member chuyển chế độ xem từ "Cây thế hệ" sang "Đồ thị 
 
 **Alternate Flow**
 
-- **A1 — Đồ thị quá dày:** Hệ thống tự động ẩn các cạnh gián tiếp khi số lượng cạnh vượt ngưỡng hiển thị, chỉ giữ quan hệ trực tiếp.
-- **A2 — Chưa có quan hệ:** Hiển thị thông báo hướng dẫn Family Owner thiết lập quan hệ (FR-FG-04, FR-FG-05).
+- **A1, Đồ thị quá dày:** Hệ thống tự động ẩn các cạnh gián tiếp khi số lượng cạnh vượt ngưỡng hiển thị, chỉ giữ quan hệ trực tiếp.
+- **A2, Chưa có quan hệ:** Hiển thị thông báo hướng dẫn Family Owner thiết lập quan hệ (FR-FG-04, FR-FG-05).
 
 **Postconditions**
 
@@ -981,7 +981,7 @@ Family Member
 
 **Supporting Actors**
 
-- AI Service (sinh mô tả quan hệ bằng ngôn ngữ tự nhiên — hỗ trợ FR-AI-03)
+- AI Service (sinh mô tả quan hệ bằng ngôn ngữ tự nhiên, hỗ trợ FR-AI-03)
 
 **Preconditions**
 
@@ -1005,9 +1005,9 @@ Family Member mở trang tra cứu quan hệ, chọn hai thành viên và nhấn
 
 **Alternate Flow**
 
-- **A1 — Không tìm thấy đường đi:** Hai thành viên chưa có quan hệ được thiết lập; hệ thống thông báo "Chưa xác định được quan hệ" và gợi ý kiểm tra dữ liệu gia phả.
-- **A2 — A trùng B:** Hệ thống báo lỗi "Vui lòng chọn hai thành viên khác nhau".
-- **A3 — Đường đi không duy nhất:** Hệ thống hiển thị quan hệ ngắn nhất và thông báo có các đường quan hệ khác (xem thêm nếu muốn).
+- **A1, Không tìm thấy đường đi:** Hai thành viên chưa có quan hệ được thiết lập; hệ thống thông báo "Chưa xác định được quan hệ" và gợi ý kiểm tra dữ liệu gia phả.
+- **A2, A trùng B:** Hệ thống báo lỗi "Vui lòng chọn hai thành viên khác nhau".
+- **A3, Đường đi không duy nhất:** Hệ thống hiển thị quan hệ ngắn nhất và thông báo có các đường quan hệ khác (xem thêm nếu muốn).
 
 **Postconditions**
 
@@ -1023,7 +1023,7 @@ Family Member biết chính xác quan hệ giữa hai thành viên bất kỳ, k
 High
 
 ---
-### 4.4.3 Module 3 — Community
+### 4.4.3 Module 3, Community
 
 **Tên module:** Community
 
@@ -1077,10 +1077,10 @@ Family Member mở trang cộng đồng và gửi bài viết mới.
 
 **Alternate Flow**
 
-- **A1 — Sửa bài viết:** Người đăng mở bài viết của mình, chỉnh sửa và lưu; hệ thống cập nhật nội dung và đánh dấu thời gian chỉnh sửa.
-- **A2 — Xóa bài viết:** Người đăng xóa bài viết; hệ thống xóa mềm (ẩn khỏi mọi người) và ghi audit log.
-- **A3 — Nội dung vi phạm:** Nếu hệ thống phát hiện (từ khóa bị chặn) hoặc Administrator gỡ bài (FR-ADM-02), bài viết chuyển trạng thái *Removed*, người đăng nhận thông báo lý do.
-- **A4 — File không hợp lệ:** Hệ thống báo lỗi loại/kích thước file và chặn đăng.
+- **A1, Sửa bài viết:** Người đăng mở bài viết của mình, chỉnh sửa và lưu; hệ thống cập nhật nội dung và đánh dấu thời gian chỉnh sửa.
+- **A2, Xóa bài viết:** Người đăng xóa bài viết; hệ thống xóa mềm (ẩn khỏi mọi người) và ghi audit log.
+- **A3, Nội dung vi phạm:** Nếu hệ thống phát hiện (từ khóa bị chặn) hoặc Administrator gỡ bài (FR-ADM-02), bài viết chuyển trạng thái *Removed*, người đăng nhận thông báo lý do.
+- **A4, File không hợp lệ:** Hệ thống báo lỗi loại/kích thước file và chặn đăng.
 
 **Postconditions**
 
@@ -1130,10 +1130,10 @@ Family Member mở một bài viết trong luồng cộng đồng và bình lu�
 
 **Alternate Flow**
 
-- **A1 — Sửa/xóa bình luận:** Người bình luận sửa hoặc xóa bình luận của mình; hệ thống cập nhật ngay.
-- **A2 — Xóa bình luận của người khác:** Người đăng bài chọn xóa bình luận vi phạm trên bài viết của mình; hệ thống xóa và ghi audit log.
-- **A3 — Bỏ cảm xúc:** Family Member chọn lại cùng cảm xúc để gỡ; hệ thống giảm số đếm.
-- **A4 — Bình luận trống:** Hệ thống chặn gửi bình luận không có nội dung.
+- **A1, Sửa/xóa bình luận:** Người bình luận sửa hoặc xóa bình luận của mình; hệ thống cập nhật ngay.
+- **A2, Xóa bình luận của người khác:** Người đăng bài chọn xóa bình luận vi phạm trên bài viết của mình; hệ thống xóa và ghi audit log.
+- **A3, Bỏ cảm xúc:** Family Member chọn lại cùng cảm xúc để gỡ; hệ thống giảm số đếm.
+- **A4, Bình luận trống:** Hệ thống chặn gửi bình luận không có nội dung.
 
 **Postconditions**
 
@@ -1154,7 +1154,7 @@ Medium
 
 **Description**
 
-Hệ thống cung cấp kênh tin tức gia đình (family news feed): Family Member có thể đăng tin tức như sinh nhật, lễ cưới, thành tựu học tập, tin buồn — với định dạng có cấu trúc (loại tin, ngày diễn ra, thành viên liên quan). Tin tức được đánh dấu riêng so với bài viết thường và xuất hiện ở vị trí ưu tiên trên luồng.
+Hệ thống cung cấp kênh tin tức gia đình (family news feed): Family Member có thể đăng tin tức như sinh nhật, lễ cưới, thành tựu học tập, tin buồn, với định dạng có cấu trúc (loại tin, ngày diễn ra, thành viên liên quan). Tin tức được đánh dấu riêng so với bài viết thường và xuất hiện ở vị trí ưu tiên trên luồng.
 
 **Primary Actor**
 
@@ -1183,9 +1183,9 @@ Family Member chọn "Đăng tin gia đình" từ luồng cộng đồng.
 
 **Alternate Flow**
 
-- **A1 — Sửa/xóa tin:** Người đăng sửa hoặc xóa tin tức của mình trong thời gian cho phép (7 ngày); quá hạn phải nhờ Administrator.
-- **A2 — Gắn tin quan trọng:** Family Owner ghim tin tức quan trọng lên đầu luồng trong tối đa 7 ngày.
-- **A3 — Nội dung nhạy cảm:** Tin buồn được hiển thị với giao diện trang trọng hơn; hệ thống không tự động đề xuất cảm xúc "thích" cho loại tin này.
+- **A1, Sửa/xóa tin:** Người đăng sửa hoặc xóa tin tức của mình trong thời gian cho phép (7 ngày); quá hạn phải nhờ Administrator.
+- **A2, Gắn tin quan trọng:** Family Owner ghim tin tức quan trọng lên đầu luồng trong tối đa 7 ngày.
+- **A3, Nội dung nhạy cảm:** Tin buồn được hiển thị với giao diện trang trọng hơn; hệ thống không tự động đề xuất cảm xúc "thích" cho loại tin này.
 
 **Postconditions**
 
@@ -1236,10 +1236,10 @@ Family Member chọn "Chia sẻ ảnh" và gửi ảnh từ thiết bị.
 
 **Alternate Flow**
 
-- **A1 — Ảnh vượt giới hạn:** Hệ thống từ chối ảnh quá kích thước hoặc định dạng không hỗ trợ (JPG, PNG, WebP, HEIC), báo lỗi cụ thể từng ảnh.
-- **A2 — Xóa ảnh:** Người đăng hoặc Family Owner xóa ảnh; hệ thống xóa mềm khỏi luồng và album, ghi audit log.
-- **A3 — Gắn thẻ sai:** Người được gắn thẻ có thể gỡ thẻ chính mình khỏi ảnh.
-- **A4 — Tải lên thất bại:** Hệ thống giữ nguyên tiến trình, cho phép thử lại từng ảnh lỗi.
+- **A1, Ảnh vượt giới hạn:** Hệ thống từ chối ảnh quá kích thước hoặc định dạng không hỗ trợ (JPG, PNG, WebP, HEIC), báo lỗi cụ thể từng ảnh.
+- **A2, Xóa ảnh:** Người đăng hoặc Family Owner xóa ảnh; hệ thống xóa mềm khỏi luồng và album, ghi audit log.
+- **A3, Gắn thẻ sai:** Người được gắn thẻ có thể gỡ thẻ chính mình khỏi ảnh.
+- **A4, Tải lên thất bại:** Hệ thống giữ nguyên tiến trình, cho phép thử lại từng ảnh lỗi.
 
 **Postconditions**
 
@@ -1291,9 +1291,9 @@ Family Owner chọn "Tạo thông báo" trên trang cộng đồng.
 
 **Alternate Flow**
 
-- **A1 — Hẹn giờ gửi:** Hệ thống xếp hàng thông báo và tự động phát hành đúng giờ.
-- **A2 — Sửa/Thu hồi:** Family Owner sửa nội dung hoặc thu hồi thông báo đã gửi; thành viên nhận bản cập nhật kèm dấu hiệu đã chỉnh sửa.
-- **A3 — Thông báo khẩn cấp:** Thông báo loại khẩn cấp được gửi qua tất cả kênh (kể cả email/push) bất kể cấu hình cá nhân; mức thông thường chỉ gửi in-app.
+- **A1, Hẹn giờ gửi:** Hệ thống xếp hàng thông báo và tự động phát hành đúng giờ.
+- **A2, Sửa/Thu hồi:** Family Owner sửa nội dung hoặc thu hồi thông báo đã gửi; thành viên nhận bản cập nhật kèm dấu hiệu đã chỉnh sửa.
+- **A3, Thông báo khẩn cấp:** Thông báo loại khẩn cấp được gửi qua tất cả kênh (kể cả email/push) bất kể cấu hình cá nhân; mức thông thường chỉ gửi in-app.
 
 **Postconditions**
 
@@ -1310,7 +1310,7 @@ High
 
 ---
 
-### 4.4.4 Module 4 — Events
+### 4.4.4 Module 4, Events
 
 **Tên module:** Events
 
@@ -1364,10 +1364,10 @@ Family Member chọn "Tạo sự kiện" trên trang sự kiện của gia đìn
 
 **Alternate Flow**
 
-- **A1 — Sửa sự kiện:** Event Owner hoặc Family Owner cập nhật thông tin; hệ thống gửi thông báo thay đổi cho người đã RSVP.
-- **A2 — Hủy sự kiện:** Event Owner hủy sự kiện kèm lý do; hệ thống thông báo cho toàn bộ người tham gia và khóa RSVP.
-- **A3 — Lịch trùng:** Hệ thống cảnh báo nếu sự kiện trùng thời gian với sự kiện khác của cùng gia đình (không chặn).
-- **A4 — Số lượng khách ngoài giới hạn:** Mỗi sự kiện tối đa 50 khách ngoài để tránh lạm dụng.
+- **A1, Sửa sự kiện:** Event Owner hoặc Family Owner cập nhật thông tin; hệ thống gửi thông báo thay đổi cho người đã RSVP.
+- **A2, Hủy sự kiện:** Event Owner hủy sự kiện kèm lý do; hệ thống thông báo cho toàn bộ người tham gia và khóa RSVP.
+- **A3, Lịch trùng:** Hệ thống cảnh báo nếu sự kiện trùng thời gian với sự kiện khác của cùng gia đình (không chặn).
+- **A4, Số lượng khách ngoài giới hạn:** Mỗi sự kiện tối đa 50 khách ngoài để tránh lạm dụng.
 
 **Postconditions**
 
@@ -1417,9 +1417,9 @@ Khách mời mở trang chi tiết sự kiện (hoặc link RSVP) và chọn tr�
 
 **Alternate Flow**
 
-- **A1 — Đổi trạng thái:** Khách mời chọn trạng thái khác; hệ thống ghi đè trạng thái cũ và cập nhật số liệu.
-- **A2 — Khóa RSVP:** Event Owner khóa danh sách trước sự kiện 24 giờ; hệ thống chặn mọi thay đổi và hiển thị "RSVP đã đóng".
-- **A3 — Khách ngoài không nhận email:** Event Owner gửi lại thư mời hoặc sao chép link RSVP gửi trực tiếp.
+- **A1, Đổi trạng thái:** Khách mời chọn trạng thái khác; hệ thống ghi đè trạng thái cũ và cập nhật số liệu.
+- **A2, Khóa RSVP:** Event Owner khóa danh sách trước sự kiện 24 giờ; hệ thống chặn mọi thay đổi và hiển thị "RSVP đã đóng".
+- **A3, Khách ngoài không nhận email:** Event Owner gửi lại thư mời hoặc sao chép link RSVP gửi trực tiếp.
 
 **Postconditions**
 
@@ -1471,9 +1471,9 @@ Event Owner mở trang "Người tham gia" của sự kiện.
 
 **Alternate Flow**
 
-- **A1 — Khách ngoài cần nhập danh sách:** Event Owner nhập danh sách email hàng loạt (tối đa 50/lần); hệ thống tạo thư mời cho từng email.
-- **A2 — Người tham gia vượt sức chứa:** Hệ thống cảnh báo khi số Going vượt sức chứa khai báo của địa điểm (nếu có).
-- **A3 — Xóa nhầm:** Hệ thống yêu cầu xác nhận trước khi xóa khách khỏi danh sách.
+- **A1, Khách ngoài cần nhập danh sách:** Event Owner nhập danh sách email hàng loạt (tối đa 50/lần); hệ thống tạo thư mời cho từng email.
+- **A2, Người tham gia vượt sức chứa:** Hệ thống cảnh báo khi số Going vượt sức chứa khai báo của địa điểm (nếu có).
+- **A3, Xóa nhầm:** Hệ thống yêu cầu xác nhận trước khi xóa khách khỏi danh sách.
 
 **Postconditions**
 
@@ -1507,7 +1507,7 @@ Family Member
 **Preconditions**
 
 1. Family Member đã đăng nhập (FR-US-02).
-2. Family Member là người tham gia sự kiện (RSVP Going — FR-EVT-02).
+2. Family Member là người tham gia sự kiện (RSVP Going, FR-EVT-02).
 
 **Trigger**
 
@@ -1524,9 +1524,9 @@ Family Member mở trang thư viện ảnh của sự kiện và tải ảnh lê
 
 **Alternate Flow**
 
-- **A1 — Xóa ảnh:** Người tải hoặc Event Owner xóa ảnh khỏi album; ghi audit log.
-- **A2 — Tải lên khi chưa kết thúc:** Cho phép tải ảnh ngay trong sự kiện (livestream-like) và sau khi kết thúc tối đa 30 ngày.
-- **A3 — Khách ngoài tải ảnh:** Khách ngoài truy cập qua link album với token tạm, chỉ tải lên/xem, không thấy dữ liệu khác của gia đình.
+- **A1, Xóa ảnh:** Người tải hoặc Event Owner xóa ảnh khỏi album; ghi audit log.
+- **A2, Tải lên khi chưa kết thúc:** Cho phép tải ảnh ngay trong sự kiện (livestream-like) và sau khi kết thúc tối đa 30 ngày.
+- **A3, Khách ngoài tải ảnh:** Khách ngoài truy cập qua link album với token tạm, chỉ tải lên/xem, không thấy dữ liệu khác của gia đình.
 
 **Postconditions**
 
@@ -1578,10 +1578,10 @@ Hệ thống Scheduler kích hoạt đúng mốc thời gian nhắc nhở (tự 
 
 **Alternate Flow**
 
-- **A1 — Tắt nhắc nhở:** Người dùng tắt nhắc cho sự kiện; hệ thống loại khỏi danh sách nhận.
-- **A2 — Sự kiện thay đổi thời gian:** Hệ thống tính lại các mốc nhắc nhở theo thời gian mới.
-- **A3 — Sự kiện bị hủy:** Hệ thống gửi thông báo hủy và không còn nhắc nhở.
-- **A4 — Kênh gửi lỗi:** Thất bại ở một kênh không ảnh hưởng kênh khác; hệ thống thử lại tối đa 2 lần.
+- **A1, Tắt nhắc nhở:** Người dùng tắt nhắc cho sự kiện; hệ thống loại khỏi danh sách nhận.
+- **A2, Sự kiện thay đổi thời gian:** Hệ thống tính lại các mốc nhắc nhở theo thời gian mới.
+- **A3, Sự kiện bị hủy:** Hệ thống gửi thông báo hủy và không còn nhắc nhở.
+- **A4, Kênh gửi lỗi:** Thất bại ở một kênh không ảnh hưởng kênh khác; hệ thống thử lại tối đa 2 lần.
 
 **Postconditions**
 
@@ -1598,7 +1598,7 @@ High
 
 ---
 
-### 4.4.5 Module 5 — Family Directory
+### 4.4.5 Module 5, Family Directory
 
 **Tên module:** Family Directory
 
@@ -1648,8 +1648,8 @@ Family Member mở trang "Danh bạ" của gia đình.
 
 **Alternate Flow**
 
-- **A1 — Thông tin liên hệ ẩn:** Nếu thành viên đặt riêng tư, hệ thống chỉ hiển thị nút "Gửi tin nhắn qua hệ thống" thay vì SĐT/email trực tiếp.
-- **A2 — Danh bạ trống:** Gia đình mới chưa có đủ thành viên; hệ thống hiển thị gợi ý mời thêm thành viên (FR-FG-03).
+- **A1, Thông tin liên hệ ẩn:** Nếu thành viên đặt riêng tư, hệ thống chỉ hiển thị nút "Gửi tin nhắn qua hệ thống" thay vì SĐT/email trực tiếp.
+- **A2, Danh bạ trống:** Gia đình mới chưa có đủ thành viên; hệ thống hiển thị gợi ý mời thêm thành viên (FR-FG-03).
 
 **Postconditions**
 
@@ -1700,8 +1700,8 @@ Family Member mở mục "Nghề nghiệp" trong hồ sơ và cập nhật thôn
 
 **Alternate Flow**
 
-- **A1 — Nghề nghiệp không thuộc danh mục:** Hệ thống cho phép nhập tự do và gắn nhãn "Khác".
-- **A2 — Cập nhật hộ thành viên chưa có tài khoản:** Family Owner cập nhật hồ sơ nghề nghiệp hộ; khi thành viên liên kết tài khoản, dữ liệu được giữ nguyên.
+- **A1, Nghề nghiệp không thuộc danh mục:** Hệ thống cho phép nhập tự do và gắn nhãn "Khác".
+- **A2, Cập nhật hộ thành viên chưa có tài khoản:** Family Owner cập nhật hồ sơ nghề nghiệp hộ; khi thành viên liên kết tài khoản, dữ liệu được giữ nguyên.
 
 **Postconditions**
 
@@ -1752,8 +1752,8 @@ Family Member mở mục "Học vấn" trong hồ sơ và thêm bản ghi học 
 
 **Alternate Flow**
 
-- **A1 — Đang học:** Trường "năm tốt nghiệp" được để trống; hệ thống hiển thị "Đang học".
-- **A2 — Dữ liệu lỗi:** Hệ thống báo lỗi năm không hợp lệ và chặn lưu.
+- **A1, Đang học:** Trường "năm tốt nghiệp" được để trống; hệ thống hiển thị "Đang học".
+- **A2, Dữ liệu lỗi:** Hệ thống báo lỗi năm không hợp lệ và chặn lưu.
 
 **Postconditions**
 
@@ -1782,7 +1782,7 @@ Family Member
 
 **Supporting Actors**
 
-- AI Service (xếp hạng liên quan nâng cao — tùy chọn)
+- AI Service (xếp hạng liên quan nâng cao, tùy chọn)
 
 **Preconditions**
 
@@ -1804,9 +1804,9 @@ Family Member mở trang tìm kiếm thành viên và nhập bộ lọc.
 
 **Alternate Flow**
 
-- **A1 — Không có kết quả:** Hệ thống gợi ý giảm bớt bộ lọc hoặc tìm với từ khóa khác.
-- **A2 — Tìm kiếm ẩn danh tính:** Kết quả tôn trọng cài đặt riêng tư — thành viên không cho hiển thị thông tin nghề nghiệp sẽ không xuất hiện khi tìm theo nghề nghiệp.
-- **A3 — Lưu bộ lọc:** Family Member lưu bộ lọc tìm kiếm để dùng lại (tối đa 10 bộ lọc đã lưu).
+- **A1, Không có kết quả:** Hệ thống gợi ý giảm bớt bộ lọc hoặc tìm với từ khóa khác.
+- **A2, Tìm kiếm ẩn danh tính:** Kết quả tôn trọng cài đặt riêng tư, thành viên không cho hiển thị thông tin nghề nghiệp sẽ không xuất hiện khi tìm theo nghề nghiệp.
+- **A3, Lưu bộ lọc:** Family Member lưu bộ lọc tìm kiếm để dùng lại (tối đa 10 bộ lọc đã lưu).
 
 **Postconditions**
 
@@ -1823,7 +1823,7 @@ High
 
 ---
 
-### 4.4.6 Module 6 — Family Heritage
+### 4.4.6 Module 6, Family Heritage
 
 **Tên module:** Family Heritage
 
@@ -1875,10 +1875,10 @@ Family Owner mở trang "Tư liệu lịch sử" và tải lên tư liệu mới
 
 **Alternate Flow**
 
-- **A1 — Sửa thông tin tư liệu:** Người tạo/Family Owner cập nhật mô tả, niên đại; hệ thống lưu lịch sử phiên bản.
-- **A2 — Xóa tư liệu:** Xóa mềm với xác nhận; tư liệu ẩn khỏi mọi người và ghi audit log.
-- **A3 — Gán nhánh cho tư liệu:** Tư liệu có thể gắn với nhánh cụ thể để lọc theo nhánh (FR-FG-02).
-- **A4 — Tư liệu trùng lặp:** Hệ thống cảnh báo nếu phát hiện file trùng hash với tư liệu hiện có.
+- **A1, Sửa thông tin tư liệu:** Người tạo/Family Owner cập nhật mô tả, niên đại; hệ thống lưu lịch sử phiên bản.
+- **A2, Xóa tư liệu:** Xóa mềm với xác nhận; tư liệu ẩn khỏi mọi người và ghi audit log.
+- **A3, Gán nhánh cho tư liệu:** Tư liệu có thể gắn với nhánh cụ thể để lọc theo nhánh (FR-FG-02).
+- **A4, Tư liệu trùng lặp:** Hệ thống cảnh báo nếu phát hiện file trùng hash với tư liệu hiện có.
 
 **Postconditions**
 
@@ -1929,10 +1929,10 @@ Family Member chọn "Viết câu chuyện" trong kho di sản.
 
 **Alternate Flow**
 
-- **A1 — Lưu nháp:** Câu chuyện lưu ở trạng thái *Draft*, chỉ người viết thấy; có thể đăng sau.
-- **A2 — Sửa/xóa:** Người viết sửa hoặc xóa câu chuyện của mình; xóa phải có xác nhận.
-- **A3 — Nội dung vi phạm:** Câu chuyện bị gỡ nếu vi phạm chính sách nội dung (FR-ADM-02).
-- **A4 — Chuyển quyền sở hữu:** Nếu người viết rời gia đình, Family Owner nhận quyền quản lý câu chuyện.
+- **A1, Lưu nháp:** Câu chuyện lưu ở trạng thái *Draft*, chỉ người viết thấy; có thể đăng sau.
+- **A2, Sửa/xóa:** Người viết sửa hoặc xóa câu chuyện của mình; xóa phải có xác nhận.
+- **A3, Nội dung vi phạm:** Câu chuyện bị gỡ nếu vi phạm chính sách nội dung (FR-ADM-02).
+- **A4, Chuyển quyền sở hữu:** Nếu người viết rời gia đình, Family Owner nhận quyền quản lý câu chuyện.
 
 **Postconditions**
 
@@ -1983,9 +1983,9 @@ Family Owner mở mục "Thành viên tiêu biểu" và tạo hồ sơ tôn vinh
 
 **Alternate Flow**
 
-- **A1 — Đề xuất của thành viên:** Family Member gửi đề xuất; Family Owner duyệt hoặc từ chối kèm lý do.
-- **A2 — Sửa/xóa hồ sơ:** Family Owner cập nhật thành tựu hoặc gỡ hồ sơ khi cần.
-- **A3 — Trùng lặp:** Hệ thống chặn tạo hồ sơ tiêu biểu cho thành viên đã có.
+- **A1, Đề xuất của thành viên:** Family Member gửi đề xuất; Family Owner duyệt hoặc từ chối kèm lý do.
+- **A2, Sửa/xóa hồ sơ:** Family Owner cập nhật thành tựu hoặc gỡ hồ sơ khi cần.
+- **A3, Trùng lặp:** Hệ thống chặn tạo hồ sơ tiêu biểu cho thành viên đã có.
 
 **Postconditions**
 
@@ -2036,9 +2036,9 @@ Family Member mở trang "Thư viện ảnh" của gia đình.
 
 **Alternate Flow**
 
-- **A1 — Tìm ảnh cũ:** Family Member tìm theo năm/thẻ/người; hệ thống lọc ảnh khớp.
-- **A2 — Tạo album:** Family Member tạo album riêng để tổ chức ảnh theo ý mình (album cá nhân, không ảnh hưởng album chung).
-- **A3 — Ảnh nhạy cảm:** Family Member đánh dấu ảnh riêng tư; chỉ người được chỉ định xem.
+- **A1, Tìm ảnh cũ:** Family Member tìm theo năm/thẻ/người; hệ thống lọc ảnh khớp.
+- **A2, Tạo album:** Family Member tạo album riêng để tổ chức ảnh theo ý mình (album cá nhân, không ảnh hưởng album chung).
+- **A3, Ảnh nhạy cảm:** Family Member đánh dấu ảnh riêng tư; chỉ người được chỉ định xem.
 
 **Postconditions**
 
@@ -2089,9 +2089,9 @@ Family Owner mở trang "Kho lưu trữ" của gia đình.
 
 **Alternate Flow**
 
-- **A1 — Tìm kiếm nâng cao:** Family Member dùng tìm kiếm ngữ nghĩa AI (FR-AI-01) để tìm nội dung di sản.
-- **A2 — Dung lượng đầy:** Hệ thống cảnh báo khi kho đạt 90% hạn mức; Family Owner nén hoặc dọn tư liệu cũ.
-- **A3 — Truy cập hạn chế:** Một số tư liệu nhạy cảm chỉ Family Owner xem; RBAC kiểm soát (FR-US-05).
+- **A1, Tìm kiếm nâng cao:** Family Member dùng tìm kiếm ngữ nghĩa AI (FR-AI-01) để tìm nội dung di sản.
+- **A2, Dung lượng đầy:** Hệ thống cảnh báo khi kho đạt 90% hạn mức; Family Owner nén hoặc dọn tư liệu cũ.
+- **A3, Truy cập hạn chế:** Một số tư liệu nhạy cảm chỉ Family Owner xem; RBAC kiểm soát (FR-US-05).
 
 **Postconditions**
 
@@ -2108,11 +2108,11 @@ High
 
 ---
 
-### 4.4.7 Module 7 — AI-assisted Services
+### 4.4.7 Module 7, AI-assisted Services
 
 **Tên module:** AI-assisted Services
 
-**Mục đích:** Tích hợp trí tuệ nhân tạo như trợ lý thông minh của gia đình: tìm kiếm ngữ nghĩa, trợ lý tri thức, giải thích quan hệ, tóm tắt nội dung và gợi ý cá nhân hóa. AI giúp người dùng khám phá tri thức gia đình hiệu quả hơn, không thay thế quyết định của con người — mọi phản hồi AI đều là gợi ý, người dùng chịu trách nhiệm cuối cùng.
+**Mục đích:** Tích hợp trí tuệ nhân tạo như trợ lý thông minh của gia đình: tìm kiếm ngữ nghĩa, trợ lý tri thức, giải thích quan hệ, tóm tắt nội dung và gợi ý cá nhân hóa. AI giúp người dùng khám phá tri thức gia đình hiệu quả hơn, không thay thế quyết định của con người, mọi phản hồi AI đều là gợi ý, người dùng chịu trách nhiệm cuối cùng.
 
 **Danh sách chức năng:**
 
@@ -2143,7 +2143,7 @@ Family Member
 **Preconditions**
 
 1. Family Member đã đăng nhập (FR-US-02).
-2. Family Member thuộc gia đình (FR-US-07) — kết quả chỉ trong phạm vi quyền của người dùng.
+2. Family Member thuộc gia đình (FR-US-07), kết quả chỉ trong phạm vi quyền của người dùng.
 3. AI Service khả dụng (dịch vụ hoạt động).
 
 **Trigger**
@@ -2161,10 +2161,10 @@ Family Member nhập câu hỏi vào ô tìm kiếm và nhấn tìm kiếm.
 
 **Alternate Flow**
 
-- **A1 — Không có kết quả phù hợp:** Hệ thống gợi ý truy vấn khác hoặc tìm kiếm từ khóa truyền thống.
-- **A2 — AI Service không khả dụng:** Hệ thống tự động fallback về tìm kiếm từ khóa; hiển thị ghi chú "đang dùng chế độ tìm kiếm cơ bản".
-- **A3 — Truy vấn ngoài phạm vi quyền:** Kết quả tự động lọc — không trả về dữ liệu người dùng không có quyền xem.
-- **A4 — Truy vấn không rõ ràng:** AI hỏi lại để làm rõ ý định trước khi tìm.
+- **A1, Không có kết quả phù hợp:** Hệ thống gợi ý truy vấn khác hoặc tìm kiếm từ khóa truyền thống.
+- **A2, AI Service không khả dụng:** Hệ thống tự động fallback về tìm kiếm từ khóa; hiển thị ghi chú "đang dùng chế độ tìm kiếm cơ bản".
+- **A3, Truy vấn ngoài phạm vi quyền:** Kết quả tự động lọc, không trả về dữ liệu người dùng không có quyền xem.
+- **A4, Truy vấn không rõ ràng:** AI hỏi lại để làm rõ ý định trước khi tìm.
 
 **Postconditions**
 
@@ -2185,7 +2185,7 @@ High
 
 **Description**
 
-Hệ thống cung cấp trợ lý ảo (AI Assistant) cho phép Family Member hỏi đáp bằng ngôn ngữ tự nhiên về mọi khía cạnh của gia đình: lịch sử, cấu trúc gia phả, thành viên, sự kiện, di sản. Trợ lý trả lời dựa trên dữ liệu gia đình đã được phép truy cập (RAG — Retrieval Augmented Generation), luôn trích dẫn nguồn. Trợ lý không trả lời các câu hỏi ngoài phạm vi dữ liệu gia đình.
+Hệ thống cung cấp trợ lý ảo (AI Assistant) cho phép Family Member hỏi đáp bằng ngôn ngữ tự nhiên về mọi khía cạnh của gia đình: lịch sử, cấu trúc gia phả, thành viên, sự kiện, di sản. Trợ lý trả lời dựa trên dữ liệu gia đình đã được phép truy cập (RAG, Retrieval Augmented Generation), luôn trích dẫn nguồn. Trợ lý không trả lời các câu hỏi ngoài phạm vi dữ liệu gia đình.
 
 **Primary Actor**
 
@@ -2217,10 +2217,10 @@ Family Member mở cửa sổ trợ lý AI và gửi câu hỏi.
 
 **Alternate Flow**
 
-- **A1 — Không tìm thấy dữ liệu:** Trợ lý trả lời "Chưa có thông tin trong dữ liệu gia đình" và gợi ý kiểm tra gia phả.
-- **A2 — Câu hỏi ngoài phạm vi:** Trợ lý từ chối nhẹ nhàng và đề nghị câu hỏi về gia đình.
-- **A3 — AI Service lỗi:** Hệ thống hiển thị thông báo lỗi, cho phép thử lại; hội thoại được lưu an toàn.
-- **A4 — Ngữ cảnh thiếu:** Trợ lý hỏi lại thông tin bổ sung (tên đầy đủ, nhánh nào...).
+- **A1, Không tìm thấy dữ liệu:** Trợ lý trả lời "Chưa có thông tin trong dữ liệu gia đình" và gợi ý kiểm tra gia phả.
+- **A2, Câu hỏi ngoài phạm vi:** Trợ lý từ chối nhẹ nhàng và đề nghị câu hỏi về gia đình.
+- **A3, AI Service lỗi:** Hệ thống hiển thị thông báo lỗi, cho phép thử lại; hội thoại được lưu an toàn.
+- **A4, Ngữ cảnh thiếu:** Trợ lý hỏi lại thông tin bổ sung (tên đầy đủ, nhánh nào...).
 
 **Postconditions**
 
@@ -2273,9 +2273,9 @@ Family Member nhấn nút "Giải thích bằng AI" tại màn hình tra cứu q
 
 **Alternate Flow**
 
-- **A1 — Đánh giá "sai":** Family Member báo cáo giải thích không chính xác; hệ thống ghi nhận phản hồi để cải thiện (không tự sửa dữ liệu gia phả).
-- **A2 — Không có đường đi:** Nút giải thích bị ẩn/khóa vì không có quan hệ (FR-FG-08, A1).
-- **A3 — AI lỗi:** Hiển thị giải thích cơ bản (tên quan hệ từ đồ thị) kèm thông báo AI tạm không khả dụng.
+- **A1, Đánh giá "sai":** Family Member báo cáo giải thích không chính xác; hệ thống ghi nhận phản hồi để cải thiện (không tự sửa dữ liệu gia phả).
+- **A2, Không có đường đi:** Nút giải thích bị ẩn/khóa vì không có quan hệ (FR-FG-08, A1).
+- **A3, AI lỗi:** Hiển thị giải thích cơ bản (tên quan hệ từ đồ thị) kèm thông báo AI tạm không khả dụng.
 
 **Postconditions**
 
@@ -2327,9 +2327,9 @@ Family Member nhấn nút "Tóm tắt" trên một nội dung dài.
 
 **Alternate Flow**
 
-- **A1 — Nội dung quá ngắn:** Nút tóm tắt bị ẩn hoặc thông báo không cần tóm tắt.
-- **A2 — AI lỗi:** Hệ thống thông báo thử lại sau, nội dung gốc vẫn hiển thị bình thường.
-- **A3 — Tóm tắt nội dung nhạy cảm:** Không tóm tắt tin buồn; chỉ hiển thị nội dung gốc trang trọng.
+- **A1, Nội dung quá ngắn:** Nút tóm tắt bị ẩn hoặc thông báo không cần tóm tắt.
+- **A2, AI lỗi:** Hệ thống thông báo thử lại sau, nội dung gốc vẫn hiển thị bình thường.
+- **A3, Tóm tắt nội dung nhạy cảm:** Không tóm tắt tin buồn; chỉ hiển thị nội dung gốc trang trọng.
 
 **Postconditions**
 
@@ -2379,9 +2379,9 @@ Family Member mở trang chủ hoặc khu vực "Gợi ý cho bạn".
 
 **Alternate Flow**
 
-- **A1 — Chưa đủ dữ liệu:** Hệ thống hiển thị gợi ý cơ bản (thành viên cùng nhánh, tài liệu mới nhất) thay vì gợi ý cá nhân hóa.
-- **A2 — Quyền riêng tư:** Gợi ý chỉ dùng dữ liệu trong phạm vi quyền; không gợi ý thành viên đã ẩn hồ sơ.
-- **A3 — Tắt gợi ý:** Family Member tắt toàn bộ gợi ý trong cài đặt; hệ thống ngừng tính toán gợi ý cho tài khoản.
+- **A1, Chưa đủ dữ liệu:** Hệ thống hiển thị gợi ý cơ bản (thành viên cùng nhánh, tài liệu mới nhất) thay vì gợi ý cá nhân hóa.
+- **A2, Quyền riêng tư:** Gợi ý chỉ dùng dữ liệu trong phạm vi quyền; không gợi ý thành viên đã ẩn hồ sơ.
+- **A3, Tắt gợi ý:** Family Member tắt toàn bộ gợi ý trong cài đặt; hệ thống ngừng tính toán gợi ý cho tài khoản.
 
 **Postconditions**
 
@@ -2398,7 +2398,7 @@ Low
 
 ---
 
-### 4.4.8 Module 8 — Dashboard & Reporting
+### 4.4.8 Module 8, Dashboard & Reporting
 
 **Tên module:** Dashboard & Reporting
 
@@ -2449,8 +2449,8 @@ Family Owner mở trang "Thống kê gia đình".
 
 **Alternate Flow**
 
-- **A1 — Gia đình chưa có dữ liệu:** Hiển thị trạng thái trống và hướng dẫn thêm thành viên.
-- **A2 — Số liệu không chính xác:** Family Owner kiểm tra lại dữ liệu gốc; hệ thống chỉ hiển thị, không tự sửa.
+- **A1, Gia đình chưa có dữ liệu:** Hiển thị trạng thái trống và hướng dẫn thêm thành viên.
+- **A2, Số liệu không chính xác:** Family Owner kiểm tra lại dữ liệu gốc; hệ thống chỉ hiển thị, không tự sửa.
 
 **Postconditions**
 
@@ -2500,8 +2500,8 @@ Family Member mở trang "Hoạt động cộng đồng" trên trang chủ.
 
 **Alternate Flow**
 
-- **A1 — Chưa có hoạt động:** Hiển thị trạng thái trống kèm gợi ý bắt đầu tương tác.
-- **A2 — Quyền hạn:** Family Member chỉ thấy số liệu tổng hợp; danh sách thành viên tích cực chi tiết chỉ Family Owner.
+- **A1, Chưa có hoạt động:** Hiển thị trạng thái trống kèm gợi ý bắt đầu tương tác.
+- **A2, Quyền hạn:** Family Member chỉ thấy số liệu tổng hợp; danh sách thành viên tích cực chi tiết chỉ Family Owner.
 
 **Postconditions**
 
@@ -2551,8 +2551,8 @@ Family Owner mở trang "Thống kê sự kiện".
 
 **Alternate Flow**
 
-- **A1 — Chưa có sự kiện:** Hiển thị trạng thái trống và gợi ý tạo sự kiện đầu tiên.
-- **A2 — Không đủ dữ liệu:** Tỷ lệ tham dự chỉ tính cho sự kiện có ≥ 3 khách mời.
+- **A1, Chưa có sự kiện:** Hiển thị trạng thái trống và gợi ý tạo sự kiện đầu tiên.
+- **A2, Không đủ dữ liệu:** Tỷ lệ tham dự chỉ tính cho sự kiện có ≥ 3 khách mời.
 
 **Postconditions**
 
@@ -2602,8 +2602,8 @@ Family Owner mở trang "Thống kê nhân khẩu".
 
 **Alternate Flow**
 
-- **A1 — Thiếu dữ liệu nhân khẩu:** Biểu đồ hiển thị nhóm "Chưa khai báo"; hệ thống gợi ý cập nhật hồ sơ.
-- **A2 — Bảo mật:** Các nhóm có ít hơn 3 người được gộp vào nhóm "Khác" để tránh nhận diện cá nhân.
+- **A1, Thiếu dữ liệu nhân khẩu:** Biểu đồ hiển thị nhóm "Chưa khai báo"; hệ thống gợi ý cập nhật hồ sơ.
+- **A2, Bảo mật:** Các nhóm có ít hơn 3 người được gộp vào nhóm "Khác" để tránh nhận diện cá nhân.
 
 **Postconditions**
 
@@ -2654,10 +2654,10 @@ Family Owner mở trang "Báo cáo" và chọn tạo báo cáo mới.
 
 **Alternate Flow**
 
-- **A1 — Xuất CSV:** Chỉ xuất dữ liệu thô dạng bảng theo phạm vi đã chọn.
-- **A2 — Báo cáo lịch sử:** Family Owner mở danh sách báo cáo đã tạo, tải lại file cũ.
-- **A3 — Xóa báo cáo:** Family Owner xóa báo cáo cũ; hệ thống ghi audit log.
-- **A4 — Xuất thất bại:** Hệ thống thông báo lỗi và cho phép thử lại.
+- **A1, Xuất CSV:** Chỉ xuất dữ liệu thô dạng bảng theo phạm vi đã chọn.
+- **A2, Báo cáo lịch sử:** Family Owner mở danh sách báo cáo đã tạo, tải lại file cũ.
+- **A3, Xóa báo cáo:** Family Owner xóa báo cáo cũ; hệ thống ghi audit log.
+- **A4, Xuất thất bại:** Hệ thống thông báo lỗi và cho phép thử lại.
 
 **Postconditions**
 
@@ -2674,7 +2674,7 @@ High
 
 ---
 
-### 4.4.9 Module 9 — Administration
+### 4.4.9 Module 9, Administration
 
 **Tên module:** Administration
 
@@ -2726,9 +2726,9 @@ Administrator mở trang "Quản lý người dùng" trong khu vực quản tr�
 
 **Alternate Flow**
 
-- **A1 — Khóa tài khoản:** Tài khoản bị khóa không đăng nhập được (FR-US-02, A3); người dùng nhận email thông báo.
-- **A2 — Đổi vai trò:** Không thể hạ quyền Admin cuối cùng; hệ thống chặn để đảm bảo luôn có người quản trị.
-- **A3 — Tìm không thấy:** Hệ thống hiển thị thông báo không có kết quả.
+- **A1, Khóa tài khoản:** Tài khoản bị khóa không đăng nhập được (FR-US-02, A3); người dùng nhận email thông báo.
+- **A2, Đổi vai trò:** Không thể hạ quyền Admin cuối cùng; hệ thống chặn để đảm bảo luôn có người quản trị.
+- **A3, Tìm không thấy:** Hệ thống hiển thị thông báo không có kết quả.
 
 **Postconditions**
 
@@ -2779,10 +2779,10 @@ Administrator nhận thông báo nội dung mới bị báo cáo, hoặc mở h�
 
 **Alternate Flow**
 
-- **A1 — Phát hiện tự động:** Từ khóa/pattern vi phạm được cờ tự động trước khi người dùng báo cáo.
-- **A2 — Không đủ thông tin:** Administrator yêu cầu thêm ngữ cảnh; hệ thống giữ nội dung ở trạng thái chờ.
-- **A3 — Gỡ nhầm:** Administrator khôi phục nội dung đã gỡ trong vòng 30 ngày; hệ thống ghi đầy đủ lịch sử.
-- **A4 — Báo cáo trùng:** Báo cáo của nhiều người về cùng nội dung được gộp thành một.
+- **A1, Phát hiện tự động:** Từ khóa/pattern vi phạm được cờ tự động trước khi người dùng báo cáo.
+- **A2, Không đủ thông tin:** Administrator yêu cầu thêm ngữ cảnh; hệ thống giữ nội dung ở trạng thái chờ.
+- **A3, Gỡ nhầm:** Administrator khôi phục nội dung đã gỡ trong vòng 30 ngày; hệ thống ghi đầy đủ lịch sử.
+- **A4, Báo cáo trùng:** Báo cáo của nhiều người về cùng nội dung được gộp thành một.
 
 **Postconditions**
 
@@ -2832,9 +2832,9 @@ Sự kiện quan trọng phát sinh (tự động) hoặc Administrator mở tra
 
 **Alternate Flow**
 
-- **A1 — Tra cứu theo tài khoản:** Administrator xem toàn bộ lịch sử hành động của một tài khoản.
-- **A2 — Xuất nhật ký:** Xuất CSV tối đa 10.000 bản ghi/lần; hệ thống cảnh báo nếu vượt.
-- **A3 — Lưu trữ lâu dài:** Nhật ký trên 12 tháng chuyển kho lưu trữ lạnh, vẫn tra cứu được.
+- **A1, Tra cứu theo tài khoản:** Administrator xem toàn bộ lịch sử hành động của một tài khoản.
+- **A2, Xuất nhật ký:** Xuất CSV tối đa 10.000 bản ghi/lần; hệ thống cảnh báo nếu vượt.
+- **A3, Lưu trữ lâu dài:** Nhật ký trên 12 tháng chuyển kho lưu trữ lạnh, vẫn tra cứu được.
 
 **Postconditions**
 
@@ -2886,9 +2886,9 @@ Administrator
 
 **Alternate Flow**
 
-- **A1 — Sao lưu thất bại:** Hệ thống thử lại tối đa 3 lần, gửi cảnh báo cho Administrator và ghi nhật ký lỗi.
-- **A2 — Phục hồi thất bại:** Hệ thống giữ nguyên dữ liệu hiện tại, thông báo lỗi chi tiết, không tự ghi đè.
-- **A3 — Chính sách lưu giữ:** Bản sao lưu giữ tối đa 30 bản; bản cũ nhất tự động bị xóa.
+- **A1, Sao lưu thất bại:** Hệ thống thử lại tối đa 3 lần, gửi cảnh báo cho Administrator và ghi nhật ký lỗi.
+- **A2, Phục hồi thất bại:** Hệ thống giữ nguyên dữ liệu hiện tại, thông báo lỗi chi tiết, không tự ghi đè.
+- **A3, Chính sách lưu giữ:** Bản sao lưu giữ tối đa 30 bản; bản cũ nhất tự động bị xóa.
 
 **Postconditions**
 
@@ -2939,9 +2939,9 @@ Administrator mở trang "Cấu hình hệ thống" và thay đổi tham số.
 
 **Alternate Flow**
 
-- **A1 — Giá trị không hợp lệ:** Hệ thống báo lỗi theo từng trường, không lưu các giá trị sai.
-- **A2 — Tắt dịch vụ AI:** Khi tắt một dịch vụ AI, các chức năng tương ứng hiển thị trạng thái không khả dụng (fallback của FR-AI-01 đến FR-AI-05).
-- **A3 — Khôi phục mặc định:** Administrator khôi phục cấu hình mặc định nhà sản xuất cho một nhóm tham số.
+- **A1, Giá trị không hợp lệ:** Hệ thống báo lỗi theo từng trường, không lưu các giá trị sai.
+- **A2, Tắt dịch vụ AI:** Khi tắt một dịch vụ AI, các chức năng tương ứng hiển thị trạng thái không khả dụng (fallback của FR-AI-01 đến FR-AI-05).
+- **A3, Khôi phục mặc định:** Administrator khôi phục cấu hình mặc định nhà sản xuất cho một nhóm tham số.
 
 **Postconditions**
 
@@ -3111,11 +3111,11 @@ Medium
 ### 4.6.3 Giả định khi phân tích
 
 1. **Actor** dựa trên Stakeholder Analysis (FT8-3): Guest, Family Member, Family Owner, Administrator, AI Service, Notification Service. Nếu FT8-3 thay đổi danh sách actor, cập nhật lại Mục 4.2.1.
-2. **Một người dùng thuộc nhiều gia đình** — mỗi quan hệ thành viên có vai trò riêng theo gia đình (Owner của gia đình A, Member của gia đình B).
+2. **Một người dùng thuộc nhiều gia đình**, mỗi quan hệ thành viên có vai trò riêng theo gia đình (Owner của gia đình A, Member của gia đình B).
 3. **Thành viên "chưa liên kết tài khoản"** tồn tại hợp lệ trong gia phả (do Owner tạo hộ), có thể liên kết tài khoản sau.
 4. **Giới hạn định lượng** (kích thước file, số ký tự, thời gian hiệu lực token, số lần thử) là đề xuất hợp lý của BA, được chốt chính thức khi thiết kế chi tiết.
 5. **Các số liệu thống kê** hiển thị ẩn danh (anonymized) cho nhóm nhỏ hơn 3 người để tránh nhận diện cá nhân.
-6. **AI Service** là dịch vụ nội bộ (self-hosted hoặc API LLM) — ranh giới tích hợp cụ thể thuộc NFR (FT8-7) và thiết kế hệ thống.
+6. **AI Service** là dịch vụ nội bộ (self-hosted hoặc API LLM), ranh giới tích hợp cụ thể thuộc NFR (FT8-7) và thiết kế hệ thống.
 
 ---
 

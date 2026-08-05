@@ -44,12 +44,12 @@ Hệ thống được chia thành các module cốt lõi sau:
 
 Trong Sprint 1, các tài liệu (Deliverables) cần hoàn thành cho giai đoạn Phân tích yêu cầu bao gồm:
 
-1. **Stakeholder Analysis:** Phân tích các bên liên quan — xác định vai trò, nhu cầu, mức độ quan tâm và ảnh hưởng của từng bên đối với dự án. Đầu ra là danh sách các stakeholder và yêu cầu chính của họ.
-2. **Vision & Scope:** Tầm nhìn và phạm vi dự án — mô tả giá trị sản phẩm, đối tượng phục vụ, phạm vi (trong/ngoài) và ràng buộc, làm cơ sở thống nhất giữa các bên.
-3. **Functional Requirements:** Đặc tả các yêu cầu chức năng — phân rã từng module thành các chức năng cụ thể, có mã số (FR-x.y) và tiêu chí chấp nhận.
-4. **Non-functional Requirements:** Đặc tả các yêu cầu phi chức năng — hiệu năng, bảo mật, khả dụng, tương thích, khả năng mở rộng.
+1. **Stakeholder Analysis:** Phân tích các bên liên quan, xác định vai trò, nhu cầu, mức độ quan tâm và ảnh hưởng của từng bên đối với dự án. Đầu ra là danh sách các stakeholder và yêu cầu chính của họ.
+2. **Vision & Scope:** Tầm nhìn và phạm vi dự án, mô tả giá trị sản phẩm, đối tượng phục vụ, phạm vi (trong/ngoài) và ràng buộc, làm cơ sở thống nhất giữa các bên.
+3. **Functional Requirements:** Đặc tả các yêu cầu chức năng, phân rã từng module thành các chức năng cụ thể, có mã số (FR-x.y) và tiêu chí chấp nhận.
+4. **Non-functional Requirements:** Đặc tả các yêu cầu phi chức năng, hiệu năng, bảo mật, khả dụng, tương thích, khả năng mở rộng.
 5. **Use Case Diagram:** Sơ đồ Use Case tổng quan và chi tiết cho từng module.
-6. **Use Case Specification:** Đặc tả chi tiết kịch bản cho từng Use Case — bao gồm tác nhân, tiền điều kiện, luồng chính, luồng thay thế và hậu điều kiện.
+6. **Use Case Specification:** Đặc tả chi tiết kịch bản cho từng Use Case, bao gồm tác nhân, tiền điều kiện, luồng chính, luồng thay thế và hậu điều kiện.
 
 ### 4.1. Trình tự thực hiện
 
