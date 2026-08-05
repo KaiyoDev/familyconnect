@@ -1,4 +1,12 @@
-# 06. USE CASE DIAGRAM - HỆ THỐNG FAMILYCONNECT
+# 06. Use Case Diagram
+
+> **Dự án:** FamilyConnect, Nền tảng Cộng đồng Gia đình số tích hợp Trí tuệ nhân tạo
+> **Tài liệu:** Sơ đồ Use Case (Use Case Diagram)
+> **Jira:** [FT8-8](https://familyconnect.atlassian.net/browse/FT8-8), Xây dựng Use Case Diagram
+> **Thuộc Epic:** FT8-4, Phân tích yêu cầu hệ thống (Sprint 1)
+> **Trạng thái:** Draft v1.0
+
+---
 
 ## 1. Mục tiêu
 Xây dựng Use Case Diagram cho hệ thống FamilyConnect nhằm mô hình hóa các chức năng chính và mối quan hệ giữa các Actor với hệ thống. Sơ đồ Use Case là cơ sở để đặc tả Use Case chi tiết và thiết kế hệ thống trong các Sprint tiếp theo.
