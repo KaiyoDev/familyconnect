@@ -1,4 +1,12 @@
-# Non-Functional Requirements (Yêu cầu phi chức năng) - FamilyConnect
+# 05. Non-Functional Requirements
+
+> **Dự án:** FamilyConnect, Nền tảng Cộng đồng Gia đình số tích hợp Trí tuệ nhân tạo
+> **Tài liệu:** Yêu cầu Phi chức năng (Non-Functional Requirements Specification)
+> **Jira:** [FT8-7](https://familyconnect.atlassian.net/browse/FT8-7), Phân tích yêu cầu phi chức năng
+> **Thuộc Epic:** FT8-4, Phân tích yêu cầu hệ thống (Sprint 1)
+> **Trạng thái:** Draft v1.0
+
+---
 
 Tài liệu này xác định các tiêu chí về chất lượng, hiệu năng, bảo mật, khả năng mở rộng và các ràng buộc kỹ thuật của nền tảng **FamilyConnect**, làm cơ sở để thiết kế kiến trúc hệ thống và đánh giá chất lượng phần mềm trong các giai đoạn tiếp theo.
 
