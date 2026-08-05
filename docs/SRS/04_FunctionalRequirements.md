@@ -4,7 +4,7 @@
 > **Tài liệu:** Đặc tả yêu cầu chức năng (Functional Requirements Specification)
 > **Jira:** [FT8-6](https://familyconnect.atlassian.net/browse/FT8-6), Phân tích yêu cầu chức năng
 > **Thuộc Epic:** FT8-4, Phân tích yêu cầu hệ thống (Sprint 1)
-> **Trạng thái:** Draft v1.0
+> **Trạng thái:** Final v1.0
 
 ---
 
