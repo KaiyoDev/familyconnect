@@ -4,7 +4,7 @@
 > **Tài liệu:** Sơ đồ Use Case (Use Case Diagram)
 > **Jira:** [FT8-8](https://familyconnect.atlassian.net/browse/FT8-8), Xây dựng Use Case Diagram
 > **Thuộc Epic:** FT8-4, Phân tích yêu cầu hệ thống (Sprint 1)
-> **Trạng thái:** Draft v1.0
+> **Trạng thái:** Final v1.0
 
 ---
 
