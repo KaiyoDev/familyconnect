@@ -4,7 +4,7 @@
 > **Tài liệu:** Đặc tả Use Case (Use Case Specification)
 > **Jira:** [FT8-10](https://familyconnect.atlassian.net/browse/FT8-10), Đặc tả Use Case
 > **Thuộc Epic:** FT8-4, Phân tích yêu cầu hệ thống (Sprint 1)
-> **Trạng thái:** Draft v1.0
+> **Trạng thái:** Final v1.0
 
 ---
 
