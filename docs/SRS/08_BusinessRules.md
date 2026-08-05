@@ -4,7 +4,7 @@
 > **Tài liệu:** Phân tích Business Rules (Business Rules Specification)
 > **Jira:** [FT8-11](https://familyconnect.atlassian.net/browse/FT8-11), Phân tích Business Rules
 > **Thuộc Epic:** FT8-4, Phân tích yêu cầu hệ thống (Sprint 1)
-> **Trạng thái:** Draft v1.0
+> **Trạng thái:** Final v1.0
 
 ---
 
