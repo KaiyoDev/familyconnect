@@ -1,4 +1,12 @@
-# FamilyConnect – Phân tích Yêu cầu (Requirement Analysis)
+# 01. Project Analysis
+
+> **Dự án:** FamilyConnect, Nền tảng Cộng đồng Gia đình số tích hợp Trí tuệ nhân tạo
+> **Tài liệu:** Phân tích Yêu cầu (Requirement Analysis)
+> **Jira:** [FT8-2](https://familyconnect.atlassian.net/browse/FT8-2), Phân tích yêu cầu và lập kế hoạch yêu cầu
+> **Thuộc Epic:** FT8-4, Phân tích yêu cầu hệ thống (Sprint 1)
+> **Trạng thái:** Draft v1.0
+
+---
 
 ## 1. Giới thiệu đề tài
 
