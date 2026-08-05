@@ -4,7 +4,7 @@
 > **Tài liệu:** Glossary & Data Dictionary
 > **Jira:** [FT8-12](https://familyconnect.atlassian.net/browse/FT8-12), Xây dựng Glossary & Data Dictionary
 > **Thuộc Epic:** FT8-4, Phân tích yêu cầu hệ thống (Sprint 1)
-> **Trạng thái:** Draft v1.0
+> **Trạng thái:** Final v1.0
 
 ---
 
