@@ -1,0 +1,192 @@
+openapi: 3.0.3
+info:
+  title: FamilyConnect Backend RESTful API
+  description: OpenAPI Specification cho Nền tảng Cộng đồng Gia đình số tích hợp AI - FamilyConnect.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local Development Server
+  - url: https://api.familyconnect.vn/api/v1
+    description: Production Server
+
+paths:
+  /auth/register:
+    post:
+      summary: Đăng ký tài khoản người dùng mới
+      operationId: registerUser
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Đăng ký thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseSuccessResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '409':
+          $ref: '#/components/responses/409Conflict'
+
+  /auth/login:
+    post:
+      summary: Đăng nhập vào hệ thống
+      operationId: loginUser
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Đăng nhập thành công, trả về JWT Token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginSuccessResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+
+  /families/{id}/tree:
+    get:
+      summary: Truy vấn sơ đồ đồ thị Cây gia phả
+      operationId: getGenealogyTree
+      tags:
+        - Family & Genealogy
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Tải dữ liệu cây gia phả thành công
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+
+  /ai/chat:
+    post:
+      summary: Hỏi đáp tri thức gia đình với Trợ lý AI (RAG)
+      operationId: aiChat
+      tags:
+        - AI Services
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - family_id
+                - prompt
+              properties:
+                family_id:
+                  type: string
+                  format: uuid
+                prompt:
+                  type: string
+                  example: "Cho tôi biết các thành viên làm ngành Y trong họ?"
+      responses:
+        '200':
+          description: AI trả lời thành công
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - full_name
+      properties:
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        password:
+          type: string
+          format: password
+          example: "SecurePass123!"
+        full_name:
+          type: string
+          example: "Nguyen Van A"
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    BaseSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Operation completed successfully"
+        timestamp:
+          type: string
+          format: date-time
+
+    LoginSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            access_token:
+              type: string
+            refresh_token:
+              type: string
+            token_type:
+              type: string
+              example: "Bearer"
+            expires_in:
+              type: integer
+              example: 86400
+
+  responses:
+    400BadRequest:
+      description: Lỗi dữ liệu đầu vào không hợp lệ (Validation Error)
+    401Unauthorized:
+      description: Lỗi xác thực tài khoản hoặc Token không hợp lệ
+    403Forbidden:
+      description: Không có quyền truy cập (RBAC Violation)
+    404NotFound:
+      description: Không tìm thấy tài nguyên
+    409Conflict:
+      description: Tài nguyên đã tồn tại trong hệ thống

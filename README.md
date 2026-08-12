@@ -1,88 +1,184 @@
-# FamilyConnect
-
-Nền tảng kết nối gia đình — giúp các thành viên duy trì liên lạc, chia sẻ khoảnh khắc và quản lý thông tin gia đình.
-
-## Công nghệ
-
-| Tầng | Stack |
-|------|-------|
-| Backend | Python, FastAPI, PostgreSQL |
-| Frontend | React, TypeScript |
-| Mobile | React Native |
-| Infra | Docker, GitHub Actions |
-
-## Cấu trúc thư mục
-
-```
-familyconnect
-├── backend/       # API server (FastAPI)
-├── frontend/      # Web app (React)
-├── docs/          # Tài liệu dự án
-├── .github/       # CI/CD templates
-└── README.md
-```
-
-## Cài đặt
-
-### Yêu cầu hệ thống
-- Python 3.11+
-- Node.js 20+
-- Docker & Docker Compose
-- Git
-
-### Clone
+# Architecture
 
 ```bash
-git clone https://github.com/KaiyoDev/familyconnect.git
-cd familyconnect
+    ├── migrations
+    ├── scripts
+    │   └── run_postgres.sh
+    ├── src
+    │   ├── api
+    │   │   ├── controllers
+    │   │   │   └── ...  # controllers for the api
+    │   │   ├── schemas
+    │   │   │   └── ...  # Marshmallow schemas
+    │   │   ├── middleware.py
+    │   │   ├── responses.py
+    │   │   └── requests.py
+    │   ├── infrastructure
+    │   │   ├── services
+    │   │   │   └── ...  # Services that use third party libraries or services (e.g. email service)
+    │   │   ├── databases
+    │   │   │   └── ...  # Database adapaters and initialization
+    │   │   ├── repositories
+    │   │   │   └── ...  # Repositories for interacting with the databases
+    │   │   └── models
+    │   │   │   └── ...  # Database models
+    │   ├── domain
+    │   │   ├── constants.py
+    │   │   ├── exceptions.py
+    │   │   ├── models
+    │   │   │   └── ...  # Business logic models
+    │   ├── services
+    │   │    └── ...  # Services for interacting with the domain (business logic)
+    │   ├── app.py
+    │   ├── config.py
+    │   ├── cors.py
+    │   ├── create_app.py
+    │   ├── dependency_container.py
+    │   ├── error_handler.py
+    │   └── logging.py
 ```
 
-### Chạy Backend
+## Domain Layer
 
-```bash
-cd backend
-# Cài đặt dependencies
-pip install -r requirements.txt
-# Chạy dev server
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
+## Services Layer
 
-### Chạy Frontend
+## Infrastructure Layer
 
-```bash
-cd frontend
-# Cài đặt dependencies
-npm install
-# Chạy dev server
-npm run dev
-```
+## Download source code (CMD)
+    git clone https://github.com/ChienNguyensrdn/Flask-CleanArchitecture.git
+## Kiểm tra đã cài python đã cài đặt trên máy chưa
+    python --version
+## Run app
 
-## Branch Strategy
+ - Bước 1: Tạo môi trường ảo co Python (phiên bản 3.x)
+     ## Windows:
+     		py -m venv .venv
+     ## Unix/MacOS:
+     		python3 -m venv .venv
+   - Bước 2: Kích hoạt môi trường:
+     ## Windows:
+     		.venv\Scripts\activate.ps1
+     ### Nếu xảy ra lỗi active .venv trên winos run powershell -->Administrator
+         Set-ExecutionPolicy RemoteSigned -Force
+     ## Unix/MacOS:
+     		source .venv/bin/activate
+     
+   - Bước 3: Cài đặt các thư viện cần thiết
+     ## Install:
+     		pip install -r requirements.txt
+   - Bước 4: Chạy mã xử lý dữ liệu
+     ## Run:
+    		python app.py
 
-| Branch | Mục đích |
-|--------|----------|
-| `main` | Production-ready, bảo vệ bởi branch protection |
-| `develop` | Tích hợp tính năng mới |
-| `feature/*` | Tính năng mới |
-| `bugfix/*` | Sửa lỗi |
-| `release/*` | Chuẩn bị release |
-| `hotfix/*` | Sửa lỗi khẩn cấp trên production |
 
-## Đóng góp
+     Truy câp http://localhost:6868/docs
+     Truy câp http://localhost:9999/docs
 
-1. Tạo branch từ `develop`: `git checkout -b feature/ten-tinh-nang develop`
-2. Commit theo quy ước Conventional Commits
-3. Tạo Pull Request vào `develop`
-4. Cần tối thiểu 1 approval trước khi merge
 
-## Nhóm phát triển
 
-- Đặng Hoàng Ân
-- Lê Kha Bình
-- Rcom Chiến
-- Bùi Cao Thiên Phước
-- Phan Đình Phúc
+## Create file .env in folder /src/.env
+    
+    # Flask settings
+    FLASK_ENV=development
+    SECRET_KEY=your_secret_key
+    
+    # SQL Server settings
+    DB_USER=sa
+    DB_PASSWORD=Aa@123456
+    DB_HOST=127.0.0.1
+    DB_PORT=1433
+    DB_NAME=FlaskApiDB
+    
+    
+    DATABASE_URI = "mssql+pymssql://sa:Aa%40123456@127.0.0.1:1433/FlaskApiDB"
 
-## License
+## pull image MS SQL server 
+    
+    ```bash
+    docker pull mcr.microsoft.com/mssql/server:2025-latest
+    ```
+## Install MS SQL server in docker 
+    ```bash
+    docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Aa123456" -p 1433:1433 --name sql1 --hostname sql1 -d  mcr.microsoft.com/mssql/server:2025-latest
+    ```
+## Test connect SQL server 
 
-MIT — xem [LICENSE](LICENSE)
+## ORM Flask (from sqlalchemy.orm )
+Object Relational Mapping
+
+Ánh xạ 1 class (OOP)  model src/infrastructure/models --> Table in database 
+Ánh xạ các mối quan hệ (Relational) -- Khoá ngoại CSDL 
+(n-n): many to many 
+
+@startuml
+' Diagram Title
+title Clean Architecture Sequence Diagram
+
+' Define participants in order of appearance
+actor Actor
+participant "Web App"
+participant "Controller"
+participant "Services"
+participant "Domain"
+participant "infrastructure"
+database "Database"
+
+' --- Message Flow ---
+
+' 1. Initial Request
+Actor -> "Web App": Request
+activate "Web App"
+
+' 2. Forwarding to Controller
+"Web App" -> "Controller"
+activate "Controller"
+
+' 3. Calling the Service Layer
+"Controller" -> "Services"
+activate "Services"
+
+' 4. Interacting with the Domain Layer
+"Services" -> "Domain"
+activate "Domain"
+note over Domain: Interfaces
+
+' 5. Interacting with Infrastructure
+"Domain" -> "infrastructure"
+activate "infrastructure"
+note over infrastructure: Class implement
+
+' 6. Database Query
+"infrastructure" -> "Database"
+activate "Database"
+
+' --- Response Flow (Return Messages) ---
+
+' 7. Database returns data
+"Database" --> "infrastructure"
+deactivate "Database"
+
+' 8. Infrastructure returns to Domain
+"infrastructure" --> "Domain"
+deactivate "infrastructure"
+
+' 9. Domain returns to Services
+"Domain" --> "Services"
+deactivate "Domain"
+
+' 10. Services returns to Controller
+"Services" --> "Controller"
+deactivate "Services"
+
+' 11. Controller returns to Web App
+"Controller" --> "Web App"
+deactivate "Controller"
+
+' 12. Final data rendering to Actor
+"Web App" --> Actor
+note left of "Web App"
+  Render data
+end note
+deactivate "Web App"
+
+@enduml
+=======
