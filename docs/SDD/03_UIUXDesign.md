@@ -194,11 +194,60 @@ Diagrams: `design-system/user-flows/UF-01..UF-07.png`
 
 ## 6. Thiết kế giao diện hi-fi (Hi-fi UI)
 
-- Tổng số: **48 hi-fi UI** tương ứng wireframes (điều kiện FT8-33).
-- Thực hiện trên **Google Stitch**, xuất PNG.
-- Vị trí: `design-system/ui/`
+- Tổng số: **48 hi-fi UI** tương ứng wireframes, mỗi hi-fi đủ 3 breakpoint (Desktop 1440 / Tablet 768 / Mobile 375).
+- Thiết kế theo **design system** (Mục 7) phong cách shadcn/ui, tông màu teal FamilyConnect.
+- Vị trí: `design-system/ui/` (gallery: `design-system/ui/index.html`)
 
-*(Bảng danh sách 48 hi-fi UI: giống Mục 5, thay tiền tố W- bằng UI-)*
+| STT | Mã | Hi-fi UI |
+|:---:|:---:|---|
+| 1 | UI-01 | PUB-01 Landing page |
+| 2 | UI-02 | PUB-02 Đăng nhập |
+| 3 | UI-03 | PUB-03 Đăng ký |
+| 4 | UI-04 | PUB-04 Quên / đặt lại mật khẩu |
+| 5 | UI-05 | PUB-05 Kích hoạt tài khoản |
+| 6 | UI-06 | SHL-01 Layout chính |
+| 7 | UI-07 | SHL-02 Trang chủ tổng quan |
+| 8 | UI-08 | SHL-03 Tìm kiếm toàn cục |
+| 9 | UI-09 | GEN-01 Cây gia phả thế hệ |
+| 10 | UI-10 | GEN-02 Đồ thị quan hệ |
+| 11 | UI-11 | GEN-03 Tra cứu quan hệ |
+| 12 | UI-12 | GEN-04 Hồ sơ thành viên |
+| 13 | UI-13 | GEN-05/GEN-06 Form thêm thành viên & quan hệ |
+| 14 | UI-14 | FAM-01 Tạo gia đình |
+| 15 | UI-15 | FAM-02 Thông tin gia đình |
+| 16 | UI-16 | FAM-03 Quản lý nhánh |
+| 17 | UI-17 | FAM-04 Danh sách thành viên |
+| 18 | UI-18 | FAM-05 Xác thực yêu cầu tham gia |
+| 19 | UI-19 | COM-01 Luồng cộng đồng |
+| 20 | UI-20 | COM-02 Chi tiết bài viết |
+| 21 | UI-21 | COM-03 Tạo bài viết |
+| 22 | UI-22 | COM-04 Tin gia đình |
+| 23 | UI-23 | COM-05 Tạo thông báo |
+| 24 | UI-24 | EVT-01 Danh sách sự kiện + lịch |
+| 25 | UI-25 | EVT-02 Chi tiết sự kiện + RSVP |
+| 26 | UI-26 | EVT-03 Tạo / sửa sự kiện |
+| 27 | UI-27 | EVT-04 Quản lý người tham gia |
+| 28 | UI-28 | EVT-05 Thư viện ảnh sự kiện |
+| 29 | UI-29 | DIR-01 Danh bạ thành viên |
+| 30 | UI-30 | DIR-02 Hồ sơ nghề nghiệp / học vấn |
+| 31 | UI-31 | DIR-03 Tìm kiếm nâng cao |
+| 32 | UI-32 | HER-01 Kho lưu trữ số |
+| 33 | UI-33 | HER-02 Tư liệu lịch sử |
+| 34 | UI-34 | HER-03 Câu chuyện gia đình |
+| 35 | UI-35 | HER-04 Thành viên tiêu biểu |
+| 36 | UI-36 | HER-05 Thư viện ảnh gia đình |
+| 37 | UI-37 | AI-01 Trợ lý tri thức |
+| 38 | UI-38 | AI-02 Kết quả tìm kiếm ngữ nghĩa |
+| 39 | UI-39 | DSH-01 Thống kê gia đình |
+| 40 | UI-40 | DSH-02 Thống kê nhân khẩu + sự kiện |
+| 41 | UI-41 | DSH-03 Tạo / xuất báo cáo |
+| 42 | UI-42 | ADM-01 Admin dashboard |
+| 43 | UI-43 | ADM-02 Quản lý người dùng |
+| 44 | UI-44 | ADM-03 Kiểm duyệt nội dung |
+| 45 | UI-45 | ADM-04 Nhật ký kiểm toán |
+| 46 | UI-46 | ADM-05 Sao lưu & phục hồi |
+| 47 | UI-47 | ADM-06 Cấu hình hệ thống |
+| 48 | UI-48 | PRF-01/02/03 Hồ sơ cá nhân, thông báo, lịch sử |
 
 ---
 
@@ -216,16 +265,9 @@ Diagrams: `design-system/user-flows/UF-01..UF-07.png`
 
 ---
 
-## 8. Prototype tương tác
+## 8. Ma trận truy vết (Traceability)
 
-- Prototype điều hướng giữa các màn hình hi-fi trên Google Stitch.
-- Link: `design-system/prototype-link.txt`
-
----
-
-## 9. Ma trận truy vết (Traceability)
-
-### 9.1 FR → Screen
+### 8.1 FR → Screen
 
 | FR | Màn hình |
 |----|----------|
@@ -279,7 +321,7 @@ Diagrams: `design-system/user-flows/UF-01..UF-07.png`
 | FR-ADM-04 | ADM-05 |
 | FR-ADM-05 | ADM-06 |
 
-### 9.2 UC → Flow
+### 8.2 UC → Flow
 
 | UC | User Flow |
 |----|-----------|
@@ -296,7 +338,7 @@ Diagrams: `design-system/user-flows/UF-01..UF-07.png`
 | UC-11 Xem Báo cáo & Thống kê | (luồng phụ: DSH-01 → DSH-02 → DSH-03) |
 | UC-12 Quản trị Hệ thống & Kiểm duyệt | (luồng phụ: ADM-01 → ADM-02/03/04) |
 
-### 9.3 BPM → Screen
+### 8.3 BPM → Screen
 
 | BPM | Màn hình |
 |-----|----------|
@@ -313,7 +355,7 @@ Diagrams: `design-system/user-flows/UF-01..UF-07.png`
 
 ---
 
-## 10. Lịch sử tài liệu
+## 9. Lịch sử tài liệu
 
 | Phiên bản | Ngày | Người cập nhật | Mô tả |
 |-----------|------|----------------|--------|

@@ -1,0 +1,159 @@
+{
+  "$schema": "google-stitch-design-system",
+  "meta": {
+    "product": "FamilyConnect",
+    "platform": "Web Portal",
+    "version": "1.0.0",
+    "author": "FT8-33",
+    "created": "2026-08-13",
+    "source": "docs/SDD/03_UIUXDesign.md, docs/SDD/design-system/DESIGN.md"
+  },
+  "principles": [
+    "Family-first: mọi màn hình lấy gia đình và quan hệ thân tộc làm trung tâm",
+    "Đơn giản cho mọi lứa tuổi: chữ to, tương phản cao, thao tác tối giản",
+    "Nhất quán: toàn bộ màn hình dùng chung tokens và components",
+    "RBAC-driven: menu và thao tác theo vai trò (Guest, Member, Owner, Admin)",
+    "Responsive-first: Mobile 375 → Desktop 1440",
+    "AI là trợ lý: phản hồi kèm trích dẫn nguồn + fallback"
+  ],
+  "tokens": {
+    "color": {
+      "primary": "#0D9488",
+      "primary-dark": "#0F766E",
+      "primary-light": "#CCFBF1",
+      "accent": "#F59E0B",
+      "accent-light": "#FEF3C7",
+      "success": "#16A34A",
+      "success-bg": "#F0FDF4",
+      "warning": "#D97706",
+      "warning-bg": "#FFFBEB",
+      "danger": "#DC2626",
+      "danger-bg": "#FEF2F2",
+      "info": "#0284C7",
+      "info-bg": "#F0F9FF",
+      "gender-male": "#0D9488",
+      "gender-female": "#DB2777",
+      "neutral-0": "#FFFFFF",
+      "neutral-50": "#F8FAFC",
+      "neutral-100": "#F1F5F9",
+      "neutral-200": "#E2E8F0",
+      "neutral-300": "#CBD5E1",
+      "neutral-500": "#64748B",
+      "neutral-700": "#334155",
+      "neutral-900": "#0F172A",
+      "text-on-primary": "#FFFFFF"
+    },
+    "typography": {
+      "font-family": "Be Vietnam Pro, Inter, Segoe UI, sans-serif",
+      "scale": [12, 14, 16, 18, 20, 24, 32, 40],
+      "line-height": { "heading": 1.2, "body": 1.5 },
+      "weights": [400, 500, 600, 700]
+    },
+    "spacing": { "grid": 4, "scale": [4, 8, 12, 16, 24, 32, 48] },
+    "radius": { "sm": 4, "md": 8, "lg": 12, "full": 999 },
+    "shadow": {
+      "card": "0 1px 3px rgba(15,23,42,.08)",
+      "modal": "0 8px 24px rgba(15,23,42,.15)"
+    },
+    "breakpoints": {
+      "desktop": 1440,
+      "tablet": 768,
+      "mobile": 375
+    },
+    "a11y": {
+      "contrast": "WCAG AA (4.5:1 text, 3:1 UI)",
+      "touch-target-min": 44,
+      "focus-ring": "primary 2px"
+    }
+  },
+  "components": {
+    "button": {
+      "variants": ["primary", "secondary", "ghost", "danger"],
+      "sizes": { "sm": 32, "md": 40, "lg": 48 },
+      "radius": "md",
+      "min-touch-target": 44
+    },
+    "input": { "border": "neutral-300", "focus": "primary 2px ring", "error": "danger", "label": "14px semibold", "radius": "sm" },
+    "tabs": { "style": "underline primary", "height": 40 },
+    "table": { "header": "neutral-100 600", "row-hover": "neutral-50", "sticky-header": true },
+    "card": { "radius": "md", "shadow": "card", "padding": [16, 24] },
+    "modal": { "radius": "lg", "overlay": "rgba(15,23,42,.4)", "close-on-esc": true },
+    "toast": { "types": ["success", "warning", "danger", "info"], "auto-dismiss-ms": 4000 },
+    "badge": { "radius": "full", "height": 20 },
+    "avatar": { "sizes": [24, 32, 40, 48, 64], "fallback": "initials" },
+    "tree-node": { "width": 96, "gender-color": "gender-male/gender-female", "ancestor-highlight": "accent" },
+    "chart": { "types": ["line", "bar", "donut"], "legend": true, "tooltip": true },
+    "empty-state": { "icon": true, "title": true, "description": true, "cta": true },
+    "skeleton": { "shimmer": true },
+    "bottom-nav": { "tabs": ["Trang chủ", "Gia phả", "Sự kiện", "Di sản", "Cá nhân"], "breakpoint": "mobile" }
+  },
+  "iconography": {
+    "set": "Material Symbols",
+    "size": 24,
+    "stroke": 1.5,
+    "rule": "icon hỗ trợ nhãn text, không thay thế"
+  },
+  "layout": {
+    "sidebar": { "width": 220, "tablet-collapsed": 64, "mobile": "drawer" },
+    "content-max-width": 1200,
+    "page-padding": { "desktop": 24, "mobile": 16 }
+  },
+  "screens": [
+    { "code": "PUB-01", "name": "Landing page", "group": "Public & Auth" },
+    { "code": "PUB-02", "name": "Đăng nhập", "group": "Public & Auth" },
+    { "code": "PUB-03", "name": "Đăng ký", "group": "Public & Auth" },
+    { "code": "PUB-04", "name": "Quên / đặt lại mật khẩu", "group": "Public & Auth" },
+    { "code": "PUB-05", "name": "Kích hoạt tài khoản", "group": "Public & Auth" },
+    { "code": "SHL-01", "name": "Layout chính (shell)", "group": "App Shell" },
+    { "code": "SHL-02", "name": "Trang chủ tổng quan", "group": "App Shell" },
+    { "code": "SHL-03", "name": "Tìm kiếm toàn cục", "group": "App Shell" },
+    { "code": "GEN-01", "name": "Cây gia phả (thế hệ)", "group": "Gia phả" },
+    { "code": "GEN-02", "name": "Đồ thị quan hệ", "group": "Gia phả" },
+    { "code": "GEN-03", "name": "Tra cứu quan hệ", "group": "Gia phả" },
+    { "code": "GEN-04", "name": "Hồ sơ thành viên", "group": "Gia phả" },
+    { "code": "GEN-05/06", "name": "Thêm thành viên & thiết lập quan hệ", "group": "Gia phả" },
+    { "code": "FAM-01", "name": "Tạo gia đình", "group": "Gia đình" },
+    { "code": "FAM-02", "name": "Thông tin gia đình", "group": "Gia đình" },
+    { "code": "FAM-03", "name": "Quản lý nhánh", "group": "Gia đình" },
+    { "code": "FAM-04", "name": "Danh sách thành viên", "group": "Gia đình" },
+    { "code": "FAM-05", "name": "Xác thực yêu cầu tham gia", "group": "Gia đình" },
+    { "code": "COM-01", "name": "Luồng cộng đồng", "group": "Cộng đồng" },
+    { "code": "COM-02", "name": "Chi tiết bài viết", "group": "Cộng đồng" },
+    { "code": "COM-03", "name": "Tạo bài viết", "group": "Cộng đồng" },
+    { "code": "COM-04", "name": "Tin gia đình", "group": "Cộng đồng" },
+    { "code": "COM-05", "name": "Tạo thông báo", "group": "Cộng đồng" },
+    { "code": "EVT-01", "name": "Danh sách sự kiện + lịch", "group": "Sự kiện" },
+    { "code": "EVT-02", "name": "Chi tiết sự kiện + RSVP", "group": "Sự kiện" },
+    { "code": "EVT-03", "name": "Tạo / sửa sự kiện", "group": "Sự kiện" },
+    { "code": "EVT-04", "name": "Quản lý người tham gia", "group": "Sự kiện" },
+    { "code": "EVT-05", "name": "Thư viện ảnh sự kiện", "group": "Sự kiện" },
+    { "code": "DIR-01", "name": "Danh bạ thành viên", "group": "Danh bạ" },
+    { "code": "DIR-02", "name": "Hồ sơ nghề nghiệp / học vấn", "group": "Danh bạ" },
+    { "code": "DIR-03", "name": "Tìm kiếm nâng cao", "group": "Danh bạ" },
+    { "code": "HER-01", "name": "Kho lưu trữ số", "group": "Di sản" },
+    { "code": "HER-02", "name": "Tư liệu lịch sử", "group": "Di sản" },
+    { "code": "HER-03", "name": "Câu chuyện gia đình", "group": "Di sản" },
+    { "code": "HER-04", "name": "Thành viên tiêu biểu", "group": "Di sản" },
+    { "code": "HER-05", "name": "Thư viện ảnh gia đình", "group": "Di sản" },
+    { "code": "AI-01", "name": "Trợ lý tri thức gia đình", "group": "Trợ lý AI" },
+    { "code": "AI-02", "name": "Kết quả tìm kiếm ngữ nghĩa", "group": "Trợ lý AI" },
+    { "code": "DSH-01", "name": "Thống kê gia đình", "group": "Báo cáo" },
+    { "code": "DSH-02", "name": "Nhân khẩu + sự kiện", "group": "Báo cáo" },
+    { "code": "DSH-03", "name": "Tạo / xuất báo cáo", "group": "Báo cáo" },
+    { "code": "ADM-01", "name": "Admin dashboard", "group": "Admin" },
+    { "code": "ADM-02", "name": "Quản lý người dùng", "group": "Admin" },
+    { "code": "ADM-03", "name": "Kiểm duyệt nội dung", "group": "Admin" },
+    { "code": "ADM-04", "name": "Nhật ký kiểm toán", "group": "Admin" },
+    { "code": "ADM-05", "name": "Sao lưu & phục hồi", "group": "Admin" },
+    { "code": "ADM-06", "name": "Cấu hình hệ thống", "group": "Admin" },
+    { "code": "PRF-01/02/03", "name": "Hồ sơ cá nhân · Thông báo · Lịch sử", "group": "Cá nhân" }
+  ],
+  "prototype": {
+    "flows": [
+      "PUB-01 → PUB-03 → PUB-05 → PUB-02 → FAM-01 → GEN-01 → COM-01 → EVT-01 → EVT-02 → AI-01",
+      "GEN-01 → GEN-04 → GEN-05/06",
+      "COM-04 → COM-05",
+      "ADM-01 → ADM-02 → ADM-03"
+    ]
+  }
+}
