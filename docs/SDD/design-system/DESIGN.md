@@ -1,6 +1,6 @@
-# FamilyConnect — Web Portal Design Specification (Google Stitch)
+# FamilyConnect — Web Portal Design Specification (Figma)
 
-> Input spec cho Google Stitch: paste file này vào Stitch để generate design system `.gdd`, 48 hi-fi UI và prototype.
+> Thiết kế trên **Figma** (chuyển hướng từ Google Stitch): dùng spec này làm tài liệu tham chiếu khi dựng design system, 48 hi-fi UI và prototype trong Figma, kết hợp Figma kit shadcncraft.
 > Nguồn: `docs/SDD/03_UIUXDesign.md` (FT8-33), SRS (FT8-2..FT8-13), SAD (FT8-30), [shadcncraft.com](https://shadcncraft.com/).
 
 ## 1. Product Overview
@@ -11,7 +11,7 @@
 
 - **Reference chính: [shadcncraft.com](https://shadcncraft.com/)** (Figma kit + React components shadcn/ui).
 - Áp dụng: component style (button, input, card, modal...), typography, spacing, radius, shadow từ bộ kit.
-- Toàn bộ hi-fi UI render theo phong cách này (đã áp dụng trong `ui/out/`).
+- Toàn bộ 48 hi-fi UI sẽ được dựng trên Figma theo phong cách này.
 
 ## 2. Design Principles
 
@@ -189,5 +189,5 @@
 
 ## 5. Prototype
 
-- Prototype tương tác: từ DESIGN.md này, Stitch generate prototype nối 48 màn hình.
+- Prototype tương tác: dựng trên Figma, nối 48 màn hình.
 - Luồng demo chính: Landing → Đăng ký → Kích hoạt → Đăng nhập → Tạo gia đình → Cây gia phả → Đăng bài → Tạo sự kiện → RSVP → Trợ lý AI.

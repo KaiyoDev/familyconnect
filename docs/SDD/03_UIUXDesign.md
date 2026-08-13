@@ -17,8 +17,8 @@ Tài liệu đặc tả thiết kế giao diện (UI/UX) cho **Web Portal** củ
 - **Trong phạm vi:** Web Portal (trang giới thiệu, trang công khai, portal đã xác thực, admin dashboard), responsive 3 breakpoint (Desktop 1440px / Tablet 768px / Mobile 375px), design system, prototype tương tác.
 - **Ngoài phạm vi:** Mobile Application (React Native), thiết kế hệ thống backend (thuộc FT8-30, FT8-34), API chi tiết (FT8-35).
 
-### 1.3 Công cụ bắt buộc
-- **Google Stitch** (bắt buộc): tạo design system `.gdd`, hi-fi UI và prototype tương tác.
+### 1.3 Công cụ thiết kế
+- **Figma** (chuyển hướng từ Google Stitch): thiết kế design system, 48 hi-fi UI và prototype tương tác trực tiếp trên Figma, tham chiếu Figma kit shadcncraft.
 - Wireframes: bản vẽ tay/kỹ thuật số, xuất PNG.
 
 ### 1.4 Đối tượng đọc
@@ -41,7 +41,7 @@ Tài liệu đặc tả thiết kế giao diện (UI/UX) cho **Web Portal** củ
 
 1. **Gia đình trước tiên (Family-first):** Mọi màn hình lấy gia đình và các mối quan hệ làm trung tâm, ngôn ngữ xưng hô Việt Nam (thân tộc) được ưu tiên.
 2. **Đơn giản cho mọi lứa tuổi:** Đối tượng gồm người lớn tuổi, giao diện chữ to, tương phản cao, thao tác tối giản.
-3. **Nhất quán (Consistency):** Toàn bộ màn hình dùng chung design system (màu, typography, components) từ Google Stitch.
+3. **Nhất quán (Consistency):** Toàn bộ màn hình dùng chung design system (màu, typography, components) từ Figma.
 4. **Phân quyền rõ ràng (RBAC-driven):** Menu và thao tác hiển thị theo vai trò (Guest, Member, Owner, Admin).
 5. **Responsive-first:** Thiết kế từ Mobile 375 lên Desktop 1440; quản trị và form nặng tối ưu trên Desktop, core thao tác (xem cây, feed, RSVP) hoạt động đầy đủ trên Mobile.
 6. **AI là trợ lý, không thay thế:** Mọi phản hồi AI hiển thị kèm trích dẫn nguồn và trạng thái fallback khi AI không khả dụng.
@@ -198,7 +198,7 @@ Diagrams: `design-system/user-flows/UF-01..UF-07.png`
 
 - Tổng số: **48 hi-fi UI** tương ứng wireframes, mỗi hi-fi đủ 3 breakpoint (Desktop 1440 / Tablet 768 / Mobile 375).
 - Thiết kế theo **design system** (Mục 7) phong cách shadcn/ui, tông màu teal FamilyConnect.
-- Vị trí: `design-system/ui/` (gallery: `design-system/ui/index.html`)
+- Vị trí: **Figma** (dựng trong file Figma của project; wireframes PNG tại `design-system/wireframes/` là input tham chiếu).
 
 | STT | Mã | Hi-fi UI |
 |:---:|:---:|---|
@@ -253,9 +253,10 @@ Diagrams: `design-system/user-flows/UF-01..UF-07.png`
 
 ---
 
-## 7. Design System (Google Stitch)
+## 7. Design System (Figma)
 
-- File: `design-system/design-system.gdd`
+- Thiết kế trên **Figma** (thay cho Google Stitch): color tokens, typography, spacing, radius, components, breakpoints.
+- Token quy chiếu cũ (Google Stitch `.gdd`): `design-system/design-system.gdd` (giữ làm tài liệu tham khảo).
 - **Design reference: https://shadcncraft.com/** (Figma kit + React components shadcn/ui), phong cách tối giản hiện đại.
 - Nội dung:
   - Màu sắc (color tokens): primary teal `#0D9488`, semantic (success/warning/danger/info), neutral scale; neutral chiếm phần lớn giao diện, primary dùng có chủ đích.
@@ -364,3 +365,4 @@ Diagrams: `design-system/user-flows/UF-01..UF-07.png`
 | Phiên bản | Ngày | Người cập nhật | Mô tả |
 |-----------|------|----------------|--------|
 | 1.0 | 2026-08-13 | Đặng Hoàng Ân | Khung tài liệu: sitemap, 51 screens, 7 user flows, 48 wireframes, hi-fi, design system, traceability |
+| 1.1 | 2026-08-13 | Đặng Hoàng Ân | Chuyển công cụ thiết kế từ Google Stitch sang Figma |
