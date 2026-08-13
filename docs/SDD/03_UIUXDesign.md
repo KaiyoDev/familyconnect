@@ -18,7 +18,7 @@ Tài liệu đặc tả thiết kế giao diện (UI/UX) cho **Web Portal** củ
 - **Ngoài phạm vi:** Mobile Application (React Native), thiết kế hệ thống backend (thuộc FT8-30, FT8-34), API chi tiết (FT8-35).
 
 ### 1.3 Công cụ thiết kế
-- **Figma** (chuyển hướng từ Google Stitch): thiết kế design system, 48 hi-fi UI và prototype tương tác trực tiếp trên Figma, tham chiếu Figma kit shadcncraft.
+- **Design system + hi-fi UI**: đặc tả token tại `design-system/DESIGN.md`; bản hi-fi PNG (render từ **Google Stitch**) lưu tại `design-system/screens/`; tham chiếu kit shadcncraft.
 - Wireframes: bản vẽ tay/kỹ thuật số, xuất PNG.
 
 ### 1.4 Đối tượng đọc
@@ -33,7 +33,7 @@ Tài liệu đặc tả thiết kế giao diện (UI/UX) cho **Web Portal** củ
 | FT8-2..FT8-13 | SRS (docs/SRS/) | Final v1.0 |
 | FT8-30 | 01_SystemArchitectureDesign.md | Draft v1.0 |
 | FT8-32 | 02_* (thiết kế DB, nếu có) | - |
-| shadcncraft | https://shadcncraft.com/ (Figma kit + React components shadcn/ui) | Design reference chính |
+| shadcncraft | https://shadcncraft.com/ (React components shadcn/ui) | Design reference chính |
 
 ---
 
@@ -41,7 +41,7 @@ Tài liệu đặc tả thiết kế giao diện (UI/UX) cho **Web Portal** củ
 
 1. **Gia đình trước tiên (Family-first):** Mọi màn hình lấy gia đình và các mối quan hệ làm trung tâm, ngôn ngữ xưng hô Việt Nam (thân tộc) được ưu tiên.
 2. **Đơn giản cho mọi lứa tuổi:** Đối tượng gồm người lớn tuổi, giao diện chữ to, tương phản cao, thao tác tối giản.
-3. **Nhất quán (Consistency):** Toàn bộ màn hình dùng chung design system (màu, typography, components) từ Figma.
+3. **Nhất quán (Consistency):** Toàn bộ màn hình dùng chung design system (màu, typography, components).
 4. **Phân quyền rõ ràng (RBAC-driven):** Menu và thao tác hiển thị theo vai trò (Guest, Member, Owner, Admin).
 5. **Responsive-first:** Thiết kế từ Mobile 375 lên Desktop 1440; quản trị và form nặng tối ưu trên Desktop, core thao tác (xem cây, feed, RSVP) hoạt động đầy đủ trên Mobile.
 6. **AI là trợ lý, không thay thế:** Mọi phản hồi AI hiển thị kèm trích dẫn nguồn và trạng thái fallback khi AI không khả dụng.
@@ -139,7 +139,7 @@ Diagrams: `design-system/user-flows/UF-01..UF-07.png`
 
 - Tổng số: **48 wireframes** (51 screens, gộp màn hình con cùng template: GEN-05/GEN-06 dùng chung form template; PRF-02/PRF-03 dùng chung list template).
 - Mỗi wireframe đủ 3 breakpoint: Desktop 1440 / Tablet 768 / Mobile 375.
-- Vị trí: `design-system/wireframes/`
+- Bản PNG wireframes (Google Stitch) đã gỡ khỏi repo; bản hi-fi PNG tham chiếu tại Mục 6.
 
 | STT | Mã | Wireframe |
 |:---:|:---:|---|
@@ -198,7 +198,86 @@ Diagrams: `design-system/user-flows/UF-01..UF-07.png`
 
 - Tổng số: **48 hi-fi UI** tương ứng wireframes, mỗi hi-fi đủ 3 breakpoint (Desktop 1440 / Tablet 768 / Mobile 375).
 - Thiết kế theo **design system** (Mục 7) phong cách shadcn/ui, tông màu teal FamilyConnect.
-- Vị trí: **Figma** (dựng trong file Figma của project; wireframes PNG tại `design-system/wireframes/` là input tham chiếu).
+- Vị trí: `design-system/screens/{MÃ}-{breakpoint}.png` (bản PNG render từ Google Stitch).
+
+### 6.1 Bản hi-fi đã có (Google Stitch)
+
+> PNG theo breakpoint: `design-system/screens/{MÃ}-{breakpoint}.png` (desktop / tablet / mobile).
+> Cập nhật tiếp theo tiến độ; bản chưa có giữ danh sách mục tiêu ở 6.2.
+
+<details>
+<summary><b>PUB-01 Landing page</b></summary>
+
+| Desktop 1440 | Tablet 768 | Mobile 375 |
+|---|---|---|
+| ![PUB-01 Desktop](design-system/screens/PUB-01-desktop.png) | ![PUB-01 Tablet](design-system/screens/PUB-01-tablet.png) | ![PUB-01 Mobile](design-system/screens/PUB-01-mobile.png) |
+
+</details>
+
+<details>
+<summary><b>PUB-02 Đăng nhập</b></summary>
+
+| Desktop 1440 | Tablet 768 | Mobile 375 |
+|---|---|---|
+| ![PUB-02 Desktop](design-system/screens/PUB-02-desktop.png) | ![PUB-02 Tablet](design-system/screens/PUB-02-tablet.png) | ![PUB-02 Mobile](design-system/screens/PUB-02-mobile.png) |
+
+</details>
+
+<details>
+<summary><b>PUB-03 Đăng ký</b></summary>
+
+| Mobile 375 |
+|---|
+| ![PUB-03 Mobile](design-system/screens/PUB-03-mobile.png) |
+
+</details>
+
+<details>
+<summary><b>SHL-01 Layout chính</b></summary>
+
+| Desktop 1440 | Tablet 768 | Mobile 375 |
+|---|---|---|
+| ![SHL-01 Desktop](design-system/screens/SHL-01-desktop.png) | ![SHL-01 Tablet](design-system/screens/SHL-01-tablet.png) | ![SHL-01 Mobile](design-system/screens/SHL-01-mobile.png) |
+
+</details>
+
+<details>
+<summary><b>SHL-02 Trang chủ tổng quan</b></summary>
+
+| Desktop 1440 | Tablet 768 | Mobile 375 |
+|---|---|---|
+| ![SHL-02 Desktop](design-system/screens/SHL-02-desktop.png) | ![SHL-02 Tablet](design-system/screens/SHL-02-tablet.png) | ![SHL-02 Mobile](design-system/screens/SHL-02-mobile.png) |
+
+</details>
+
+<details>
+<summary><b>SHL-03 Tìm kiếm toàn cục</b></summary>
+
+| Desktop 1440 | Tablet 768 | Mobile 375 |
+|---|---|---|
+| ![SHL-03 Desktop](design-system/screens/SHL-03-desktop.png) | ![SHL-03 Tablet](design-system/screens/SHL-03-tablet.png) | ![SHL-03 Mobile](design-system/screens/SHL-03-mobile.png) |
+
+</details>
+
+<details>
+<summary><b>ADM-01 Admin dashboard</b></summary>
+
+| Desktop 1440 | Tablet 768 | Mobile 375 |
+|---|---|---|
+| ![ADM-01 Desktop](design-system/screens/ADM-01-desktop.png) | ![ADM-01 Tablet](design-system/screens/ADM-01-tablet.png) | ![ADM-01 Mobile](design-system/screens/ADM-01-mobile.png) |
+
+</details>
+
+<details>
+<summary><b>AI-01 Trợ lý tri thức</b></summary>
+
+| Desktop 1440 | Tablet 768 | Mobile 375 |
+|---|---|---|
+| ![AI-01 Desktop](design-system/screens/AI-01-desktop.png) | ![AI-01 Tablet](design-system/screens/AI-01-tablet.png) | ![AI-01 Mobile](design-system/screens/AI-01-mobile.png) |
+
+</details>
+
+### 6.2 Danh sách 48 hi-fi UI mục tiêu
 
 | STT | Mã | Hi-fi UI |
 |:---:|:---:|---|
@@ -253,11 +332,12 @@ Diagrams: `design-system/user-flows/UF-01..UF-07.png`
 
 ---
 
-## 7. Design System (Figma)
+## 7. Design System
 
-- Thiết kế trên **Figma** (thay cho Google Stitch): color tokens, typography, spacing, radius, components, breakpoints.
-- Token quy chiếu cũ (Google Stitch `.gdd`): `design-system/design-system.gdd` (giữ làm tài liệu tham khảo).
-- **Design reference: https://shadcncraft.com/** (Figma kit + React components shadcn/ui), phong cách tối giản hiện đại.
+- Đặc tả trên **DESIGN.md** (Google Stitch `.gdd` chuyển sang): color tokens, typography, spacing, radius, components, breakpoints.
+- Token quy chiếu (Google Stitch `.gdd`): `design-system/design-system.gdd` (giữ làm tài liệu tham khảo).
+- **Design reference: https://shadcncraft.com/** (React components shadcn/ui), phong cách tối giản hiện đại.
+- Bản hi-fi đã có: `design-system/screens/{MÃ}-{breakpoint}.png` (xem Mục 6.1).
 - Nội dung:
   - Màu sắc (color tokens): primary teal `#0D9488`, semantic (success/warning/danger/info), neutral scale; neutral chiếm phần lớn giao diện, primary dùng có chủ đích.
   - Typography: Inter (fallback Be Vietnam Pro cho tiếng Việt), thang kích thước, line-height; button weight 500.
@@ -365,4 +445,4 @@ Diagrams: `design-system/user-flows/UF-01..UF-07.png`
 | Phiên bản | Ngày | Người cập nhật | Mô tả |
 |-----------|------|----------------|--------|
 | 1.0 | 2026-08-13 | Đặng Hoàng Ân | Khung tài liệu: sitemap, 51 screens, 7 user flows, 48 wireframes, hi-fi, design system, traceability |
-| 1.1 | 2026-08-13 | Đặng Hoàng Ân | Chuyển công cụ thiết kế từ Google Stitch sang Figma |
+| 1.1 | 2026-08-13 | Đặng Hoàng Ân | Chèn ảnh hi-fi từ Google Stitch (8 màn hình x 3 breakpoint) |
