@@ -33,6 +33,7 @@ Tài liệu đặc tả thiết kế giao diện (UI/UX) cho **Web Portal** củ
 | FT8-2..FT8-13 | SRS (docs/SRS/) | Final v1.0 |
 | FT8-30 | 01_SystemArchitectureDesign.md | Draft v1.0 |
 | FT8-32 | 02_* (thiết kế DB, nếu có) | - |
+| shadcncraft | https://shadcncraft.com/ (Figma kit + React components shadcn/ui) | Design reference chính |
 
 ---
 
@@ -44,6 +45,7 @@ Tài liệu đặc tả thiết kế giao diện (UI/UX) cho **Web Portal** củ
 4. **Phân quyền rõ ràng (RBAC-driven):** Menu và thao tác hiển thị theo vai trò (Guest, Member, Owner, Admin).
 5. **Responsive-first:** Thiết kế từ Mobile 375 lên Desktop 1440; quản trị và form nặng tối ưu trên Desktop, core thao tác (xem cây, feed, RSVP) hoạt động đầy đủ trên Mobile.
 6. **AI là trợ lý, không thay thế:** Mọi phản hồi AI hiển thị kèm trích dẫn nguồn và trạng thái fallback khi AI không khả dụng.
+7. **Tối giản hiện đại (Minimalist modern, theo shadcncraft):** UI gọn, không trang trí thừa, nội dung là trọng tâm; spacing rộng, shadow nhẹ, border-radius vừa phải (card 10px, input 6px); màu neutral chiếm phần lớn, primary teal dùng có chủ đích; không gradient nặng, không hiệu ứng thừa.
 
 ---
 
@@ -254,10 +256,12 @@ Diagrams: `design-system/user-flows/UF-01..UF-07.png`
 ## 7. Design System (Google Stitch)
 
 - File: `design-system/design-system.gdd`
+- **Design reference: https://shadcncraft.com/** (Figma kit + React components shadcn/ui), phong cách tối giản hiện đại.
 - Nội dung:
-  - Màu sắc (color tokens): primary, secondary, semantic (success/warning/danger/info), neutral scale.
-  - Typography: hệ chữ (ưu tiên hỗ trợ tiếng Việt: Be Vietnam Pro / Inter), thang kích thước, line-height.
+  - Màu sắc (color tokens): primary teal `#0D9488`, semantic (success/warning/danger/info), neutral scale; neutral chiếm phần lớn giao diện, primary dùng có chủ đích.
+  - Typography: Inter (fallback Be Vietnam Pro cho tiếng Việt), thang kích thước, line-height; button weight 500.
   - Spacing: 4px grid, spacing scale 4/8/12/16/24/32/48.
+  - Radius (shadcncraft): input 6px, card/button 10px, modal 12px.
   - Components: Button, Input, Select, Checkbox, Radio, Tabs, Table, Card, Modal, Drawer, Toast, Badge, Avatar, Tree Node, Chart, Empty state, Skeleton.
   - Iconography: bộ icon nhất quán.
   - Breakpoints: Desktop 1440 / Tablet 768 / Mobile 375.
