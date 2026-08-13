@@ -1,11 +1,17 @@
 # FamilyConnect — Web Portal Design Specification (Google Stitch)
 
 > Input spec cho Google Stitch: paste file này vào Stitch để generate design system `.gdd`, 48 hi-fi UI và prototype.
-> Nguồn: `docs/SDD/03_UIUXDesign.md` (FT8-33), SRS (FT8-2..FT8-13), SAD (FT8-30).
+> Nguồn: `docs/SDD/03_UIUXDesign.md` (FT8-33), SRS (FT8-2..FT8-13), SAD (FT8-30), [shadcncraft.com](https://shadcncraft.com/).
 
 ## 1. Product Overview
 
-FamilyConnect là nền tảng cộng đồng gia đình số, kết nối các thế hệ qua cây gia phả, sự kiện, di sản và trợ lý AI. Web Portal phục vụ 4 vai trò: Guest, Family Member, Family Owner, Administrator. Responsive 3 breakpoints: Desktop 1440 / Tablet 768 / Mobile 375.
+**FamilyConnect: AI-powered Digital Family Community Platform** ("Nền tảng Cộng đồng Gia đình số tích hợp Trí tuệ nhân tạo"). Gia đình hiện đại phân tán địa lý vì học tập, công việc, di cư; nền tảng này kết nối các thế hệ qua cây gia phả, giao tiếp, sự kiện, di sản và trợ lý AI trong một hệ sinh thái thống nhất. Web Portal phục vụ 4 vai trò: Guest, Family Member, Family Owner, Administrator. Responsive 3 breakpoints: Desktop 1440 / Tablet 768 / Mobile 375.
+
+### 1.1 Design Reference
+
+- **Reference chính: [shadcncraft.com](https://shadcncraft.com/)** (Figma kit + React components shadcn/ui).
+- Áp dụng: component style (button, input, card, modal...), typography, spacing, radius, shadow từ bộ kit.
+- Toàn bộ hi-fi UI render theo phong cách này (đã áp dụng trong `ui/out/`).
 
 ## 2. Design Principles
 
@@ -15,6 +21,7 @@ FamilyConnect là nền tảng cộng đồng gia đình số, kết nối các 
 4. **RBAC-driven:** menu và thao tác hiển thị theo vai trò; Admin có khu vực riêng.
 5. **Responsive-first:** từ Mobile 375 lên Desktop 1440; form nặng tối ưu Desktop, core thao tác (xem cây, feed, RSVP) đầy đủ trên Mobile.
 6. **AI là trợ lý:** phản hồi AI kèm trích dẫn nguồn + trạng thái fallback khi AI không khả dụng.
+7. **Tối giản hiện đại (Minimalist modern, theo shadcncraft):** UI gọn, không trang trí thừa; nội dung là trọng tâm; spacing rộng rãi, shadow nhẹ, border-radius vừa phải; màu neutral chiếm phần lớn, primary teal dùng có chủ đích; không gradient nặng, không hiệu ứng thừa.
 
 ## 3. Design System
 
@@ -43,27 +50,27 @@ FamilyConnect là nền tảng cộng đồng gia đình số, kết nối các 
 
 ### 3.2 Typography
 
-- Font: **Be Vietnam Pro** (hỗ trợ tiếng Việt đầy đủ), fallback `Inter, Segoe UI, sans-serif`.
+- Font: **Inter** (font chính shadcncraft), fallback `Be Vietnam Pro, Segoe UI, sans-serif` (Be Vietnam Pro dùng khi cần hỗ trợ tiếng Việt tốt hơn).
 - Thang kích thước: 12 / 14 / 16 (base) / 18 / 20 / 24 / 32 / 40.
 - Line-height: heading 1.2, body 1.5.
-- Weight: 400 regular, 500 medium, 600 semibold, 700 bold.
+- Weight: 400 regular, 500 medium (button), 600 semibold, 700 bold.
 
 ### 3.3 Spacing & Radius
 
 - Grid 4px: 4 / 8 / 12 / 16 / 24 / 32 / 48.
-- Radius: `sm` 4px (input), `md` 8px (card, button), `lg` 12px (modal, drawer), `full` 999px (avatar, chip).
-- Shadow: `card` `0 1px 3px rgba(15,23,42,.08)`, `modal` `0 8px 24px rgba(15,23,42,.15)`.
+- Radius (theo shadcncraft): `sm` 6px (input), `md` 10px (card, button), `lg` 12px (modal, drawer), `full` 999px (avatar, chip).
+- Shadow: `card` `0 1px 3px rgba(15,23,42,.08)`, `modal` `0 8px 24px rgba(15,23,42,.15)`, nhẹ, không tối ưu đổ bóng mạnh.
 
 ### 3.4 Components
 
 | Component | Mô tả |
 |---|---|
-| Button | 4 variants: primary, secondary (outline), ghost, danger; 3 sizes: sm 32 / md 40 / lg 48; disabled state; min touch target 44px |
-| Input / Select / Textarea | Border `neutral-300`, focus ring primary 2px, error state danger, label 14px semibold |
+| Button | 4 variants: primary, secondary (outline), ghost, danger; weight 500, radius 10px; 3 sizes: sm 32 / md 40 / lg 48; disabled state; min touch target 44px |
+| Input / Select / Textarea | Border `neutral-300`, radius 6px, focus ring primary 2px, error state danger, label 14px semibold |
 | Checkbox / Radio | Vòng chọn, focus visible |
 | Tabs | Underline primary, 40px height |
 | Table | Header `neutral-100` 600, row hover `neutral-50`, zebra, sticky header |
-| Card | Radius `md`, shadow `card`, padding 16-24 |
+| Card | Radius `md` 10px, shadow `card`, padding 16-24, nền trắng trên neutral-50 |
 | Modal / Drawer | Radius `lg`, overlay `rgba(15,23,42,.4)`, đóng bằng Esc |
 | Toast | 4 loại success/warning/danger/info, auto-dismiss 4s |
 | Badge / Tag | Radius full, 20px height, semantic màu |

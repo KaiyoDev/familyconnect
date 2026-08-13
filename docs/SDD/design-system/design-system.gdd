@@ -2,10 +2,12 @@
   "$schema": "google-stitch-design-system",
   "meta": {
     "product": "FamilyConnect",
+    "product_en": "AI-powered Digital Family Community Platform",
     "platform": "Web Portal",
     "version": "1.0.0",
     "author": "FT8-33",
     "created": "2026-08-13",
+    "design_reference": "https://shadcncraft.com/ (Figma kit + shadcn/ui components, minimalist modern)",
     "source": "docs/SDD/03_UIUXDesign.md, docs/SDD/design-system/DESIGN.md"
   },
   "principles": [
@@ -14,7 +16,8 @@
     "Nhất quán: toàn bộ màn hình dùng chung tokens và components",
     "RBAC-driven: menu và thao tác theo vai trò (Guest, Member, Owner, Admin)",
     "Responsive-first: Mobile 375 → Desktop 1440",
-    "AI là trợ lý: phản hồi kèm trích dẫn nguồn + fallback"
+    "AI là trợ lý: phản hồi kèm trích dẫn nguồn + fallback",
+    "Tối giản hiện đại (shadcncraft/shadcn-ui): gọn, không trang trí thừa, spacing rộng, shadow nhẹ, primary dùng có chủ đích"
   ],
   "tokens": {
     "color": {
@@ -44,13 +47,13 @@
       "text-on-primary": "#FFFFFF"
     },
     "typography": {
-      "font-family": "Be Vietnam Pro, Inter, Segoe UI, sans-serif",
+      "font-family": "Inter, Be Vietnam Pro, Segoe UI, sans-serif",
       "scale": [12, 14, 16, 18, 20, 24, 32, 40],
       "line-height": { "heading": 1.2, "body": 1.5 },
       "weights": [400, 500, 600, 700]
     },
     "spacing": { "grid": 4, "scale": [4, 8, 12, 16, 24, 32, 48] },
-    "radius": { "sm": 4, "md": 8, "lg": 12, "full": 999 },
+    "radius": { "sm": 6, "md": 10, "lg": 12, "full": 999 },
     "shadow": {
       "card": "0 1px 3px rgba(15,23,42,.08)",
       "modal": "0 8px 24px rgba(15,23,42,.15)"
@@ -70,10 +73,11 @@
     "button": {
       "variants": ["primary", "secondary", "ghost", "danger"],
       "sizes": { "sm": 32, "md": 40, "lg": 48 },
+      "weight": 500,
       "radius": "md",
       "min-touch-target": 44
     },
-    "input": { "border": "neutral-300", "focus": "primary 2px ring", "error": "danger", "label": "14px semibold", "radius": "sm" },
+    "input": { "border": "neutral-300", "focus": "primary 2px ring", "error": "danger", "label": "14px semibold", "radius": 6 },
     "tabs": { "style": "underline primary", "height": 40 },
     "table": { "header": "neutral-100 600", "row-hover": "neutral-50", "sticky-header": true },
     "card": { "radius": "md", "shadow": "card", "padding": [16, 24] },
