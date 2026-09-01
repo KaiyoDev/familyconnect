@@ -25,53 +25,77 @@ Xây dựng Use Case Diagram cho hệ thống FamilyConnect nhằm mô hình hó
 
 ---
 
-## 3. Danh sách Use Case theo Module Chức năng
+## 3. Danh sách Use Case chuẩn (12 Use Cases)
 
-### 3.1. User & Security
-- **UC1.1:** Đăng ký tài khoản
-- **UC1.2:** Đăng nhập
-- **UC1.3:** Quên mật khẩu
-- **UC1.4:** Quản lý hồ sơ cá nhân
-- **UC1.5:** Xác thực thành viên
+> FamilyConnect chốt **12 Use Case chuẩn** (`UC-01`..`UC-12`). Đây là hệ mã Use Case duy nhất dùng chung toàn dự án: Use Case Specification (FT8-10), ma trận FR↔UC (04_FunctionalRequirements.md, mục 4.5.2), Business Rules (FT8-11), UI/UX (FT8-33) và tài liệu thiết kế. Các Use Case theo module trước đây (UC1.1..UC9.4) được gộp về 12 Use Case chuẩn, mỗi Use Case liệt kê các chức năng con tương ứng.
 
-### 3.2. Family & Genealogy Management
-- **UC2.1:** Quản lý gia đình & nhánh gia đình
-- **UC2.2:** Quản lý thành viên & quan hệ (cha mẹ - con, hôn nhân)
-- **UC2.3:** Xem cây gia phả
-- **UC2.4:** Tra cứu quan hệ gia đình
+### 3.1. UC-01: Đăng nhập & Xác thực (Authentication)
+- Đăng nhập
+- Đăng xuất
+- Khôi phục mật khẩu (quên mật khẩu)
+- Phân quyền truy cập theo vai trò (RBAC)
+- Kiểm soát phiên làm việc (JWT)
 
-### 3.3. Community
-- **UC3.1:** Đăng bài viết & Chia sẻ hình ảnh/tin tức
-- **UC3.2:** Bình luận & Thả cảm xúc
-- **UC3.3:** Quản lý thông báo
+### 3.2. UC-02: Đăng ký & Xác minh Thành viên (Registration & Member Verification)
+- Đăng ký tài khoản
+- Kích hoạt tài khoản
+- Xác thực / phê duyệt thành viên tham gia gia đình
 
-### 3.4. Events
-- **UC4.1:** Tạo & Quản lý sự kiện
-- **UC4.2:** Quản lý người tham gia & RSVP
-- **UC4.3:** Quản lý thư viện ảnh sự kiện
-- **UC4.4:** Gửi nhắc nhở sự kiện
+### 3.3. UC-03: Quản lý Gia đình & Chi nhánh (Family & Branch Management)
+- Tạo & quản lý gia đình (Family)
+- Quản lý chi nhánh (FamilyBranch)
+- Quản lý thành viên gia đình (FamilyMember)
 
-### 3.5. Family Directory
-- **UC5.1:** Tra cứu thành viên (theo nghề nghiệp, địa điểm, thế hệ)
+### 3.4. UC-04: Quản lý Quan hệ Cây gia phả (Genealogy Relationship Management)
+- Quản lý quan hệ cha mẹ – con (Parent-Child)
+- Quản lý quan hệ hôn nhân (Marriage)
+- Kiểm soát chu trình (loop) và tính hợp lệ thế hệ
 
-### 3.6. Family Heritage
-- **UC6.1:** Quản lý tư liệu lịch sử & câu chuyện gia đình
-- **UC6.2:** Quản lý thành viên tiêu biểu
-- **UC6.3:** Quản lý thư viện ảnh & kho lưu trữ số
+### 3.5. UC-05: Truy vấn & Trực quan hóa Cây gia phả (Genealogy Tree Query & Visualization)
+- Xem cây gia phả tương tác (Interactive Tree)
+- Trực quan hóa đồ thị quan hệ (Relationship Graph)
+- Tra cứu quan hệ (đường đi, mức thân tộc)
 
-### 3.7. AI-assisted Services
-- **UC7.1:** Tìm kiếm ngữ nghĩa & Gợi ý thành viên/tài nguyên
-- **UC7.2:** Trợ lý AI (Giải thích quan hệ gia đình & Tóm tắt nội dung)
+### 3.6. UC-06: Quản lý Bài viết & Tương tác (Posts & Interactions)
+- Đăng & quản lý bài viết
+- Bình luận & thả cảm xúc
+- Chia sẻ tin tức gia đình và hình ảnh
+- Thông báo gia đình (Announcement)
 
-### 3.8. Dashboard & Reporting
-- **UC8.1:** Xem thống kê (gia đình, cộng đồng, sự kiện)
-- **UC8.2:** Xuất báo cáo
+### 3.7. UC-07: Quản lý Sự kiện & RSVP (Events & RSVP)
+- Tạo & quản lý sự kiện
+- Xác nhận tham dự (RSVP) & quản lý người tham gia
+- Thư viện ảnh sự kiện (Event Gallery)
+- Nhắc nhở sự kiện
 
-### 3.9. Administration
-- **UC9.1:** Quản lý người dùng
-- **UC9.2:** Kiểm duyệt nội dung
-- **UC9.3:** Nhật ký hệ thống & Cấu hình
-- **UC9.4:** Sao lưu và phục hồi
+### 3.8. UC-08: Tra cứu Danh bạ & Hồ sơ (Directory & Profiles)
+- Xem danh bạ thành viên
+- Hồ sơ nghề nghiệp (Professional) & hồ sơ học vấn (Education)
+- Tìm kiếm thành viên (theo nghề nghiệp, địa điểm, thế hệ)
+
+### 3.9. UC-09: Quản lý Lưu trữ & Di sản (Heritage & Digital Archive)
+- Quản lý tư liệu lịch sử & câu chuyện gia đình
+- Quản lý thành viên tiêu biểu
+- Quản lý thư viện ảnh & kho lưu trữ số
+- Duyệt tư liệu di sản (moderation, BR-HER-002)
+
+### 3.10. UC-10: Trợ lý AI & Truy vấn Tri thức (AI Assistant & Knowledge Query)
+- Tìm kiếm ngữ nghĩa bằng AI
+- Trợ lý tri thức gia đình (chat + RAG)
+- Giải thích quan hệ gia đình
+- Tóm tắt nội dung & gợi ý thành viên/tài nguyên
+
+### 3.11. UC-11: Xem Báo cáo & Thống kê (Dashboard & Reports)
+- Thống kê gia đình, cộng đồng, sự kiện, nhân khẩu
+- Xem dashboard
+- Tạo & xuất báo cáo
+
+### 3.12. UC-12: Quản trị Hệ thống & Kiểm duyệt (Administration & Moderation)
+- Quản lý người dùng
+- Kiểm duyệt nội dung
+- Nhật ký kiểm toán (Audit Log)
+- Sao lưu & phục hồi (Backup & Restore)
+- Cấu hình hệ thống
 
 ---
 
@@ -180,3 +204,4 @@ admin --> UC_AdminSystem
 ai --> UC_AISearch
 ai --> UC_AIAssistant
 @enduml
+> **Ghi chú:** Bản ảnh PNG hiện tại là bản vẽ theo module. Khi tái xuất sơ đồ, dùng **12 Use Case chuẩn** (`UC-01`..`UC-12`) theo danh sách ở Mục 3, với các Actor: Guest, Family Member, Family Owner, Administrator, AI Service. Mục 3 là nguồn chính thức cho mã UC; ảnh PNG là minh họa và phải được cập nhật để khớp.

@@ -19,7 +19,7 @@ Hệ thống FamilyConnect phân loại các yêu cầu phi chức năng thành 
 | Mã ID | Tên yêu cầu | Nhóm phân loại | Mô tả tóm tắt | Mức độ ưu tiên |
 | :--- | :--- | :--- | :--- | :--- |
 | **NFR-01** | Responsive Web Application | Usability / Compatibility | Giao diện web tự động thích ứng với nhiều kích thước màn hình thiết bị. | High |
-| **NFR-02** | Cross-platform Mobile Application | Compatibility / Portability | Ứng dụng di động hoạt động đa nền tảng (iOS/Android). | High |
+| **NFR-02** | Cross-platform Mobile Application (Future/Optional) | Compatibility / Portability | Ứng dụng di động hoạt động đa nền tảng (iOS/Android) – ngoài phạm vi Web Portal MVP, đánh dấu future/optional. | Medium |
 | **NFR-03** | Secure Authentication (JWT) | Security | Xác thực người dùng an toàn bằng JSON Web Token. | High |
 | **NFR-04** | RESTful API Architecture | Maintainability / Compatibility | Kiến trúc giao tiếp chuẩn RESTful giữa các tầng hệ thống. | High |
 | **NFR-05** | Modular Software Architecture | Maintainability / Scalability | Kiến trúc phần mềm phân chia thành các mô-đun độc lập. | High |
@@ -27,8 +27,10 @@ Hệ thống FamilyConnect phân loại các yêu cầu phi chức năng thành 
 | **NFR-07** | PostgreSQL Database | Reliability / Performance | Lưu trữ dữ liệu quan hệ và cấu trúc đồ thị bằng PostgreSQL. | High |
 | **NFR-08** | AI Service Integration | Performance / Functionality | Tích hợp dịch vụ AI hỗ trợ tìm kiếm ngữ nghĩa và trợ lý tri thức. | High |
 | **NFR-09** | Docker Deployment | Portability / Maintainability | Đóng gói và triển khai ứng dụng bằng Docker container. | High |
-| **NFR-10** | High Availability | Availability | Đảm bảo hệ thống vận hành liên tục, giảm thiểu thời gian chết. | Medium |
+| **NFR-10** | High Availability | Availability | Đảm bảo hệ thống vận hành liên tục với uptime đo lường được. | Medium |
 | **NFR-11** | Audit Logging | Security / Reliability | Ghi nhận toàn bộ nhật ký hoạt động hệ thống và bảo mật. | High |
+| **NFR-12** | API Latency | Performance | Thời gian phản hồi API P95 dưới 2 giây. | High |
+| **NFR-13** | Test Coverage | Quality | Độ bao phủ kiểm thử đạt ít nhất 70%. | Medium |
 
 ---
 
@@ -39,7 +41,7 @@ Hệ thống FamilyConnect phân loại các yêu cầu phi chức năng thành 
 * **Requirement Name:** Responsive Web Application
 * **Description:** Web Management Portal phải tự động điều chỉnh bố cục, hình ảnh và thành phần giao diện sao cho phù hợp với mọi kích thước màn hình.
 * **Rationale:** Giúp người dùng dễ dàng quản lý gia phả và tương tác với cộng đồng mọi lúc, mọi nơi trên trình duyệt web mà không gặp lỗi hiển thị.
-* **Acceptance Criteria:** Giao diện hiển thị tốt trên các trình duyệt phổ biến và vượt qua các bài kiểm tra giao diện tương thích.
+* **Acceptance Criteria:** Giao diện hiển thị tốt trên các trình duyệt phổ biến và vượt qua các bài kiểm tra giao diện tương thích; bố cục hoạt động ổn định trên Desktop 1440px, Tablet 768px và Mobile 375px.
 * **Priority:** High
 
 ### 2. Cross-platform Mobile Application
@@ -47,8 +49,8 @@ Hệ thống FamilyConnect phân loại các yêu cầu phi chức năng thành 
 * **Requirement Name:** Cross-platform Mobile Application
 * **Description:** Ứng dụng di động dành cho thành viên gia đình phải được phát triển dưới dạng đa nền tảng.
 * **Rationale:** Đảm bảo khả năng tiếp cận rộng rãi cho mọi thế hệ thành viên trong gia đình sử dụng các dòng điện thoại thông minh khác nhau.
-* **Acceptance Criteria:** Ứng dụng được biên dịch và chạy ổn định trên các hệ điều hành di động chính.
-* **Priority:** High
+* **Acceptance Criteria:** Không bắt buộc cho giai đoạn MVP; nếu triển khai sau, ứng dụng phải chạy ổn định trên iOS và Android.
+* **Priority:** Medium
 
 ### 3. Secure Authentication (JWT)
 * **Requirement ID:** NFR-03
@@ -79,7 +81,7 @@ Hệ thống FamilyConnect phân loại các yêu cầu phi chức năng thành 
 * **Requirement Name:** Interactive Graph Visualization
 * **Description:** Mô-đun quản lý gia phả cung cấp giao diện trực quan hóa đồ thị gia đình tương tác.
 * **Rationale:** Giúp người dùng dễ dàng nắm bắt mối quan hệ họ hàng qua nhiều thế hệ.
-* **Acceptance Criteria:** Biểu diễn sơ đồ cây gia phả rõ ràng, hỗ trợ tương tác mượt mà.
+* **Acceptance Criteria:** Biểu diễn sơ đồ cây gia phả rõ ràng, hỗ trợ tương tác mượt mà; hiển thị tối thiểu 5 thế hệ và phản hồi thao tác pan/zoom < 200ms.
 * **Priority:** Medium
 
 ### 7. PostgreSQL Database
@@ -111,7 +113,7 @@ Hệ thống FamilyConnect phân loại các yêu cầu phi chức năng thành 
 * **Requirement Name:** High Availability
 * **Description:** Hệ thống được thiết kế hướng tới tính sẵn sàng cao.
 * **Rationale:** Đảm bảo người dùng có thể truy cập thông tin gia đình bất cứ lúc nào.
-* **Acceptance Criteria:** Hệ thống duy trì hoạt động ổn định và có khả năng tự phục hồi lỗi.
+* **Acceptance Criteria:** Hệ thống đạt uptime ≥ 99% theo tháng (đo tại endpoint health check), RTO ≤ 4 giờ, RPO ≤ 1 giờ.
 * **Priority:** Medium
 
 ### 11. Audit Logging
@@ -121,3 +123,19 @@ Hệ thống FamilyConnect phân loại các yêu cầu phi chức năng thành 
 * **Rationale:** Phục vụ cho công tác kiểm tra bảo mật và theo dõi lịch sử thao tác dữ liệu.
 * **Acceptance Criteria:** Lưu trữ đầy đủ các bản ghi nhật ký (audit logs) cho các sự kiện quan trọng.
 * **Priority:** High
+
+### 12. API Latency
+* **Requirement ID:** NFR-12
+* **Requirement Name:** API Latency
+* **Description:** Thời gian phản hồi API phải nhanh để đảm bảo trải nghiệm người dùng mượt mà.
+* **Rationale:** Khớp với KPI dự án: 95% yêu cầu API phản hồi dưới 2 giây trong điều kiện mạng bình thường.
+* **Acceptance Criteria:** P95 API latency < 2s đo được qua giám sát hoặc load test.
+* **Priority:** High
+
+### 13. Test Coverage
+* **Requirement ID:** NFR-13
+* **Requirement Name:** Test Coverage
+* **Description:** Mã nguồn phải được kiểm thử với độ bao phủ đo lường được.
+* **Rationale:** Giảm thiểu lỗi, đảm bảo chất lượng trước khi giao hàng.
+* **Acceptance Criteria:** Độ bao phủ kiểm thử (line coverage) đạt ít nhất 70%.
+* **Priority:** Medium

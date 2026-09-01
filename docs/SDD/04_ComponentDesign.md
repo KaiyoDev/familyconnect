@@ -40,7 +40,6 @@ The Component Design covers:
 - Frontend shared components.
 - Frontend service classes.
 - Frontend state management.
-- API Gateway.
 - AI Service Layer.
 - Database and Storage components.
 - Cross-cutting concerns such as authentication, notifications,
@@ -63,21 +62,19 @@ FamilyConnect follows a layered component architecture.
 The main layers are:
 
 1. Frontend Layer
-2. API Access Layer
-3. Backend Services Layer
-4. AI Service Layer
-5. Data & Storage Layer
+2. Backend Services Layer
+3. AI Service Layer
+4. Data & Storage Layer
 
 The general dependency flow is:
 
 Frontend
-→ API Gateway
 → Backend Services
 → Database / Storage
 
 AI requests follow:
 
-API Gateway
+Backend Services
 → AI Service
 → RAG Component
 → Embedding Component
@@ -260,7 +257,7 @@ Main responsibilities:
 - Represent family membership.
 - Store genealogy-related member information.
 - Associate a user with a family.
-- Store generation information.
+- Store generation information (derived/calculated from genealogy graph).
 
 Related requirement:
 
@@ -285,7 +282,7 @@ Main attributes:
 Relationship types include:
 
 - PARENT_CHILD
-- SPOUSE
+- MARRIAGE
 
 Main responsibilities:
 
@@ -742,7 +739,7 @@ The frontend service layer contains:
 - AIService
 - NotificationService
 
-These services communicate with backend APIs through the API Gateway.
+These services communicate with backend APIs through RESTful HTTP endpoints.
 
 ---
 
@@ -822,36 +819,19 @@ Responsibilities:
 
 ---
 
-### 3.3. API Access Layer
-
-The API Access Layer contains:
-
-6. API Gateway
-
-The API Gateway provides a centralized entry point for frontend requests.
-
-Responsibilities:
-
-- Request routing.
-- API boundary management.
-- Authentication-related routing.
-- Backend response forwarding.
-
----
-
-### 3.4. Backend Components
+### 3.3. Backend Components
 
 The Backend Services layer contains:
 
-7. Auth Component
-8. Family Management Component
-9. Genealogy Component
-10. Community Component
-11. Event Component
-12. Directory Component
-13. Heritage Component
-14. Notification Component
-15. Admin Component
+6. Auth Component
+7. Family Management Component
+8. Genealogy Component
+9. Community Component
+10. Event Component
+11. Directory Component
+12. Heritage Component
+13. Notification Component
+14. Admin Component
 
 Each component has a clearly defined business responsibility.
 
@@ -868,7 +848,7 @@ The AI Service Layer contains:
 
 The AI flow is:
 
-API Gateway
+Backend Services
 → AI Service
 → RAG Component
 → Embedding Component
@@ -923,11 +903,11 @@ The main frontend dependency flow is:
 
 Pages
 → Services
-→ API Gateway
+→ Backend API (FastAPI)
 
 The main backend dependency flow is:
 
-API Gateway
+FastAPI Routers
 → Auth
 → Family Management
 → Genealogy
@@ -964,7 +944,7 @@ The Component Diagram follows these principles:
 - Each component has a clear responsibility.
 - Components communicate through defined boundaries.
 - Database access is separated from frontend components.
-- API Gateway isolates frontend clients from backend implementation.
+- Backend API (FastAPI) isolates frontend clients from data layer implementation.
 - AI processing is isolated in a dedicated layer.
 - Storage is separated from structured database persistence.
 - Circular dependencies should be avoided.
@@ -988,7 +968,6 @@ Main flow:
 User
 → LoginPage
 → AuthService
-→ API Gateway
 → Auth Component
 → UserRepository
 → Database
@@ -1011,7 +990,6 @@ Main flow:
 User
 → RegisterPage
 → AuthService
-→ API Gateway
 → Auth Component
 → UserRepository
 → Database
@@ -1035,7 +1013,6 @@ Main flow:
 Family Owner
 → FamilyListPage
 → FamilyService
-→ API Gateway
 → Family Management
 → FamilyRepository
 → Database
@@ -1063,7 +1040,6 @@ Main flow:
 Family Owner
 → GenealogyTreePage
 → GenealogyService
-→ API Gateway
 → Genealogy Component
 
 Member creation:
@@ -1096,7 +1072,6 @@ Main flow:
 Member
 → GenealogyTreePage
 → GenealogyService
-→ API Gateway
 → Genealogy Component
 → GenealogyRepository
 → Database
@@ -1121,7 +1096,6 @@ Main flow:
 Member
 → CommunityFeedPage
 → CommunityService
-→ API Gateway
 → Community Component
 → PostRepository
 → Database
@@ -1147,7 +1121,6 @@ Main flow:
 Member
 → EventDetailPage
 → EventService
-→ API Gateway
 → Event Component
 → EventRepository
 → Database
@@ -1157,7 +1130,6 @@ RSVP flow:
 Member
 → EventDetailPage
 → EventService
-→ API Gateway
 → Event Component
 → EventRepository
 → Database
@@ -1183,7 +1155,6 @@ Main flow:
 Member
 → MemberDirectoryPage
 → DirectoryService
-→ API Gateway
 → Directory Component
 → MemberRepository
 → Database
@@ -1207,7 +1178,7 @@ Main flow:
 Member
 → AIAssistantPage
 → AIService
-→ API Gateway
+→ Backend Services
 → AI Service
 → RAG Component
 → Embedding Component
@@ -1236,7 +1207,6 @@ Main flow:
 Admin
 → AdminDashboardPage
 → AdminService
-→ API Gateway
 → Admin Component
 
 The moderation flow includes:
@@ -1252,6 +1222,92 @@ The moderation flow includes:
 
 The sequence uses nested alternative flows for authorization and moderation
 results.
+
+---
+
+### 4.12. SD-11 - Heritage Management (UC-09)
+
+Main flow:
+
+Member
+→ HeritageArchivePage
+→ HeritageService
+→ Heritage Component
+→ HeritageRepository
+→ Database
+
+Upload flow:
+
+Member
+→ HeritageArchivePage
+→ HeritageService
+→ Heritage Component
+→ Storage Component (S3)
+→ HeritageRepository
+→ Database
+
+Moderation flow:
+
+Family Owner / Admin
+→ HeritageArchivePage
+→ HeritageService
+→ Heritage Component
+→ HeritageRepository
+→ Database
+→ NotificationService
+
+The sequence handles:
+
+- Heritage document upload (status = Pending Review per BR-HER-001).
+- File storage via S3 (MediaAsset with OwnerType = HeritageItem).
+- Metadata persistence.
+- Approval / rejection by Owner or Admin (BR-HER-002).
+- Status transition (Pending → Approved / Rejected).
+- Notification to uploader on moderation decision.
+- Unauthorized access handling (non-owner cannot approve/reject).
+- Heritage story submission and moderation (same pattern).
+
+---
+
+### 4.13. SD-12 - Dashboard & Reporting (UC-11)
+
+Main flow:
+
+Member / Family Owner
+→ DashboardPage
+→ AnalyticsService
+→ Analytics Component
+→ GenealogyRepository
+→ EventRepository
+→ MemberRepository
+→ Database
+
+Report generation flow:
+
+Family Owner
+→ DashboardPage
+→ AnalyticsService
+→ Analytics Component
+→ ReportGenerator
+→ Database
+
+Export flow:
+
+Family Owner
+→ DashboardPage
+→ AnalyticsService
+→ ReportGenerator
+→ File output (PDF/Excel)
+
+The sequence handles:
+
+- Aggregated statistics retrieval (member count, branch count, event stats).
+- Demographics query (age distribution, gender ratio per FR-DASH-04).
+- Event participation analytics (FR-DASH-03).
+- Report generation from template (FR-DASH-05).
+- Report export to PDF/Excel.
+- RBAC enforcement (Owner sees full analytics; Member sees limited view).
+- Empty data handling (new family with no members/events).
 
 ---
 
@@ -1307,21 +1363,7 @@ Benefits:
 
 ---
 
-### 5.3. API Gateway Pattern
-
-The API Gateway provides a single entry point between frontend clients and
-backend services.
-
-Benefits:
-
-- Centralized routing.
-- Authentication boundary.
-- Consistent API access.
-- Reduced frontend dependency on backend implementation details.
-
----
-
-### 5.4. Layered Architecture Pattern
+### 5.3. Layered Architecture Pattern
 
 The system separates:
 
@@ -1471,7 +1513,7 @@ interaction models.
 | Notifications | Notification Component |
 | Administration | Admin Component |
 | AI Services | AI Service Component |
-| API Access | API Gateway |
+| API Access | Backend API (FastAPI Routers) |
 | Frontend Shell | Shell Component |
 | Frontend Pages | Pages Component |
 | Shared UI | Shared Components |
@@ -1501,7 +1543,7 @@ interaction models.
 | LLM Integration | SD-09 |
 | Admin Component | SD-10 |
 | Notification Component | SD-02, SD-06, SD-07, SD-10 |
-| API Gateway | SD-01 through SD-10 |
+| Backend API (FastAPI) | SD-01 through SD-10 |
 
 ---
 
@@ -1556,7 +1598,7 @@ The FamilyConnect system contains 21 major components:
 3. Shared Components
 4. Services Component
 5. State Management Component
-6. API Gateway
+6. Backend API (FastAPI Routers)
 7. Auth Component
 8. Family Management Component
 9. Genealogy Component
@@ -1675,7 +1717,7 @@ Examples:
 
 The Component Design is based on the following assumptions:
 
-- Frontend communicates with backend through the API Gateway.
+- Frontend communicates with backend through FastAPI Routers (REST API).
 - Backend services do not expose database implementation details to the
   frontend.
 - Repository classes handle persistence operations.
@@ -1709,7 +1751,7 @@ The Component Design is based on the following assumptions:
 
 - [x] 21 major components are defined.
 - [x] Frontend layer is separated.
-- [x] API Gateway is defined.
+- [x] Backend API (FastAPI Routers) is defined.
 - [x] Backend services are separated by responsibility.
 - [x] AI Service Layer is isolated.
 - [x] Database and Storage are separated.

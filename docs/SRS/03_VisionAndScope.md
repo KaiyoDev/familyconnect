@@ -34,7 +34,7 @@ Trong bối cảnh toàn cầu hóa, gia đình hiện đại ngày càng bị p
 ## 2. Business Goals (Mục tiêu kinh doanh & Dự án)
 
 ### 2.1. Mục tiêu tổng quát
-Phát triển hệ thống FamilyConnect hoàn chỉnh theo mô hình kiến trúc hiện đại (Web Management Portal, Cross-platform Mobile App, AI Service Layer kết nối qua RESTful API), giải quyết triệt để bài toán đứt gãy kết nối gia đình và thất lạc thông tin gia phả truyền thống.
+Phát triển hệ thống FamilyConnect hoàn chỉnh theo mô hình kiến trúc hiện đại (Web Management Portal, Cross-platform Mobile App *(future/optional — not in current MVP scope)*, AI Service Layer kết nối qua RESTful API), giải quyết triệt để bài toán đứt gãy kết nối gia đình và thất lạc thông tin gia phả truyền thống.
 
 ### 2.2. Mục tiêu cụ thể (SMART Goals)
 * **Thời gian:** Hoàn thành phát triển, kiểm thử và đóng gói Docker deployment cho phiên bản 1.0 đúng tiến độ cam kết (Sprint 1-3, tổng 8 tuần).
@@ -135,7 +135,7 @@ Phát triển hệ thống FamilyConnect hoàn chỉnh theo mô hình kiến tr�
 |----|--------|-------|----------|----------|---------------------|
 | SR1 | Scope creep | Yêu cầu bổ sung từ stakeholders sau khi freeze scope | Cao | Cao | Freeze requirements sau Sprint 1. Tất cả thay đổi phải qua change request process. |
 | SR2 | AI API cost vượt budget | Sử dụng nhiều API calls hơn dự kiến khi test AI features | Trung bình | Trung bình | Implement rate limiting, caching responses, sử dụng mock data trong development. |
-| SR3 | Graph DB complexity | PostgreSQL graph extensions khó học và debug hơn dự kiến | Trung bình | Cao | Tạo PoC trước với 50 nodes. Nếu quá phức tạp, fallback sang adjacency list model. |
+| SR3 | Genealogy query complexity | Truy vấn cây gia phả đệ quy có thể chậm khi số lượng thành viên lớn (>10,000 nodes) | Trung bình | Cao | Sử dụng adjacency list + recursive CTE (PostgreSQL). Thêm materialized path cache hoặc closure table nếu performance không đạt NFR-12 (P95 < 2s). |
 | SR4 | Integration issues | Khó khăn khi tích hợp Web/Mobile/API/AI services | Trung bình | Cao | Định nghĩa rõ API contracts, sử dụng OpenAPI spec, test integration sớm. |
 | SR5 | Data migration | Khó import dữ liệu gia phả từ Excel/CSV vào graph structure | Thấp | Trung bình | Cung cấp template Excel chuẩn, viết import script với validation. |
 

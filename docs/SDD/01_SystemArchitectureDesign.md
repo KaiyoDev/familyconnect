@@ -33,14 +33,14 @@ Phạm vi tài liệu tập trung ở mức **kiến trúc tổng thể (Archite
 |---|---|---|
 | FR-US-01, FR-US-02 | User authentication, JWT, Phân quyền | Hình thành Security layer, Auth middleware dùng chung cho toàn hệ thống. |
 | FR-FG-* | Quản lý cây gia phả (Genealogy tree) | Yêu cầu cấu trúc dữ liệu đồ thị, hình thành module chuyên trách xử lý đệ quy/đồ thị. |
-| FR-CM-* | Quản lý cộng đồng (Post, Comment, Media) | Đòi hỏi giải pháp lưu trữ Object Storage cho Media và kiến trúc truy vấn có độ trễ thấp. |
+| FR-COM-* | Quản lý cộng đồng (Post, Comment, Media) | Đòi hỏi giải pháp lưu trữ Object Storage cho Media và kiến trúc truy vấn có độ trễ thấp. |
 
 ### 2.2 Non-Functional Requirements ảnh hưởng kiến trúc
 | Source | Nội dung | Ảnh hưởng kiến trúc |
 |---|---|---|
 | NFR-05 | Modular architecture | Định hình ranh giới Subsystems & Modules rõ ràng, giảm thiểu dependency chéo (Low coupling). |
 | NFR-08 | Tích hợp AI Service (Semantic search, Assistant) | Tách riêng AI Service Layer để dễ dàng scale GPU/Compute độc lập với API xử lý logic thông thường. |
-| NFR-01 | Hiệu năng phản hồi API < 200ms | Bắt buộc thiết kế Stateless API và khả năng Caching ở Database Layer/API Layer. |
+| NFR-12 (API Latency) | Thời gian phản hồi API P95 < 2s | Bắt buộc thiết kế Stateless API và khả năng Caching ở Database Layer/API Layer. |
 
 ### 2.3 Use Cases ảnh hưởng kiến trúc
 | Source | Nội dung | Ảnh hưởng kiến trúc |
@@ -55,11 +55,11 @@ Phạm vi tài liệu tập trung ở mức **kiến trúc tổng thể (Archite
 
 ## 3. System Architecture
 ### 3.1 Architecture Style/Model
-Hệ thống FamilyConnect áp dụng mô hình kiến trúc **Modular Monolith Transition-Ready Architecture** kết hợp với **Service-Oriented** ở một số thành phần đặc thù. 
+Hệ thống FamilyConnect áp dụng mô hình kiến trúc **Modular Monolith** kết hợp với **AI Service riêng** để phục vụ tính năng AI. 
 
 * **Giải nghĩa Modular:** 
   * Backend Service được xây dựng theo hướng *Modular Monolith*. Codebase và database tạm thời chạy trên một tiến trình (process) để tối ưu chi phí phát triển ban đầu, nhưng logic được chia tách thành các module độc lập tuyệt đối (giao tiếp qua Interface/Service layer, không gọi chéo DB).
-  * Ứng dụng client (Web/Mobile) và dịch vụ AI được tách biệt hoàn toàn thành các *Services* riêng biệt.
+  * Ứng dụng Web Portal và dịch vụ AI được tách biệt hoàn toàn thành các *Services* riêng biệt.
 * **Rationale:**
   * Hướng đi này đáp ứng đúng định hướng từ SRS. Tách biệt AI Service giúp tối ưu tài nguyên (AI cần GPU/RAM lớn). Mô hình Modular Monolith cho Backend giúp dễ maintain, giảm overhead DevOps giai đoạn đầu, nhưng vẫn có thể dễ dàng tách thành Microservices (nhờ NFR-05) khi dự án scale-up.
 
@@ -68,7 +68,7 @@ Hệ thống FamilyConnect áp dụng mô hình kiến trúc **Modular Monolith 
 |---|---|---|---|---|
 | **AD-01** | Use FastAPI for Backend | Hiệu năng cao, hỗ trợ Async I/O tốt, hệ sinh thái Python mạnh mẽ dễ làm việc với team AI. | Django, Flask | Cần làm quen với Async I/O; code cần tuân thủ strict typing (Pydantic). |
 | **AD-02** | Separate AI Service Layer | AI model cần thư viện riêng (PyTorch), tài nguyên phần cứng khác biệt, cần scale và deploy độc lập. | Monolithic (Gộp chung AI) | Tăng độ trễ network nội bộ; cần thiết kế fallback khi AI Service gặp sự cố. |
-| **AD-03** | PostgreSQL for Database | Hỗ trợ tốt Relational Data (ACID) và có Ltree extension xử lý tốt cấu trúc cây gia phả đệ quy. | MongoDB, Neo4j | Schema phải định nghĩa cứng, khó thay đổi linh hoạt như NoSQL. |
+| **AD-03** | PostgreSQL for Database | Hỗ trợ tốt Relational Data (ACID); adjacency list + recursive CTE xử lý cây gia phả đệ quy. Ltree chỉ được cân nhắc nhưng không chọn vì hệ thống hỗ trợ nhiều loại quan hệ (cha-con, hôn nhân). | MongoDB, Neo4j, PostgreSQL Ltree | Schema phải định nghĩa cứng, khó thay đổi linh hoạt như NoSQL. |
 
 ### 3.3 Architecture Constraints
 * **Stateless:** Tất cả Backend API và AI API phải là stateless. Session state được lưu trữ qua JWT Token hoặc external cache.
@@ -77,21 +77,21 @@ Hệ thống FamilyConnect áp dụng mô hình kiến trúc **Modular Monolith 
 
 ## 4. Subsystem Structure
 ### 4.1 Danh sách subsystems
-1. **Web Management Portal (React/TypeScript)**
-2. **Mobile Application (React Native)**
-3. **Backend Services (FastAPI)**
-4. **AI Service Layer (Python/FastAPI/LLM)**
-5. **Database & Storage Layer (PostgreSQL / S3)**
+1. **Web Management Portal (React SPA / TypeScript)**
+2. **Backend Services (FastAPI)**
+3. **AI Service Layer (Python/FastAPI/LLM)**
+4. **Database & Storage Layer (PostgreSQL / S3)**
+
+> *Ghi chú:* Mobile Application là phạm vi future/optional, không nằm trong MVP.
 
 ### 4.2 Chi tiết từng subsystem
 * **Web Management Portal:**
   * Trách nhiệm: Giao diện Web dành cho Quản trị viên (Admin) quản lý cây gia phả diện rộng, xem báo cáo, kiểm duyệt.
   * Ranh giới: Chỉ vận hành trên trình duyệt, không lưu trữ dữ liệu nhạy cảm local.
   * Dependencies: Backend Services.
-* **Mobile Application:**
-  * Trách nhiệm: Trải nghiệm cho thành viên gia đình (End-users) với thao tác nhanh: xem thông báo, chat, tìm kiếm người thân.
-  * Ranh giới: Native OS capabilities thông qua React Native (iOS/Android).
-  * Dependencies: Backend Services.
+* **Mobile Application (Future/Optional):**
+  * Trách nhiệm: Không nằm trong phạm vi MVP; nếu triển khai sau sẽ tái sử dụng cùng REST API.
+  * Ranh giới: Ngoài phạm vi hiện tại.
 * **Backend Services:**
   * Trách nhiệm: Xử lý Business Logic, xác thực, phân quyền, đóng gói dữ liệu và cung cấp RESTful APIs.
   * Ranh giới: Không xử lý UI, không trực tiếp chạy model AI nặng.
@@ -156,7 +156,7 @@ Kiến trúc Backend được module hóa thành **9 module cốt lõi**, hoạt
 |---|---|---|
 | **FR-US-01** (User auth) | User Module + JWT Middleware flow | Cần kiến trúc bảo mật tập trung để quản lý phiên và quyền người dùng. |
 | **NFR-05** (Modular) | Subsystem structure & 9 Backend Modules | Áp đặt constraint chia tách logic để dễ maintain và scale sau này. |
-| **UC-05** (Genealogy tree) | Genealogy Module + PostgreSQL Ltree | Đòi hỏi thiết kế module chuyên sâu quản lý thuật toán đồ thị huyết thống. |
+| **UC-05** (Genealogy tree) | Genealogy Module + Adjacency List + Recursive CTE | Đòi hỏi thiết kế module chuyên sâu quản lý thuật toán đồ thị huyết thống. |
 | **NFR-08** (AI integration)| AI Service Layer | Tách biệt layer giúp giải quyết bài toán khác biệt về requirements phần cứng (GPU). |
 | **FR-CM-02** (Media upload)| Community Module + Storage Layer | Sinh ra kiến trúc S3 object storage riêng thay vì lưu ảnh vào DB relational. |
 

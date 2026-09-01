@@ -9,22 +9,23 @@
 ## 1. Giới thiệu
 
 ### 1.1 Mục đích
-Tài liệu **Database Design Document (DDD)** này được xây dựng nhằm mô tả chi tiết thiết kế cơ sở dữ liệu vật lý cho hệ thống **FamilyConnect**. Tài liệu thực hiện chuyển đổi 13 Entities khái niệm từ **SRS 09 (Glossary & Data Dictionary)** thành mô hình dữ liệu vật lý hoàn chỉnh trên hệ quản trị CSDL PostgreSQL, làm căn cứ kỹ thuật cho việc lập trình Backend, viết các bản Migration Script và triển khai ORM Mapping.
+Tài liệu **Database Design Document (DDD)** này được xây dựng nhằm mô tả chi tiết thiết kế cơ sở dữ liệu vật lý cho hệ thống **FamilyConnect**. Tài liệu thực hiện chuyển đổi các Entities khái niệm từ **SRS 09 (Glossary & Data Dictionary)** thành mô hình dữ liệu vật lý hoàn chỉnh trên hệ quản trị CSDL PostgreSQL, làm căn cứ kỹ thuật cho việc lập trình Backend, viết các bản Migration Script và triển khai ORM Mapping.
 
 ### 1.2 Phạm vi
 Tài liệu bao gồm toàn bộ các khía cạnh thiết kế CSDL của hệ thống:
 * **Mô hình Dữ liệu (Data Models):** Bao gồm sơ đồ CDM (Khái niệm), LDM (Logic - chuẩn hóa 3NF) và PDM (Vật lý - PostgreSQL).
 * **Cấu trúc Đồ thị Gia phả (Genealogy Graph):** Chiến lược lưu trữ cạnh (edges), chỉ mục (indexes) và các truy vấn đệ quy (Recursive CTE) hỗ trợ hiển thị cây gia phả.
 * **Bảo mật & Phân quyền:** Cơ chế lưu trữ tài khoản, băm mật khẩu, lưu vết Refresh Token và mô hình RBAC.
-* **Tối ưu Hiệu năng & Lưu trữ:** Chiến lược đánh chỉ mục (Index strategy), phân vùng dữ liệu (Monthly Range Partitioning cho `audit_logs` và `notifications`) và quy hoạch lưu trữ Media.
+* **Tối ưu Hiệu năng & Lưu trữ:** Chiến lược đánh chỉ mục (Index strategy). Partition theo tháng chỉ là phương án scale-up tương lai, không áp dụng ở giai đoạn MVP. Quy hoạch lưu trữ Media qua S3.
 * **Danh mục Dữ liệu Mở rộng (Extended Data Dictionary):** Chi tiết cấu trúc các bảng vật lý bao gồm kiểu dữ liệu, ràng buộc (Constraints) và chỉ mục.
 * **Ma trận Truy xuất Nguồn gốc (Traceability Matrix):** Ánh xạ từ các FR, BR, NFR, UC trong SRS sang các yếu tố thiết kế trong CSDL.
 
 ### 1.3 Đối tượng sử dụng
-* **Database Administrator (DBA) / Data Engineer:** Dùng để triển khai DDL Scripts, tối ưu truy vấn, tạo Partitions và cấu hình chỉ mục.
+* **Database Administrator (DBA) / Data Engineer:** Dùng để triển khai DDL Scripts, tối ưu truy vấn và cấu hình chỉ mục.
 * **Backend Developers:** Dùng làm tài liệu tham chiếu xây dựng Entity Models (ORM/SQL queries), viết API và triển khai truy vấn đồ thị gia tộc.
 * **Software Architects / Tech Lead:** Dùng để đánh giá tính toàn vẹn hệ thống, tuân thủ kiến trúc tổng thể (SAD) và duyệt Pull Request (PR).
 * **QA / QC Team:** Dùng để xây dựng các kịch bản kiểm thử tích hợp (Integration Test) và kiểm tra ràng buộc dữ liệu.
+
 ## 2. Data Requirements
 
 Bảng tổng hợp yêu cầu ảnh hưởng đến thiết kế cơ sở dữ liệu:
@@ -35,18 +36,19 @@ Bảng tổng hợp yêu cầu ảnh hưởng đến thiết kế cơ sở dữ 
 | **FR** | FR-US-01 | User authentication | User table, password hashing |
 | **BR** | BR-FG-01 | Tree integrity: no circular | CHECK constraint hoặc trigger |
 | **BR** | BR-US-01 | Unique email per user | UNIQUE constraint on User.Email |
-| **NFR** | NFR-06 | Graph visualization < 2s | Indexes on Relationship, CTE optimization |
+| **NFR** | NFR-06 | Graph visualization | Indexes on Relationship, CTE optimization |
 | **NFR** | NFR-07 | PostgreSQL | Physical data model specifics |
-| **NFR** | NFR-11 | Audit logging | AuditLog partitioning strategy |
+| **NFR** | NFR-11 | Audit logging | AuditLog table với index CreatedAt, không partition ở MVP |
 | **UC** | UC-05 | Query ancestor/descendant | Recursive CTE design |
 | **SRS09 Note** | Mục 2.4 | Profession/Education separation | EmploymentProfile, EducationProfile tables |
 
 ---
+
 ## 3. Conceptual ERD (CDM)
 
 Vẽ ERD ở mức khái niệm từ 13 Entities SRS 09. Xác định:
 
-- 13 Entities
+- 13 Core Entities + `PostReaction`, `EventRSVP`, `AIConversation` (nếu lưu history), `MediaAsset`, `EmploymentProfile`, `EducationProfile`
 - Relationships: 1:N, N:N, 1:1 với cardinality
 - Foreign key placement
 
@@ -61,16 +63,21 @@ Vẽ ERD ở mức khái niệm từ 13 Entities SRS 09. Xác định:
 - Post → Comment (1:N) - has
 - Family → Event (1:N) - has
 - Event → EventRSVP (1:N) - has
-- Event → Image (1:N) - has
+- Family → MediaAsset (1:N) - owns
+- Event → MediaAsset (1:N) - owns
 - Family → HeritageItem (1:N) - has
 - User → Notification (1:N) - receives
 - User → AuditLog (1:N) - creates
+- FamilyMember → EmploymentProfile (1:N)
+- FamilyMember → EducationProfile (1:N)
+- User → AIConversation (1:N) (nếu lưu history)
 
 **Công cụ:** Power Designer / Rational Rose / Draw.io
 
 **Output:** docs/SDD/diagrams/erd-conceptual.png
 
 ---
+
 ## 4. Logical ERD (LDM) – Normalization
 
 ### 4.1. Normalization Decisions
@@ -81,16 +88,18 @@ Các quyết định chuẩn hóa dữ liệu được thực hiện nhằm gi�
 | :--- | :--- | :--- |
 | `FamilyMember.Profession` | Tách thành `EmploymentProfile` | Một thành viên có thể có nhiều nghề nghiệp |
 | `FamilyMember.Education` | Tách thành `EducationProfile` | Một thành viên có thể có nhiều cấp/bậc học vấn |
-| `Post.MediaURLs` | Giữ dạng JSON hoặc tách thành `PostMedia` | Phụ thuộc vào nhu cầu truy vấn và quản lý media |
+| `Post.MediaURLs` | Tách thành `MediaAsset` liên kết với `Family`/`Event` | Quản lý media tập trung, ownership rõ ràng |
 | Comment reactions | Tách thành bảng `PostReaction` | Chuẩn hóa dữ liệu reaction và hỗ trợ quan hệ nhiều-nhiều |
-| Post shares | Tách thành bảng `Share` nếu cần | Lưu thông tin chia sẻ bài viết độc lập |
+| RSVP | Dùng bảng `EventRSVP` | Một khái niệm duy nhất cho xác nhận tham dự |
+| AI chat history | Bổ sung `AIConversation` + `AIMessage` | Hỗ trợ API lịch sử hội thoại AI |
+| Generation | Không lưu cột cứng | Là giá trị suy ra từ đồ thị quan hệ; nếu cần có thể tính tại service/query |
 
 ### 4.2. Junction Tables cho quan hệ N-N
 
 Các quan hệ nhiều-nhiều được triển khai thông qua các bảng trung gian (junction tables):
 
 - `PostReaction`
-- `EventParticipant`
+- `EventRSVP`
 
 Các bảng này chứa các Foreign Key tham chiếu đến các Entity liên quan và cho phép biểu diễn quan hệ N-N trong Logical Data Model.
 
@@ -117,6 +126,7 @@ Logical ERD mô tả các Entity sau khi chuẩn hóa, bao gồm Primary Key, Fo
 **Output**: docs/SDD/diagrams/erd-logical.png
 
 ---
+
 ## 5. Physical data model ERD (PDM) cho PostgreSQL
 
 ### 5.1 PostgreSQL-specific Data Types
@@ -134,6 +144,7 @@ Logical ERD mô tả các Entity sau khi chuẩn hóa, bao gồm Primary Key, Fo
 - Index cho các trường thường xuyên được tìm kiếm/truy vấn:
   - `User.Email` (`UNIQUE`)
   - `Post.FamilyID + CreatedAt`
+  - `MediaAsset.OwnerType + OwnerID`
   - Các trường tìm kiếm phổ biến khác
 - Sử dụng **Partial Index** cho các cột có thể nhận giá trị `NULL`
 
@@ -144,11 +155,14 @@ Logical ERD mô tả các Entity sau khi chuẩn hóa, bao gồm Primary Key, Fo
   - Email
   - Phone
 - Sử dụng `NOT NULL` cho các trường bắt buộc
+- Sử dụng CHECK rõ ràng cho quyền sở hữu media (mỗi `MediaAsset` thuộc đúng một `Family` hoặc `Event`)
+- `EventRSVP` phải có CHECK chính xác một trong `MemberID` hoặc `GuestEmail`
 
 ### 5.4 Partitioning
 
-- `AuditLog`: Partition theo `CreatedAt` với phương pháp **Monthly RANGE Partitioning**
-- `Notification`: Partition theo `CreatedAt` với phương pháp **Monthly RANGE Partitioning**
+- Không sử dụng partition ở giai đoạn MVP.
+- `AuditLog` và `Notification` sử dụng index trên `CreatedAt` để tối ưu truy vấn theo thời gian.
+- Phương án **Monthly RANGE Partitioning** ghi chú làm giải pháp scale-up tương lai.
 
 ### 5.5 Storage Strategy
 

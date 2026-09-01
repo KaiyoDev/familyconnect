@@ -2963,65 +2963,67 @@ Medium
 ### 4.5.1 Nguyên tắc truy vết
 
 - Mỗi FR có ID duy nhất theo cấu trúc `FR-<MODULE>-<STT>`.
-- Mỗi FR ánh xạ tối thiểu **một** Use Case trong Use Case Diagram (FT8-8) và Use Case Specification (FT8-10). Quy ước: FR-xx-yy ↔ UC-xx-yy cùng số thứ tự, giữ nguyên ký hiệu module.
+- Mỗi FR ánh xạ tối thiểu **một** Use Case trong bộ **12 Use Case chuẩn** (`UC-01`..`UC-12`) dùng thống nhất trong Use Case Diagram (FT8-8), Use Case Specification (FT8-10), UI/UX (FT8-33) và toàn bộ tài liệu thiết kế. Mỗi FR ánh xạ về đúng một trong 12 Use Case chuẩn (xem bảng 4.5.2).
 - Mỗi FR có thể liên quan **nhiều** Business Rules (FT8-11); danh sách cụ thể được hoàn thiện trong tài liệu BR.
 - Mỗi FR cung cấp tiêu chí cơ sở cho Test Case: luồng chính (main flow) và luồng thay thế (alternate flow) là nguồn trực tiếp cho kịch bản kiểm thử.
 
-### 4.5.2 Ma trận ánh xạ FR ↔ Use Case (gợi ý cho FT8-8)
+### 4.5.2 Ma trận ánh xạ FR ↔ 12 Use Case chuẩn
 
-| Module | FR | Use Case gợi ý |
+> Hệ thống dùng **12 Use Case chuẩn** (`UC-01`..`UC-12`) thống nhất toàn dự án (Use Case Diagram FT8-8, Use Case Specification FT8-10, UI/UX FT8-33). Mỗi FR ánh xạ về đúng một Use Case chuẩn (Use Case chính, cao nhất trong phạm vi của FR).
+
+| Module | FR | Use Case chuẩn |
 |--------|-----|----------------|
-| User & Security | FR-US-01 | UC-01 Đăng ký tài khoản |
-| User & Security | FR-US-02 | UC-02 Đăng nhập |
-| User & Security | FR-US-03 | UC-03 Đăng xuất |
-| User & Security | FR-US-04 | UC-04 Khôi phục mật khẩu |
-| User & Security | FR-US-05 | UC-05 Phân quyền truy cập |
-| User & Security | FR-US-06 | UC-06 Quản lý hồ sơ cá nhân |
-| User & Security | FR-US-07 | UC-07 Xác thực thành viên |
-| Family & Genealogy | FR-FG-01 | UC-08 Quản lý gia đình |
-| Family & Genealogy | FR-FG-02 | UC-09 Quản lý nhánh gia đình |
-| Family & Genealogy | FR-FG-03 | UC-10 Quản lý thành viên gia đình |
-| Family & Genealogy | FR-FG-04 | UC-11 Quản lý quan hệ cha mẹ – con |
-| Family & Genealogy | FR-FG-05 | UC-12 Quản lý hôn nhân |
-| Family & Genealogy | FR-FG-06 | UC-13 Xem cây gia phả tương tác |
-| Family & Genealogy | FR-FG-07 | UC-14 Trực quan hóa quan hệ |
-| Family & Genealogy | FR-FG-08 | UC-15 Tra cứu quan hệ |
-| Community | FR-COM-01 | UC-16 Đăng và quản lý bài viết |
-| Community | FR-COM-02 | UC-17 Bình luận và thả cảm xúc |
-| Community | FR-COM-03 | UC-18 Chia sẻ tin tức gia đình |
-| Community | FR-COM-04 | UC-19 Chia sẻ hình ảnh |
-| Community | FR-COM-05 | UC-20 Thông báo gia đình |
-| Events | FR-EVT-01 | UC-21 Tạo sự kiện gia đình |
-| Events | FR-EVT-02 | UC-22 Xác nhận tham dự (RSVP) |
-| Events | FR-EVT-03 | UC-23 Quản lý người tham gia |
-| Events | FR-EVT-04 | UC-24 Thư viện ảnh sự kiện |
-| Events | FR-EVT-05 | UC-25 Nhắc nhở sự kiện |
-| Family Directory | FR-DIR-01 | UC-26 Xem danh bạ thành viên |
-| Family Directory | FR-DIR-02 | UC-27 Quản lý hồ sơ nghề nghiệp |
-| Family Directory | FR-DIR-03 | UC-28 Quản lý hồ sơ học vấn |
-| Family Directory | FR-DIR-04 | UC-29 Tìm kiếm thành viên |
-| Family Heritage | FR-HER-01 | UC-30 Quản lý tư liệu lịch sử |
-| Family Heritage | FR-HER-02 | UC-31 Quản lý câu chuyện gia đình |
-| Family Heritage | FR-HER-03 | UC-32 Quản lý thành viên tiêu biểu |
-| Family Heritage | FR-HER-04 | UC-33 Quản lý thư viện ảnh gia đình |
-| Family Heritage | FR-HER-05 | UC-34 Quản lý kho lưu trữ số |
-| AI-assisted Services | FR-AI-01 | UC-35 Tìm kiếm ngữ nghĩa bằng AI |
-| AI-assisted Services | FR-AI-02 | UC-36 Trợ lý tri thức gia đình |
-| AI-assisted Services | FR-AI-03 | UC-37 Giải thích quan hệ gia đình |
-| AI-assisted Services | FR-AI-04 | UC-38 Tóm tắt nội dung bằng AI |
-| AI-assisted Services | FR-AI-05 | UC-39 Gợi ý thành viên và tài nguyên |
-| Dashboard & Reporting | FR-DASH-01 | UC-40 Xem thống kê gia đình |
-| Dashboard & Reporting | FR-DASH-02 | UC-41 Xem dashboard cộng đồng |
-| Dashboard & Reporting | FR-DASH-03 | UC-42 Xem thống kê sự kiện |
-| Dashboard & Reporting | FR-DASH-04 | UC-43 Xem thống kê nhân khẩu |
-| Dashboard & Reporting | FR-DASH-05 | UC-44 Tạo và xuất báo cáo |
-| Administration | FR-ADM-01 | UC-45 Quản lý người dùng |
-| Administration | FR-ADM-02 | UC-46 Kiểm duyệt nội dung |
-| Administration | FR-ADM-03 | UC-47 Tra cứu nhật ký kiểm toán |
-| Administration | FR-ADM-04 | UC-48 Sao lưu và phục hồi |
-| Administration | FR-ADM-05 | UC-49 Cấu hình hệ thống |
+| User & Security | FR-US-01 | UC-02 Đăng ký & Xác minh Thành viên |
+| User & Security | FR-US-02 | UC-01 Đăng nhập & Xác thực |
+| User & Security | FR-US-03 | UC-01 Đăng nhập & Xác thực |
+| User & Security | FR-US-04 | UC-01 Đăng nhập & Xác thực |
+| User & Security | FR-US-05 | UC-12 Quản trị Hệ thống & Kiểm duyệt |
+| User & Security | FR-US-06 | UC-08 Tra cứu Danh bạ & Hồ sơ |
+| User & Security | FR-US-07 | UC-02 Đăng ký & Xác minh Thành viên |
+| Family & Genealogy | FR-FG-01 | UC-03 Quản lý Gia đình & Chi nhánh |
+| Family & Genealogy | FR-FG-02 | UC-03 Quản lý Gia đình & Chi nhánh |
+| Family & Genealogy | FR-FG-03 | UC-03 Quản lý Gia đình & Chi nhánh |
+| Family & Genealogy | FR-FG-04 | UC-04 Quản lý Quan hệ Cây gia phả |
+| Family & Genealogy | FR-FG-05 | UC-04 Quản lý Quan hệ Cây gia phả |
+| Family & Genealogy | FR-FG-06 | UC-05 Truy vấn & Trực quan hóa Cây gia phả |
+| Family & Genealogy | FR-FG-07 | UC-05 Truy vấn & Trực quan hóa Cây gia phả |
+| Family & Genealogy | FR-FG-08 | UC-05 Truy vấn & Trực quan hóa Cây gia phả |
+| Community | FR-COM-01 | UC-06 Quản lý Bài viết & Tương tác |
+| Community | FR-COM-02 | UC-06 Quản lý Bài viết & Tương tác |
+| Community | FR-COM-03 | UC-06 Quản lý Bài viết & Tương tác |
+| Community | FR-COM-04 | UC-06 Quản lý Bài viết & Tương tác |
+| Community | FR-COM-05 | UC-06 Quản lý Bài viết & Tương tác |
+| Events | FR-EVT-01 | UC-07 Quản lý Sự kiện & RSVP |
+| Events | FR-EVT-02 | UC-07 Quản lý Sự kiện & RSVP |
+| Events | FR-EVT-03 | UC-07 Quản lý Sự kiện & RSVP |
+| Events | FR-EVT-04 | UC-07 Quản lý Sự kiện & RSVP |
+| Events | FR-EVT-05 | UC-07 Quản lý Sự kiện & RSVP |
+| Family Directory | FR-DIR-01 | UC-08 Tra cứu Danh bạ & Hồ sơ |
+| Family Directory | FR-DIR-02 | UC-08 Tra cứu Danh bạ & Hồ sơ |
+| Family Directory | FR-DIR-03 | UC-08 Tra cứu Danh bạ & Hồ sơ |
+| Family Directory | FR-DIR-04 | UC-08 Tra cứu Danh bạ & Hồ sơ |
+| Family Heritage | FR-HER-01 | UC-09 Quản lý Lưu trữ & Di sản |
+| Family Heritage | FR-HER-02 | UC-09 Quản lý Lưu trữ & Di sản |
+| Family Heritage | FR-HER-03 | UC-09 Quản lý Lưu trữ & Di sản |
+| Family Heritage | FR-HER-04 | UC-09 Quản lý Lưu trữ & Di sản |
+| Family Heritage | FR-HER-05 | UC-09 Quản lý Lưu trữ & Di sản |
+| AI-assisted Services | FR-AI-01 | UC-10 Trợ lý AI & Truy vấn Tri thức |
+| AI-assisted Services | FR-AI-02 | UC-10 Trợ lý AI & Truy vấn Tri thức |
+| AI-assisted Services | FR-AI-03 | UC-10 Trợ lý AI & Truy vấn Tri thức |
+| AI-assisted Services | FR-AI-04 | UC-10 Trợ lý AI & Truy vấn Tri thức |
+| AI-assisted Services | FR-AI-05 | UC-10 Trợ lý AI & Truy vấn Tri thức |
+| Dashboard & Reporting | FR-DASH-01 | UC-11 Xem Báo cáo & Thống kê |
+| Dashboard & Reporting | FR-DASH-02 | UC-11 Xem Báo cáo & Thống kê |
+| Dashboard & Reporting | FR-DASH-03 | UC-11 Xem Báo cáo & Thống kê |
+| Dashboard & Reporting | FR-DASH-04 | UC-11 Xem Báo cáo & Thống kê |
+| Dashboard & Reporting | FR-DASH-05 | UC-11 Xem Báo cáo & Thống kê |
+| Administration | FR-ADM-01 | UC-12 Quản trị Hệ thống & Kiểm duyệt |
+| Administration | FR-ADM-02 | UC-12 Quản trị Hệ thống & Kiểm duyệt |
+| Administration | FR-ADM-03 | UC-12 Quản trị Hệ thống & Kiểm duyệt |
+| Administration | FR-ADM-04 | UC-12 Quản trị Hệ thống & Kiểm duyệt |
+| Administration | FR-ADM-05 | UC-12 Quản trị Hệ thống & Kiểm duyệt |
 
-> **Lưu ý:** Bảng trên là ánh xạ đề xuất (1 FR ↔ 1 UC) làm định hướng cho FT8-8. Khi dựng Use Case Diagram, một số FR có thể gộp/chẻ thành nhiều Use Case (ví dụ: <<include>> Đăng nhập); ma trận chính thức được hoàn thiện trong FT8-8 và FT8-10.
+> **Lưu ý:** Bảng trên là ma trận chính thức (mỗi FR có một Use Case chuẩn chính). Một Use Case chuẩn có thể bao phủ nhiều FR; danh sách FR thuộc mỗi Use Case được liệt kê trong mục 3 của 06_UseCaseDiagram.md và Use Case Specification (FT8-10).
 
 ### 4.5.3 Phụ thuộc giữa các FR
 
@@ -3095,7 +3097,7 @@ Medium
 | Backup & Restore | FR-ADM-04 | ✅ |
 | System configuration | FR-ADM-05 | ✅ |
 
-**Kết luận:** 100% nhóm chức năng trong đề tài được bao phủ (46/46 mục chức năng). Không có FR nào ngoài phạm vi đề tài.
+**Kết luận:** 100% nhóm chức năng trong đề tài được bao phủ (46 chủ đề chức năng, tương ứng **49/49 FR**). Không có FR nào ngoài phạm vi đề tài.
 
 ### 4.6.2 Tiêu chí chất lượng yêu cầu (kiểm chứng theo IEEE 29148)
 
@@ -3104,7 +3106,7 @@ Medium
 | Không mơ hồ (Unambiguous) | ✅ | Mỗi FR dùng thuật ngữ nhất quán, có giới hạn định lượng (số lượng, ký tự, thời gian) |
 | Kiểm chứng được (Verifiable) | ✅ | Main Flow / Expected Result có tiêu chí đo lường |
 | Nhất quán (Consistent) | ✅ | Thuật ngữ dùng chung; không FR nào mâu thuẫn |
-| Đầy đủ (Complete) | ✅ | Bao phủ 46/46 mục đề tài |
+| Đầy đủ (Complete) | ✅ | Bao phủ 46 chủ đề đề tài (49/49 FR) |
 | Truy vết được (Traceable) | ✅ | ID duy nhất, ma trận ánh xạ Use Case (4.5.2) |
 | Không trùng lặp | ✅ | Mỗi chức năng xuất hiện đúng một FR; ranh giới module rõ ràng |
 
@@ -3124,3 +3126,4 @@ Medium
 | Phiên bản | Ngày | Người cập nhật | Mô tả |
 |-----------|------|----------------|--------|
 | 1.0 | 2026-08-03 | Đặng Hoàng Ân | Tạo tài liệu lần đầu: 9 modules, 49 FR, catalog, đặc tả chi tiết, traceability |
+| 1.2 | 2026-08-20 | Đặng Hoàng Ân | Đồng bộ FR→UC về 12 Use Case chuẩn (UC-01..UC-12); sửa FR-US-05 về UC-12; chuẩn hóa 49 FR |

@@ -1,25 +1,15 @@
-"""FastAPI application factory and entry point."""
-from fastapi import FastAPI
-from config import settings
-from app.api.middleware import register_middleware
-from app.api.controllers.health_controller import router as health_router
+"""FastAPI application entry point (mirror of teacher's src/app.py).
 
+Responsibility: create app instance and run the server.
+Teacher used `create_app()` from `create_app.py` and ran on port 9999.
+"""
+import sys
 
-def create_app() -> FastAPI:
-    """Create and configure the FastAPI application."""
-    app = FastAPI(
-        title=settings.app_name,
-        version="0.1.0",
-        description="Backend API for FamilyConnect platform",
-    )
+if sys.platform == "win32":
+    import asyncio
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-    # Register middleware
-    register_middleware(app)
-
-    # Include routers
-    app.include_router(health_router, tags=["Health"])
-
-    return app
+from create_app import create_app
 
 
 app = create_app()
@@ -31,5 +21,5 @@ if __name__ == "__main__":
         "main:app",
         host="0.0.0.0",
         port=8000,
-        reload=settings.debug,
+        reload=True,
     )

@@ -44,7 +44,7 @@
   3. Hệ thống tạo chuỗi JWT Access Token và Refresh Token.
   4. Hệ thống điều hướng người dùng đến Trang chủ/Dashboard.
 * **Alternative Flow:**
-  * **2a. Đăng nhập qua OAuth (Google/Apple):** Người dùng chọn đăng nhập qua bên thứ ba -> Hệ thống xác thực qua SDK -> Tạo phiên làm việc.
+  * **2a. Đăng nhập qua OAuth (Google/Apple):** **(OUT OF SCOPE — optional future enhancement)** Người dùng chọn đăng nhập qua bên thứ ba -> Hệ thống xác thực qua SDK -> Tạo phiên làm việc.
 * **Exception Flow:**
   * **2b. Sai thông tin:** Hệ thống báo lỗi "Tài khoản hoặc mật khẩu không chính xác" và yêu cầu nhập lại.
   * **2c. Tài khoản bị khóa:** Hệ thống thông báo lý do bị khóa bởi Kiểm duyệt viên.

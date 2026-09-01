@@ -1,0 +1,267 @@
+// FamilyConnect DBML Schema
+// Import/render at: https://dbdiagram.io/d
+// Layout: Tables grouped by domain for optimal auto-layout
+
+// ============================================================
+// CORE — Genealogy Center
+// ============================================================
+
+// users
+Table users {
+  id uuid [pk]
+  full_name varchar(100) [not null]
+  email varchar(150) [unique, not null]
+  password varchar(255) [not null]
+  phone varchar(20)
+  role varchar(20) [not null, default: "USER"]
+  status varchar(20) [not null, default: "PENDING"]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// families
+Table families {
+  id uuid [pk]
+  family_name varchar(150) [not null]
+  description text
+  created_by uuid [not null]
+  status varchar(20) [not null, default: "ACTIVE"]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// family_branches
+Table family_branches {
+  id uuid [pk]
+  family_id uuid [not null]
+  branch_name varchar(150) [not null]
+  founder_id uuid
+  description text
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// family_members (genealogy center)
+Table family_members {
+  id uuid [pk]
+  family_id uuid [not null]
+  branch_id uuid
+  user_id uuid [unique]
+  full_name varchar(100) [not null]
+  gender varchar(20) [not null, default: "UNKNOWN"]
+  date_of_birth date
+  is_alive boolean [not null, default: true]
+  date_of_death date
+  status varchar(20) [not null, default: "PENDING"]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// relationships (genealogy links)
+Table relationships {
+  id uuid [pk]
+  from_member_id uuid [not null]
+  to_member_id uuid [not null]
+  type varchar(30) [not null]
+  notes varchar(255)
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// Core Refs
+Ref: families.created_by > users.id
+Ref: family_branches.family_id > families.id
+Ref: family_branches.founder_id > family_members.id
+Ref: family_members.family_id > families.id
+Ref: family_members.branch_id > family_branches.id
+Ref: family_members.user_id > users.id
+Ref: relationships.from_member_id > family_members.id
+Ref: relationships.to_member_id > family_members.id
+
+// ============================================================
+// COMMUNITY — Posts, Comments, Reactions
+// ============================================================
+
+// posts
+Table posts {
+  id uuid [pk]
+  family_id uuid [not null]
+  author_id uuid [not null]
+  branch_id uuid
+  content text [not null]
+  visibility_scope varchar(20) [not null, default: "FAMILY"]
+  status varchar(20) [not null, default: "PUBLISHED"]
+  media_urls json
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// comments
+Table comments {
+  id uuid [pk]
+  post_id uuid [not null]
+  author_id uuid [not null]
+  content varchar(1000) [not null]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// post_reactions
+Table post_reactions {
+  id uuid [pk]
+  post_id uuid [not null]
+  user_id uuid [not null]
+  reaction_type varchar(20) [not null]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// Community Refs
+Ref: posts.family_id > families.id
+Ref: posts.author_id > users.id
+Ref: posts.branch_id > family_branches.id
+Ref: comments.post_id > posts.id
+Ref: comments.author_id > users.id
+Ref: post_reactions.post_id > posts.id
+Ref: post_reactions.user_id > users.id
+
+// ============================================================
+// EVENT — Events and RSVPs
+// ============================================================
+
+// events
+Table events {
+  id uuid [pk]
+  family_id uuid [not null]
+  title varchar(200) [not null]
+  description text
+  location varchar(255)
+  start_time timestamp [not null]
+  end_time timestamp
+  type varchar(30) [not null]
+  status varchar(20) [not null, default: "OPEN"]
+  created_by uuid [not null]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// event_rsvps
+Table event_rsvps {
+  id uuid [pk]
+  event_id uuid [not null]
+  member_id uuid
+  guest_email varchar(150)
+  response varchar(20) [not null]
+  responded_at timestamp
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// Event Refs
+Ref: events.family_id > families.id
+Ref: events.created_by > users.id
+Ref: event_rsvps.event_id > events.id
+Ref: event_rsvps.member_id > family_members.id
+
+// ============================================================
+// HERITAGE — Cultural Heritage and Media
+// ============================================================
+
+// heritage_items
+Table heritage_items {
+  id uuid [pk]
+  family_id uuid [not null]
+  branch_id uuid
+  title varchar(200) [not null]
+  type varchar(30) [not null]
+  category varchar(50) [not null]
+  period varchar(100)
+  content text
+  status varchar(20) [not null, default: "DRAFT"]
+  media_url varchar(500)
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// media_assets
+Table media_assets {
+  id uuid [pk]
+  event_id uuid
+  family_id uuid
+  uploaded_by uuid [not null]
+  caption varchar(255)
+  url varchar(500) [not null]
+  media_type varchar(20) [not null]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// Heritage Refs
+Ref: heritage_items.family_id > families.id
+Ref: heritage_items.branch_id > family_branches.id
+Ref: media_assets.event_id > events.id
+Ref: media_assets.family_id > families.id
+Ref: media_assets.uploaded_by > users.id
+
+// ============================================================
+// PROFILE — Employment and Education
+// ============================================================
+
+// employment_profiles
+Table employment_profiles {
+  id uuid [pk]
+  member_id uuid [not null]
+  company_name varchar(200) [not null]
+  position varchar(100)
+  start_date date
+  end_date date
+  is_current boolean [not null, default: false]
+  description text
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// education_profiles
+Table education_profiles {
+  id uuid [pk]
+  member_id uuid [not null]
+  school_name varchar(200) [not null]
+  degree varchar(100)
+  field_of_study varchar(100)
+  start_year int
+  end_year int
+  gpa decimal(3,2)
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// Profile Refs
+Ref: employment_profiles.member_id > family_members.id
+Ref: education_profiles.member_id > family_members.id
+
+// ============================================================
+// AI — Conversations and Messages
+// ============================================================
+
+// ai_conversations
+Table ai_conversations {
+  id uuid [pk]
+  user_id uuid [not null]
+  title varchar(200)
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// ai_messages
+Table ai_messages {
+  id uuid [pk]
+  conversation_id uuid [not null]
+  role varchar(50) [not null]
+  content text [not null]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+// AI Refs
+Ref: ai_conversations.user_id > users.id
+Ref: ai_messages.conversation_id > ai_conversations.id

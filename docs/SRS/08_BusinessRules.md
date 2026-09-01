@@ -20,7 +20,7 @@ Tài liệu này đặc tả toàn bộ Business Rules của hệ thống Family
 
 ### 1.2 Phạm vi
 
-Tài liệu bao phủ 7 nhóm Business Rules:
+Tài liệu bao phủ 9 nhóm Business Rules:
 
 | STT | Nhóm (Category) | Ký hiệu |
 |-----|------------------|---------|
@@ -49,9 +49,9 @@ Tổng cộng: **34 Business Rules**.
 - [09_GlossaryAndDataDictionary.md](./09_GlossaryAndDataDictionary.md) (FT8-12), nguồn thuật ngữ và thực thể dữ liệu.
 - [03_VisionAndScope.md](./03_VisionAndScope.md) (FT8-5), phạm vi và ràng buộc dự án.
 - [02_StakeholderAnalysis.md](./02_StakeholderAnalysis.md) (FT8-3), vai trò và quyền hạn Stakeholder.
-- Use Case Specification (FT8-8, FT8-10), nguồn traceability `Related Use Case` (sẽ bổ sung khi hoàn tất).
+- Use Case Diagram (FT8-8) và Use Case Specification (FT8-10), nguồn traceability `Related Use Case`.
 
-> **Ghi chú traceability:** `Related Use Case` được đánh dấu `UC-*` (mã tham chiếu). Khi Use Case Specification (FT8-10) hoàn tất, cần đối chiếu để đảm bảo mỗi Business Rule khớp với ít nhất một Use Case.
+> **Ghi chú traceability:** `Related Use Case` dùng hệ mã **12 Use Case chuẩn** (`UC-01`..`UC-12`) thống nhất toàn dự án (xem 06_UseCaseDiagram.md và 07_UseCaseSpecification.md). Mỗi Business Rule được gán tối thiểu một Use Case chuẩn phù hợp với phạm vi quy tắc.
 
 ---
 
@@ -66,6 +66,7 @@ Tổng cộng: **34 Business Rules**.
 | BR-US-003 | Tài khoản phải kích hoạt trước khi đăng nhập | High |
 | BR-US-004 | Quyền truy cập theo vai trò (RBAC) | High |
 | BR-US-005 | Một người dùng chỉ có một hồ sơ cá nhân | Medium |
+| BR-US-006 | Phiên làm việc phải được kết thúc khi đăng xuất hoặc hết hạn token | Medium |
 
 **BR-US-001, Email phải là duy nhất**
 
@@ -73,7 +74,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** User Management
 - **Source:** Đề tài mục (c), User registration and authentication; `User.Email` trong Data Dictionary.
 - **Related Requirements:** FR-US-01, FR-US-02, FR-US-04
-- **Related Use Case:** UC-01 (Đăng ký tài khoản)
+- **Related Use Case:** UC-02 (Đăng ký & Xác minh Thành viên)
 - **Priority:** High
 
 **BR-US-002, Mật khẩu phải đạt độ mạnh tối thiểu**
@@ -82,7 +83,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** User Management
 - **Source:** Yêu cầu bảo mật đề tài mục (d), Secure Authentication (JWT); Đặc tả FR-US-01 (Main Flow, bước 2).
 - **Related Requirements:** FR-US-01, FR-US-02, FR-US-04
-- **Related Use Case:** UC-01 (Đăng ký tài khoản), UC-02 (Đăng nhập)
+- **Related Use Case:** UC-02 (Đăng ký & Xác minh Thành viên), UC-01 (Đăng nhập & Xác thực)
 - **Priority:** High
 
 **BR-US-003, Tài khoản phải kích hoạt trước khi đăng nhập**
@@ -91,7 +92,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** User Management
 - **Source:** Đặc tả FR-US-01 (Main Flow, bước 5–7; Alternate Flow A3).
 - **Related Requirements:** FR-US-01, FR-US-02
-- **Related Use Case:** UC-01 (Đăng ký tài khoản), UC-02 (Đăng nhập)
+- **Related Use Case:** UC-02 (Đăng ký & Xác minh Thành viên), UC-01 (Đăng nhập & Xác thực)
 - **Priority:** High
 
 **BR-US-004, Quyền truy cập theo vai trò (RBAC)**
@@ -100,7 +101,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** User Management
 - **Source:** Đề tài mục (c), Role-Based Access Control (RBAC); mục (d), Secure Authentication (JWT).
 - **Related Requirements:** FR-US-05
-- **Related Use Case:** UC-03 (Phân quyền truy cập)
+- **Related Use Case:** UC-01 (Đăng nhập & Xác thực), UC-12 (Quản trị Hệ thống & Kiểm duyệt)
 - **Priority:** High
 
 **BR-US-005, Một người dùng chỉ có một hồ sơ cá nhân**
@@ -109,7 +110,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** User Management
 - **Source:** Đặc tả FR-US-06; `User` trong Data Dictionary.
 - **Related Requirements:** FR-US-06
-- **Related Use Case:** UC-04 (Quản lý hồ sơ cá nhân)
+- **Related Use Case:** UC-08 (Tra cứu Danh bạ & Hồ sơ)
 - **Priority:** Medium
 
 **BR-US-006, Phiên làm việc phải được kết thúc khi đăng xuất hoặc hết hạn token**
@@ -118,7 +119,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** User Management
 - **Source:** Đặc tả FR-US-03; `JWT` trong Glossary.
 - **Related Requirements:** FR-US-03, FR-US-02
-- **Related Use Case:** UC-02 (Đăng nhập)
+- **Related Use Case:** UC-01 (Đăng nhập & Xác thực)
 - **Priority:** Medium
 
 ### 2.2 Family Management (`BR-FG-*`)
@@ -139,7 +140,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Family Management
 - **Source:** Đặc tả FR-FG-03; `Family Owner` trong Glossary.
 - **Related Requirements:** FR-FG-03, FR-US-07
-- **Related Use Case:** UC-05 (Phê duyệt thành viên)
+- **Related Use Case:** UC-02 (Đăng ký & Xác minh Thành viên)
 - **Priority:** High
 
 **BR-FG-002, Mỗi Family chỉ có một Family Owner**
@@ -148,7 +149,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Family Management
 - **Source:** Đặc tả FR-FG-01; `Family Owner` trong Glossary.
 - **Related Requirements:** FR-FG-01, FR-US-05
-- **Related Use Case:** UC-06 (Quản lý gia đình)
+- **Related Use Case:** UC-03 (Quản lý Gia đình & Chi nhánh)
 - **Priority:** High
 
 **BR-FG-003, Mỗi FamilyMember chỉ thuộc một nhánh**
@@ -157,7 +158,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Family Management
 - **Source:** Đặc tả FR-FG-02; `FamilyBranch` trong Data Dictionary.
 - **Related Requirements:** FR-FG-02, FR-FG-03
-- **Related Use Case:** UC-07 (Quản lý nhánh gia đình)
+- **Related Use Case:** UC-03 (Quản lý Gia đình & Chi nhánh)
 - **Priority:** Medium
 
 **BR-FG-004, Quan hệ cha mẹ – con phải hợp lệ về thế hệ**
@@ -166,7 +167,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Family Management
 - **Source:** Đặc tả FR-FG-04; `Relationship`, `Generation` trong Glossary.
 - **Related Requirements:** FR-FG-04, FR-FG-06, FR-FG-08
-- **Related Use Case:** UC-08 (Quản lý quan hệ cha mẹ – con)
+- **Related Use Case:** UC-04 (Quản lý Quan hệ Cây gia phả)
 - **Priority:** High
 
 **BR-FG-005, Mỗi người chỉ có tối đa một cặp hôn nhân đồng thời**
@@ -175,7 +176,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Family Management
 - **Source:** Đặc tả FR-FG-05; `Relationship` trong Glossary.
 - **Related Requirements:** FR-FG-05
-- **Related Use Case:** UC-09 (Quản lý hôn nhân)
+- **Related Use Case:** UC-04 (Quản lý Quan hệ Cây gia phả)
 - **Priority:** Medium
 
 **BR-FG-006, Dữ liệu phả hệ không thể xóa vĩnh viễn khi còn lịch sử liên quan**
@@ -184,7 +185,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Family Management
 - **Source:** Đặc tả FR-FG-01, FR-FG-03; nguyên tắc bảo toàn dữ liệu phả hệ trong đề tài mục (b).
 - **Related Requirements:** FR-FG-01, FR-FG-03, FR-FG-06
-- **Related Use Case:** UC-06 (Quản lý gia đình), UC-07 (Quản lý nhánh gia đình)
+- **Related Use Case:** UC-03 (Quản lý Gia đình & Chi nhánh), UC-04 (Quản lý Quan hệ Cây gia phả)
 - **Priority:** Medium
 
 **BR-FG-007, Thông tin hiển thị trên cây gia phả và tra cứu quan hệ phải chính xác theo dữ liệu đã ghi**
@@ -193,7 +194,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Family Management
 - **Source:** Đặc tả FR-FG-06, FR-FG-07, FR-FG-08; `Relationship`, `Generation` trong Glossary.
 - **Related Requirements:** FR-FG-06, FR-FG-07, FR-FG-08
-- **Related Use Case:** UC-08 (Quản lý quan hệ cha mẹ – con), UC-09 (Quản lý hôn nhân)
+- **Related Use Case:** UC-04 (Quản lý Quan hệ Cây gia phả), UC-05 (Truy vấn & Trực quan hóa Cây gia phả)
 - **Priority:** Medium
 
 ### 2.3 Community (`BR-COM-*`)
@@ -211,7 +212,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Community
 - **Source:** Đặc tả FR-COM-01, FR-COM-02, FR-COM-04; `Guest` trong Glossary.
 - **Related Requirements:** FR-COM-01, FR-COM-02, FR-COM-03, FR-COM-04
-- **Related Use Case:** UC-10 (Đăng và quản lý bài viết), UC-11 (Bình luận và thả cảm xúc)
+- **Related Use Case:** UC-06 (Quản lý Bài viết & Tương tác)
 - **Priority:** High
 
 **BR-COM-002, Người tạo bài viết được xóa bài viết của mình**
@@ -220,7 +221,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Community
 - **Source:** Đặc tả FR-COM-01 (Postconditions); nguyên tắc quyền sở hữu nội dung.
 - **Related Requirements:** FR-COM-01, FR-ADM-02
-- **Related Use Case:** UC-10 (Đăng và quản lý bài viết)
+- **Related Use Case:** UC-06 (Quản lý Bài viết & Tương tác)
 - **Priority:** Medium
 
 **BR-COM-003, Thông báo chỉ được tạo bởi Family Owner hoặc Ban liên lạc**
@@ -229,7 +230,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Community
 - **Source:** Đặc tả FR-COM-05; `Announcement` trong Glossary.
 - **Related Requirements:** FR-COM-05
-- **Related Use Case:** UC-12 (Tạo thông báo gia đình)
+- **Related Use Case:** UC-06 (Quản lý Bài viết & Tương tác)
 - **Priority:** High
 
 **BR-COM-004, Nội dung vi phạm bị kiểm duyệt bởi Administrator**
@@ -238,16 +239,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Community
 - **Source:** Đặc tả FR-ADM-02; `Administrator`, `Audit Log` trong Glossary.
 - **Related Requirements:** FR-ADM-02, FR-COM-01, FR-COM-02
-- **Related Use Case:** UC-13 (Kiểm duyệt nội dung)
-- **Priority:** Medium
-
-**BR-EVT-005, Hình ảnh sự kiện chỉ được thêm bởi người tham gia và Event Owner**
-
-- **Description:** Hệ thống chỉ cho phép người đã xác nhận tham dự sự kiện (RSVP = Tham gia) hoặc Event Owner thêm hình ảnh vào thư viện ảnh sự kiện (Event Gallery). Hình ảnh được gán nhãn người tải lên và thời gian tải lên.
-- **Category:** Events
-- **Source:** Đặc tả FR-EVT-04; `Event Gallery` trong Glossary.
-- **Related Requirements:** FR-EVT-04
-- **Related Use Case:** UC-15 (Xác nhận tham dự), UC-16 (Quản lý người tham gia)
+- **Related Use Case:** UC-12 (Quản trị Hệ thống & Kiểm duyệt)
 - **Priority:** Medium
 
 ### 2.4 Events (`BR-EVT-*`)
@@ -266,7 +258,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Events
 - **Source:** Đặc tả FR-EVT-01; `Event` trong Glossary.
 - **Related Requirements:** FR-EVT-01
-- **Related Use Case:** UC-14 (Tạo sự kiện gia đình)
+- **Related Use Case:** UC-07 (Quản lý Sự kiện & RSVP)
 - **Priority:** High
 
 **BR-EVT-002, Mỗi thành viên chỉ xác nhận RSVP một lần**
@@ -275,7 +267,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Events
 - **Source:** Đặc tả FR-EVT-02; `RSVP`, `EventRSVP` trong Data Dictionary.
 - **Related Requirements:** FR-EVT-02, FR-EVT-03
-- **Related Use Case:** UC-15 (Xác nhận tham dự)
+- **Related Use Case:** UC-07 (Quản lý Sự kiện & RSVP)
 - **Priority:** High
 
 **BR-EVT-003, Chỉ Event Owner hoặc Family Owner được hủy sự kiện**
@@ -284,7 +276,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Events
 - **Source:** Đặc tả FR-EVT-01, FR-EVT-03; `Event Owner` trong Glossary.
 - **Related Requirements:** FR-EVT-01, FR-EVT-03
-- **Related Use Case:** UC-14 (Tạo sự kiện gia đình), UC-16 (Quản lý người tham gia)
+- **Related Use Case:** UC-07 (Quản lý Sự kiện & RSVP)
 - **Priority:** Medium
 
 **BR-EVT-004, Thời điểm bắt đầu phải trước thời điểm kết thúc**
@@ -293,10 +285,34 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Events
 - **Source:** Đặc tả FR-EVT-01 (Preconditions); `Event` trong Data Dictionary.
 - **Related Requirements:** FR-EVT-01, FR-EVT-05
-- **Related Use Case:** UC-14 (Tạo sự kiện gia đình)
+- **Related Use Case:** UC-07 (Quản lý Sự kiện & RSVP)
 - **Priority:** High
 
-### 2.5 Family Heritage (`BR-HER-*`)
+**BR-EVT-005, Hình ảnh sự kiện chỉ được thêm bởi người tham gia và Event Owner**
+
+- **Description:** Hệ thống chỉ cho phép người đã xác nhận tham dự sự kiện (RSVP = Tham gia) hoặc Event Owner thêm hình ảnh vào thư viện ảnh sự kiện (Event Gallery). Hình ảnh được gán nhãn người tải lên và thời gian tải lên.
+- **Category:** Events
+- **Source:** Đặc tả FR-EVT-04; `Event Gallery` trong Glossary.
+- **Related Requirements:** FR-EVT-04
+- **Related Use Case:** UC-07 (Quản lý Sự kiện & RSVP)
+- **Priority:** Medium
+
+### 2.5 Family Directory (`BR-DIR-*`)
+
+| Rule ID | Rule Name | Priority |
+|---------|-----------|:--------:|
+| BR-DIR-001 | Chỉ Family Member được xem danh bạ thành viên và thông tin liên hệ | High |
+
+**BR-DIR-001, Chỉ Family Member được xem danh bạ thành viên và thông tin liên hệ**
+
+- **Description:** Hệ thống chỉ cho phép Family Member đã xác thực truy cập danh bạ thành viên (Family Directory), xem hồ sơ nghề nghiệp, học vấn và tìm kiếm thành viên. Thông tin liên hệ cá nhân chỉ hiển thị cho thành viên cùng gia đình; Guest không được truy cập.
+- **Category:** Family Directory
+- **Source:** Đặc tả FR-DIR-01, FR-DIR-02, FR-DIR-03, FR-DIR-04; `Family Member`, `Family Directory` trong Glossary.
+- **Related Requirements:** FR-DIR-01, FR-DIR-02, FR-DIR-03, FR-DIR-04, FR-US-05
+- **Related Use Case:** UC-08 (Tra cứu Danh bạ & Hồ sơ)
+- **Priority:** High
+
+### 2.6 Family Heritage (`BR-HER-*`)
 
 | Rule ID | Rule Name | Priority |
 |---------|-----------|:--------:|
@@ -310,7 +326,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Family Heritage
 - **Source:** Đặc tả FR-HER-01, FR-HER-02, FR-HER-04; `Heritage` trong Glossary.
 - **Related Requirements:** FR-HER-01, FR-HER-02, FR-HER-03, FR-HER-04, FR-HER-05
-- **Related Use Case:** UC-17 (Đóng góp tư liệu di sản)
+- **Related Use Case:** UC-09 (Quản lý Lưu trữ & Di sản)
 - **Priority:** Medium
 
 **BR-HER-002, Tư liệu di sản phải được duyệt trước khi công khai**
@@ -319,7 +335,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Family Heritage
 - **Source:** Đặc tả FR-HER-05; nguyên tắc kiểm soát chất lượng nội dung di sản.
 - **Related Requirements:** FR-HER-05, FR-ADM-02
-- **Related Use Case:** UC-18 (Duyệt tư liệu di sản)
+- **Related Use Case:** UC-09 (Quản lý Lưu trữ & Di sản), UC-12 (Quản trị Hệ thống & Kiểm duyệt)
 - **Priority:** Medium
 
 **BR-HER-003, Tư liệu được phân loại và gắn thẻ ngữ cảnh**
@@ -328,28 +344,10 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Family Heritage
 - **Source:** Đặc tả FR-HER-05; `Digital Archive` trong Glossary.
 - **Related Requirements:** FR-HER-05
-- **Related Use Case:** UC-17 (Đóng góp tư liệu di sản)
+- **Related Use Case:** UC-09 (Quản lý Lưu trữ & Di sản)
 - **Priority:** Low
 
-**BR-DIR-001, Chỉ Family Member được xem danh bạ thành viên và thông tin liên hệ**
-
-- **Description:** Hệ thống chỉ cho phép Family Member đã xác thực truy cập danh bạ thành viên (Family Directory), xem hồ sơ nghề nghiệp, học vấn và tìm kiếm thành viên. Thông tin liên hệ cá nhân chỉ hiển thị cho thành viên cùng gia đình; Guest không được truy cập.
-- **Category:** Family Directory
-- **Source:** Đặc tả FR-DIR-01, FR-DIR-02, FR-DIR-03, FR-DIR-04; `Family Member`, `Family Directory` trong Glossary.
-- **Related Requirements:** FR-DIR-01, FR-DIR-02, FR-DIR-03, FR-DIR-04, FR-US-05
-- **Related Use Case:** UC-25 (Xem danh bạ thành viên), UC-26 (Tìm kiếm thành viên)
-- **Priority:** High
-
-**BR-DASH-001, Dữ liệu báo cáo và thống kê phải được truy xuất từ dữ liệu đã xác thực**
-
-- **Description:** Mọi số liệu hiển thị trên dashboard và báo cáo (thống kê gia đình, hoạt động cộng đồng, sự kiện, nhân khẩu) phải được tính toán trực tiếp từ dữ liệu hệ thống đã được xác thực (không lấy dữ liệu tạm). Báo cáo chỉ xuất được cho dữ liệu trong phạm vi quyền của người dùng.
-- **Category:** Dashboard & Reporting
-- **Source:** Đặc tả FR-DASH-01, FR-DASH-02, FR-DASH-03, FR-DASH-04, FR-DASH-05; nguyên tắc toàn vẹn dữ liệu đề tài mục (d).
-- **Related Requirements:** FR-DASH-01, FR-DASH-02, FR-DASH-03, FR-DASH-04, FR-DASH-05, FR-US-05
-- **Related Use Case:** UC-27 (Xem dashboard), UC-28 (Xuất báo cáo)
-- **Priority:** Medium
-
-### 2.6 AI Services (`BR-AI-*`)
+### 2.7 AI Services (`BR-AI-*`)
 
 | Rule ID | Rule Name | Priority |
 |---------|-----------|:--------:|
@@ -363,7 +361,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** AI Services
 - **Source:** Đặc tả FR-AI-01, FR-AI-02, FR-AI-03, FR-AI-05; nguyên tắc bảo mật dữ liệu đề tài mục (d).
 - **Related Requirements:** FR-AI-01, FR-AI-02, FR-AI-03, FR-AI-04, FR-AI-05, FR-US-05
-- **Related Use Case:** UC-19 (Tìm kiếm ngữ nghĩa), UC-20 (Trợ lý tri thức gia đình)
+- **Related Use Case:** UC-10 (Trợ lý AI & Truy vấn Tri thức)
 - **Priority:** High
 
 **BR-AI-002, Kết quả AI phải được gán nhãn và không thay thế quyết định con người**
@@ -372,7 +370,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** AI Services
 - **Source:** Đặc tả FR-AI-04; nguyên tắc minh bạch AI trong đề tài mục (b).
 - **Related Requirements:** FR-AI-02, FR-AI-04
-- **Related Use Case:** UC-20 (Trợ lý tri thức gia đình), UC-21 (Tóm tắt nội dung)
+- **Related Use Case:** UC-10 (Trợ lý AI & Truy vấn Tri thức)
 - **Priority:** Medium
 
 **BR-AI-003, AI Service phải có cơ chế fallback khi không khả dụng**
@@ -381,25 +379,32 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** AI Services
 - **Source:** Đặc tả FR-AI-01 (Alternate Flow); `AI Service` trong Glossary.
 - **Related Requirements:** FR-AI-01, FR-AI-02
-- **Related Use Case:** UC-19 (Tìm kiếm ngữ nghĩa)
+- **Related Use Case:** UC-10 (Trợ lý AI & Truy vấn Tri thức)
 - **Priority:** High
 
-**BR-ADM-004, Sao lưu và phục hồi dữ liệu chỉ được thực hiện bởi Administrator**
+### 2.8 Dashboard & Reporting (`BR-DASH-*`)
 
-- **Description:** Hệ thống chỉ cho phép Administrator thực hiện sao lưu (Backup) và phục hồi (Restore) dữ liệu. Mọi thao tác sao lưu/phục hồi được ghi vào Audit Log và phải được xác nhận trước khi thực hiện để tránh mất dữ liệu.
-- **Category:** Administration
-- **Source:** Đặc tả FR-ADM-04; `Audit Log` trong Glossary.
-- **Related Requirements:** FR-ADM-04, FR-ADM-03
-- **Related Use Case:** UC-29 (Sao lưu và phục hồi dữ liệu)
+| Rule ID | Rule Name | Priority |
+|---------|-----------|:--------:|
+| BR-DASH-001 | Dữ liệu báo cáo và thống kê phải được truy xuất từ dữ liệu đã xác thực | Medium |
+
+**BR-DASH-001, Dữ liệu báo cáo và thống kê phải được truy xuất từ dữ liệu đã xác thực**
+
+- **Description:** Mọi số liệu hiển thị trên dashboard và báo cáo (thống kê gia đình, hoạt động cộng đồng, sự kiện, nhân khẩu) phải được tính toán trực tiếp từ dữ liệu hệ thống đã được xác thực (không lấy dữ liệu tạm). Báo cáo chỉ xuất được cho dữ liệu trong phạm vi quyền của người dùng.
+- **Category:** Dashboard & Reporting
+- **Source:** Đặc tả FR-DASH-01, FR-DASH-02, FR-DASH-03, FR-DASH-04, FR-DASH-05; nguyên tắc toàn vẹn dữ liệu đề tài mục (d).
+- **Related Requirements:** FR-DASH-01, FR-DASH-02, FR-DASH-03, FR-DASH-04, FR-DASH-05, FR-US-05
+- **Related Use Case:** UC-11 (Xem Báo cáo & Thống kê)
 - **Priority:** Medium
 
-### 2.7 Administration (`BR-ADM-*`)
+### 2.9 Administration (`BR-ADM-*`)
 
 | Rule ID | Rule Name | Priority |
 |---------|-----------|:--------:|
 | BR-ADM-001 | Chỉ Administrator mới được quản lý tài khoản người dùng | High |
 | BR-ADM-002 | Mọi thao tác nhạy cảm phải được ghi vào Audit Log | High |
 | BR-ADM-003 | Chỉ Administrator mới được cấu hình hệ thống | Medium |
+| BR-ADM-004 | Sao lưu và phục hồi dữ liệu chỉ được thực hiện bởi Administrator | Medium |
 
 **BR-ADM-001, Chỉ Administrator mới được quản lý tài khoản người dùng**
 
@@ -407,7 +412,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Administration
 - **Source:** Đặc tả FR-ADM-01; `Administrator` trong Glossary.
 - **Related Requirements:** FR-ADM-01, FR-US-05
-- **Related Use Case:** UC-22 (Quản lý người dùng)
+- **Related Use Case:** UC-12 (Quản trị Hệ thống & Kiểm duyệt)
 - **Priority:** High
 
 **BR-ADM-002, Mọi thao tác nhạy cảm phải được ghi vào Audit Log**
@@ -416,7 +421,7 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Administration
 - **Source:** Đề tài mục (d), Audit Logging; `Audit Log` trong Glossary.
 - **Related Requirements:** FR-ADM-03, FR-ADM-02
-- **Related Use Case:** UC-23 (Xem nhật ký kiểm toán)
+- **Related Use Case:** UC-12 (Quản trị Hệ thống & Kiểm duyệt)
 - **Priority:** High
 
 **BR-ADM-003, Chỉ Administrator mới được cấu hình hệ thống**
@@ -425,7 +430,16 @@ Tổng cộng: **34 Business Rules**.
 - **Category:** Administration
 - **Source:** Đặc tả FR-ADM-05; `Administrator` trong Glossary.
 - **Related Requirements:** FR-ADM-05
-- **Related Use Case:** UC-24 (Cấu hình hệ thống)
+- **Related Use Case:** UC-12 (Quản trị Hệ thống & Kiểm duyệt)
+- **Priority:** Medium
+
+**BR-ADM-004, Sao lưu và phục hồi dữ liệu chỉ được thực hiện bởi Administrator**
+
+- **Description:** Hệ thống chỉ cho phép Administrator thực hiện sao lưu (Backup) và phục hồi (Restore) dữ liệu. Mọi thao tác sao lưu/phục hồi được ghi vào Audit Log và phải được xác nhận trước khi thực hiện để tránh mất dữ liệu.
+- **Category:** Administration
+- **Source:** Đặc tả FR-ADM-04; `Audit Log` trong Glossary.
+- **Related Requirements:** FR-ADM-04, FR-ADM-03
+- **Related Use Case:** UC-12 (Quản trị Hệ thống & Kiểm duyệt)
 - **Priority:** Medium
 
 ---
@@ -441,6 +455,7 @@ Tổng cộng: **34 Business Rules**.
 | BR-US-003 | FR-US-01, FR-US-02 | User Management |
 | BR-US-004 | FR-US-05 | User Management |
 | BR-US-005 | FR-US-06 | User Management |
+| BR-US-006 | FR-US-03, FR-US-02 | User Management |
 | BR-FG-001 | FR-FG-03, FR-US-07 | Family Management |
 | BR-FG-002 | FR-FG-01, FR-US-05 | Family Management |
 | BR-FG-003 | FR-FG-02, FR-FG-03 | Family Management |
@@ -472,42 +487,42 @@ Tổng cộng: **34 Business Rules**.
 
 ### 3.2 Business Rule ↔ Use Case
 
-| BR ID | Use Case | Category |
+| BR ID | Use Case (chuẩn) | Category |
 |-------|----------|----------|
-| BR-US-001 | UC-01 (Đăng ký tài khoản) | User Management |
-| BR-US-002 | UC-01, UC-02 (Đăng nhập) | User Management |
-| BR-US-003 | UC-01, UC-02 | User Management |
-| BR-US-004 | UC-03 (Phân quyền truy cập) | User Management |
-| BR-US-005 | UC-04 (Quản lý hồ sơ cá nhân) | User Management |
-| BR-US-006 | UC-02 (Đăng nhập) | User Management |
-| BR-FG-001 | UC-05 (Phê duyệt thành viên) | Family Management |
-| BR-FG-002 | UC-06 (Quản lý gia đình) | Family Management |
-| BR-FG-003 | UC-07 (Quản lý nhánh gia đình) | Family Management |
-| BR-FG-004 | UC-08 (Quản lý quan hệ cha mẹ – con) | Family Management |
-| BR-FG-005 | UC-09 (Quản lý hôn nhân) | Family Management |
-| BR-FG-006 | UC-06, UC-07 | Family Management |
-| BR-FG-007 | UC-08, UC-09 | Family Management |
-| BR-COM-001 | UC-10 (Đăng và quản lý bài viết), UC-11 (Bình luận và thả cảm xúc) | Community |
-| BR-COM-002 | UC-10 | Community |
-| BR-COM-003 | UC-12 (Tạo thông báo gia đình) | Community |
-| BR-COM-004 | UC-13 (Kiểm duyệt nội dung) | Community |
-| BR-EVT-001 | UC-14 (Tạo sự kiện gia đình) | Events |
-| BR-EVT-002 | UC-15 (Xác nhận tham dự) | Events |
-| BR-EVT-003 | UC-14, UC-16 (Quản lý người tham gia) | Events |
-| BR-EVT-004 | UC-14 | Events |
-| BR-EVT-005 | UC-15, UC-16 | Events |
-| BR-HER-001 | UC-17 (Đóng góp tư liệu di sản) | Family Heritage |
-| BR-HER-002 | UC-18 (Duyệt tư liệu di sản) | Family Heritage |
-| BR-HER-003 | UC-17 | Family Heritage |
-| BR-DIR-001 | UC-25 (Xem danh bạ thành viên), UC-26 (Tìm kiếm thành viên) | Family Directory |
-| BR-DASH-001 | UC-27 (Xem dashboard), UC-28 (Xuất báo cáo) | Dashboard & Reporting |
-| BR-AI-001 | UC-19 (Tìm kiếm ngữ nghĩa), UC-20 (Trợ lý tri thức gia đình) | AI Services |
-| BR-AI-002 | UC-20, UC-21 (Tóm tắt nội dung) | AI Services |
-| BR-AI-003 | UC-19 | AI Services |
-| BR-ADM-001 | UC-22 (Quản lý người dùng) | Administration |
-| BR-ADM-002 | UC-23 (Xem nhật ký kiểm toán) | Administration |
-| BR-ADM-003 | UC-24 (Cấu hình hệ thống) | Administration |
-| BR-ADM-004 | UC-29 (Sao lưu và phục hồi dữ liệu) | Administration |
+| BR-US-001 | UC-02 (Đăng ký & Xác minh Thành viên) | User Management |
+| BR-US-002 | UC-02, UC-01 | User Management |
+| BR-US-003 | UC-02, UC-01 | User Management |
+| BR-US-004 | UC-01 (Đăng nhập & Xác thực), UC-12 (Quản trị Hệ thống & Kiểm duyệt) | User Management |
+| BR-US-005 | UC-08 (Tra cứu Danh bạ & Hồ sơ) | User Management |
+| BR-US-006 | UC-01 | User Management |
+| BR-FG-001 | UC-02 (Đăng ký & Xác minh Thành viên) | Family Management |
+| BR-FG-002 | UC-03 (Quản lý Gia đình & Chi nhánh) | Family Management |
+| BR-FG-003 | UC-03 | Family Management |
+| BR-FG-004 | UC-04 (Quản lý Quan hệ Cây gia phả) | Family Management |
+| BR-FG-005 | UC-04 | Family Management |
+| BR-FG-006 | UC-03, UC-04 | Family Management |
+| BR-FG-007 | UC-04, UC-05 (Truy vấn & Trực quan hóa Cây gia phả) | Family Management |
+| BR-COM-001 | UC-06 (Quản lý Bài viết & Tương tác) | Community |
+| BR-COM-002 | UC-06 | Community |
+| BR-COM-003 | UC-06 | Community |
+| BR-COM-004 | UC-12 (Quản trị Hệ thống & Kiểm duyệt) | Community |
+| BR-EVT-001 | UC-07 (Quản lý Sự kiện & RSVP) | Events |
+| BR-EVT-002 | UC-07 | Events |
+| BR-EVT-003 | UC-07 | Events |
+| BR-EVT-004 | UC-07 | Events |
+| BR-EVT-005 | UC-07 | Events |
+| BR-HER-001 | UC-09 (Quản lý Lưu trữ & Di sản) | Family Heritage |
+| BR-HER-002 | UC-09, UC-12 | Family Heritage |
+| BR-HER-003 | UC-09 | Family Heritage |
+| BR-DIR-001 | UC-08 (Tra cứu Danh bạ & Hồ sơ) | Family Directory |
+| BR-DASH-001 | UC-11 (Xem Báo cáo & Thống kê) | Dashboard & Reporting |
+| BR-AI-001 | UC-10 (Trợ lý AI & Truy vấn Tri thức) | AI Services |
+| BR-AI-002 | UC-10 | AI Services |
+| BR-AI-003 | UC-10 | AI Services |
+| BR-ADM-001 | UC-12 (Quản trị Hệ thống & Kiểm duyệt) | Administration |
+| BR-ADM-002 | UC-12 | Administration |
+| BR-ADM-003 | UC-12 | Administration |
+| BR-ADM-004 | UC-12 | Administration |
 
 ---
 
@@ -517,8 +532,17 @@ Tổng cộng: **34 Business Rules**.
 |----------|---------|
 | Không có Business Rule bị trùng lặp | ✅ 34 BR, mỗi BR có Rule ID duy nhất, không trùng nội dung |
 | Mỗi BR liên kết với ít nhất một FR | ✅ 34/34 BR có `Related Requirements` |
-| Mỗi BR liên kết với ít nhất một Use Case | ✅ 34/34 BR có `Related Use Case` (tham chiếu `UC-*`) |
+| Mỗi BR liên kết với ít nhất một Use Case | ✅ 34/34 BR có `Related Use Case` (12 Use Case chuẩn `UC-01`..`UC-12`) |
 | Mọi FR trong 04_FunctionalRequirements.md được phủ bởi ít nhất một BR | ✅ 49/49 FR được mapping |
 | BR không mâu thuẫn với nhau | ✅ Không tồn tại quy tắc đối nghịch; quyền hạn được phân cấp rõ (Guest < Member < Owner < Admin) |
 | BR thống nhất với Glossary | ✅ Thuật ngữ (`Family Owner`, `RSVP`, `Audit Log`, `Event Owner`...) khớp 09_GlossaryAndDataDictionary.md |
 | BR thống nhất với Functional Requirements | ✅ Mã `FR-*` và nội dung khớp 04_FunctionalRequirements.md |
+
+---
+
+## 5. Lịch sử tài liệu
+
+| Phiên bản | Ngày | Người cập nhật | Mô tả |
+|-----------|------|----------------|--------|
+| 1.0 | 2026-08-05 | Đặng Hoàng Ân | Tạo tài liệu: 34 BR, traceability FR/UC |
+| 1.1 | 2026-08-19 | Đặng Hoàng Ân | Đồng bộ `Related Use Case` về 12 Use Case chuẩn (UC-01..UC-12); sửa cấu trúc nhóm BR (tách Family Directory, Dashboard & Reporting; chuyển BR-EVT-005 về Events, BR-ADM-004 về Administration) |
