@@ -71,7 +71,7 @@ Tài liệu này mô tả chi tiết các quy trình nghiệp vụ (Business Pro
 *   **Actor**: Quản trị viên / Thành viên có quyền.
 *   **Trigger**: Thêm, sửa, xóa quan hệ phả hệ.
 *   **Input**: Node gốc, loại quan hệ, người liên quan.
-*   **Các bước xử lý**: Mở cây -> Thêm quan hệ -> Hệ thống cập nhật mô hình Graph DB.
+*   **Các bước xử lý**: Mở cây -> Thêm quan hệ -> Hệ thống cập nhật adjacency list (PostgreSQL recursive CTE).
 *   **Decision**: Có gây ra vòng lặp logic (vd: con già hơn cha)? (Có -> Báo lỗi; Không -> Lưu).
 *   **Output**: Cây gia phả được vẽ lại.
 *   **End State**: Quan hệ gia đình được trực quan hóa.
@@ -115,7 +115,7 @@ Tài liệu này mô tả chi tiết các quy trình nghiệp vụ (Business Pro
 *   **Actor**: Người dùng đã đăng nhập.
 *   **Trigger**: Tìm kiếm thông tin phả hệ/lịch sử.
 *   **Input**: Câu hỏi ngôn ngữ tự nhiên.
-*   **Các bước xử lý**: Nhập câu hỏi -> Gọi AI API -> Phân tích ngữ nghĩa -> Tìm Graph DB -> Trả kết quả.
+*   **Các bước xử lý**: Nhập câu hỏi -> Gọi AI API -> Phân tích ngữ nghĩa -> Truy vấn CSDL (adjacency list + recursive CTE) -> Trả kết quả.
 *   **Decision**: Đủ dữ liệu trả lời? (Có -> Hiện chi tiết; Không -> Gợi ý cập nhật).
 *   **Output**: Văn bản giải thích hoặc sơ đồ.
 *   **End State**: Người dùng nhận được thông tin cần thiết.
