@@ -41,3 +41,10 @@ def register_routes(app: FastAPI) -> None:
     #
     # from app.api.controllers.ai_controller import router as ai_router
     # app.include_router(ai_router, prefix="/api/ai", tags=["AI"])
+from fastapi import APIRouter
+from app.api.controllers.auth_controller import router as auth_router
+from app.api.controllers.event_controller import router as event_router
+
+api_router = APIRouter()
+api_router.include_router(auth_router)
+api_router.include_router(event_router)
