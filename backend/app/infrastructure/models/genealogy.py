@@ -1,6 +1,6 @@
 """Family and genealogy models."""
 from uuid import UUID
-from sqlalchemy import String, Text, ForeignKey
+from sqlalchemy import String, Text, ForeignKey, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.infrastructure.databases.base import Base, UUIDPrimaryKeyMixin, TimestampMixin
 
@@ -18,7 +18,7 @@ class Family(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="ACTIVE")
 
     # Relationships
-    creator = relationship("User", back_populates="families_created", foreign_keys=[created_by])
+    creator = relationship("User", back_populates="families_created", foreign_keys=["created_by"])
     branches = relationship("FamilyBranch", back_populates="family", cascade="all, delete-orphan")
     members = relationship("FamilyMember", back_populates="family", cascade="all, delete-orphan")
     events = relationship("Event", back_populates="family", cascade="all, delete-orphan")
@@ -46,7 +46,7 @@ class FamilyBranch(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
     # Relationships
     family = relationship("Family", back_populates="branches")
-    founder = relationship("FamilyMember", back_populates="founded_branches", foreign_keys=[founder_id])
+    founder = relationship("FamilyMember", back_populates="founded_branches", foreign_keys=["founder_id"])
     members = relationship("FamilyMember", back_populates="branch")
     heritage_items = relationship("HeritageItem", back_populates="branch")
 
@@ -80,7 +80,7 @@ class FamilyMember(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     branch = relationship("FamilyBranch", back_populates="members")
     user = relationship("User", back_populates="members_linked")
     founded_branches = relationship(
-        "FamilyBranch", back_populates="founder", foreign_keys=[founder_id]
+        "FamilyBranch", back_populates="founder", foreign_keys=["branch_id"]
     )
     employment_profiles = relationship(
         "EmploymentProfile", back_populates="member", cascade="all, delete-orphan"
