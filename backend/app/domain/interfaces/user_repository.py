@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 from uuid import UUID
-from backend.app.domain.interfaces.repository_base import BaseRepository
-from backend.app.domain.models.dtos import UserDTO
+from app.domain.interfaces.repository_base import BaseRepository
+from app.domain.models.dtos import UserDTO
 
 class IUserRepository(BaseRepository[UserDTO], ABC):
     @abstractmethod

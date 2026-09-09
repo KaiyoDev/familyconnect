@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
-from backend.app.domain.models.dtos import RegisterRequest, LoginRequest, TokenResponse, UserDTO
+from app.domain.models.dtos import RegisterRequest, LoginRequest, TokenResponse, UserDTO
 
 class IAuthService(ABC):
     @abstractmethod

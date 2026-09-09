@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 from uuid import UUID
-from backend.app.domain.models.dtos import CreateFamilyRequest, FamilyDTO, MemberDTO
+from app.domain.models.dtos import CreateFamilyRequest, FamilyDTO, MemberDTO
 
 class IFamilyService(ABC):
     @abstractmethod

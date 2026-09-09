@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 from uuid import UUID
-from backend.app.domain.models.dtos import CreateEventRequest, EventDTO, RSVPDTO
+from app.domain.models.dtos import CreateEventRequest, EventDTO, RSVPDTO
 
 class IEventService(ABC):
     @abstractmethod

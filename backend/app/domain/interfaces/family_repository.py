@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List
 from uuid import UUID
-from backend.app.domain.interfaces.repository_base import BaseRepository
-from backend.app.domain.models.dtos import FamilyDTO, MemberDTO
+from app.domain.interfaces.repository_base import BaseRepository
+from app.domain.models.dtos import FamilyDTO, MemberDTO
 
 class IFamilyRepository(BaseRepository[FamilyDTO], ABC):
     @abstractmethod

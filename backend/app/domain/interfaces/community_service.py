@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
-from backend.app.domain.models.dtos import CreatePostRequest, PostDTO, CommentDTO
+from app.domain.models.dtos import CreatePostRequest, PostDTO, CommentDTO
 
 class ICommunityService(ABC):
     @abstractmethod
