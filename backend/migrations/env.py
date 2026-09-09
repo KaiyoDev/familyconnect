@@ -1,5 +1,11 @@
 """Alembic migration environment."""
 import asyncio
+import sys
+
+if sys.platform == "win32":
+    import selectors
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 from logging.config import fileConfig
 
 from sqlalchemy import pool
@@ -12,8 +18,7 @@ from config import settings
 from app.infrastructure.databases.base import Base
 
 # Import all models here so they register with Base
-# from app.infrastructure.models.user_model import User
-# from app.infrastructure.models.family_model import Family
+from app.infrastructure.models import genealogy, community, event, heritage, directory, user, types
 
 # this is the Alembic Config object
 config = context.config
