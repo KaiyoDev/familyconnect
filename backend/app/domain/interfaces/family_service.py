@@ -1,21 +1,20 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional
 from uuid import UUID
-from app.domain.models.dtos import CreateFamilyRequest, FamilyDTO, MemberDTO
+
 
 class IFamilyService(ABC):
     @abstractmethod
-    async def create(self, creator_id: UUID, request: CreateFamilyRequest) -> FamilyDTO:
-        pass
+    async def create(self, request, creator_id: UUID):
+        raise NotImplementedError
 
     @abstractmethod
-    async def update(self, family_id: UUID, request: CreateFamilyRequest) -> Optional[FamilyDTO]:
-        pass
+    async def update(self, family_id: UUID, request):
+        raise NotImplementedError
 
     @abstractmethod
     async def delete(self, family_id: UUID) -> bool:
-        pass
+        raise NotImplementedError
 
     @abstractmethod
-    async def get_tree(self, family_id: UUID) -> List[MemberDTO]:
-        pass
+    async def get_tree(self, family_id: UUID):
+        raise NotImplementedError

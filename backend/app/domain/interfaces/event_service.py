@@ -1,17 +1,16 @@
 from abc import ABC, abstractmethod
-from typing import List
 from uuid import UUID
-from app.domain.models.dtos import CreateEventRequest, EventDTO, RSVPDTO
+
 
 class IEventService(ABC):
     @abstractmethod
-    async def create(self, creator_id: UUID, request: CreateEventRequest) -> EventDTO:
-        pass
+    async def create(self, request, creator_id: UUID):
+        raise NotImplementedError
 
     @abstractmethod
-    async def rsvp(self, event_id: UUID, user_id: UUID, status: str) -> RSVPDTO:
-        pass
+    async def rsvp(self, event_id: UUID, request, member_id: UUID):
+        raise NotImplementedError
 
     @abstractmethod
-    async def get_attendees(self, event_id: UUID) -> List[RSVPDTO]:
-        pass
+    async def get_attendees(self, event_id: UUID):
+        raise NotImplementedError

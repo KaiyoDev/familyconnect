@@ -1,14 +1,17 @@
-from abc import ABC, abstractmethod
-from typing import List
+from abc import abstractmethod
+from typing import Generic, TypeVar
 from uuid import UUID
+
 from app.domain.interfaces.repository_base import BaseRepository
-from app.domain.models.dtos import FamilyDTO, MemberDTO
 
-class IFamilyRepository(BaseRepository[FamilyDTO], ABC):
+TFamily = TypeVar("TFamily")
+
+
+class IFamilyRepository(BaseRepository[TFamily], Generic[TFamily]):
     @abstractmethod
-    async def get_by_creator(self, user_id: UUID) -> List[FamilyDTO]:
-        pass
+    async def get_by_creator(self, creator_id: UUID):
+        raise NotImplementedError
 
     @abstractmethod
-    async def get_members(self, family_id: UUID) -> List[MemberDTO]:
-        pass
+    async def get_members(self, family_id: UUID):
+        raise NotImplementedError

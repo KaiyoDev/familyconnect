@@ -1,14 +1,16 @@
-from abc import ABC, abstractmethod
-from typing import Optional
-from uuid import UUID
-from app.domain.interfaces.repository_base import BaseRepository
-from app.domain.models.dtos import UserDTO
+from abc import abstractmethod
+from typing import Generic, TypeVar
 
-class IUserRepository(BaseRepository[UserDTO], ABC):
+from app.domain.interfaces.repository_base import BaseRepository
+
+TUser = TypeVar("TUser")
+
+
+class IUserRepository(BaseRepository[TUser], Generic[TUser]):
     @abstractmethod
-    async def get_by_email(self, email: str) -> Optional[UserDTO]:
-        pass
+    async def get_by_email(self, email: str):
+        raise NotImplementedError
 
     @abstractmethod
     async def exists_by_email(self, email: str) -> bool:
-        pass
+        raise NotImplementedError

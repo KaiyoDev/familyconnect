@@ -1,85 +1,132 @@
-from pydantic import BaseModel, EmailStr
-from typing import List, Optional
+from datetime import date, datetime
 from uuid import UUID
-from datetime import datetime
 
-# --- AUTH & USER DTOs ---
-class UserDTO(BaseModel):
-    id: UUID
-    email: EmailStr
-    full_name: str
-    is_active: bool
-    created_at: datetime
+from pydantic import BaseModel, ConfigDict, Field
+
+
+class DomainDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
 
 class RegisterRequest(BaseModel):
-    email: EmailStr
-    password: str
-    full_name: str
+    full_name: str = Field(..., min_length=1, max_length=100)
+    email: str = Field(..., min_length=3, max_length=150)
+    password: str = Field(..., min_length=8, max_length=255)
+    phone: str | None = Field(default=None, max_length=20)
+
 
 class LoginRequest(BaseModel):
-    email: EmailStr
-    password: str
+    email: str = Field(..., min_length=3, max_length=150)
+    password: str = Field(..., min_length=1, max_length=255)
+
 
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
+    expires_in: int | None = Field(default=None, ge=0)
 
-# --- FAMILY DTOs ---
-class FamilyDTO(BaseModel):
+
+class UserDTO(DomainDTO):
     id: UUID
-    name: str
-    description: Optional[str] = None
-    creator_id: UUID
-    created_at: datetime
+    full_name: str
+    email: str
+    phone: str | None = None
+    role: str
+    status: str
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
 
 class CreateFamilyRequest(BaseModel):
-    name: str
-    description: Optional[str] = None
+    family_name: str = Field(..., min_length=1, max_length=150)
+    description: str | None = Field(default=None, max_length=2000)
 
-class MemberDTO(BaseModel):
-    user_id: UUID
+
+class FamilyDTO(DomainDTO):
+    id: UUID
+    family_name: str
+    description: str | None = None
+    created_by: UUID
+    status: str
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
+class MemberDTO(DomainDTO):
+    id: UUID
     family_id: UUID
-    role: str
-    joined_at: datetime
+    branch_id: UUID | None = None
+    user_id: UUID | None = None
+    full_name: str
+    gender: str
+    date_of_birth: date | None = None
+    is_alive: bool
+    date_of_death: date | None = None
+    status: str
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
-# --- COMMUNITY DTOs ---
-class PostDTO(BaseModel):
+
+class CreatePostRequest(BaseModel):
+    family_id: UUID
+    content: str = Field(..., min_length=1, max_length=2000)
+    visibility_scope: str = "FAMILY"
+    branch_id: UUID | None = None
+    media_urls: list[str] | None = None
+
+
+class PostDTO(DomainDTO):
     id: UUID
     family_id: UUID
     author_id: UUID
     content: str
-    created_at: datetime
+    visibility_scope: str
+    branch_id: UUID | None = None
+    status: str
+    media_urls: list[str] | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
-class CreatePostRequest(BaseModel):
-    family_id: UUID
-    content: str
 
-class CommentDTO(BaseModel):
+class CommentDTO(DomainDTO):
     id: UUID
     post_id: UUID
     author_id: UUID
     content: str
-    created_at: datetime
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
-# --- EVENT DTOs ---
-class EventDTO(BaseModel):
-    id: UUID
-    family_id: UUID
-    creator_id: UUID
-    title: str
-    description: Optional[str] = None
-    start_time: datetime
-    end_time: datetime
 
 class CreateEventRequest(BaseModel):
     family_id: UUID
-    title: str
-    description: Optional[str] = None
+    title: str = Field(..., min_length=1, max_length=200)
+    description: str | None = Field(default=None, max_length=5000)
+    location: str | None = Field(default=None, max_length=255)
     start_time: datetime
-    end_time: datetime
+    end_time: datetime | None = None
+    type: str = Field(..., min_length=1, max_length=30)
 
-class RSVPDTO(BaseModel):
+
+class EventDTO(DomainDTO):
+    id: UUID
+    family_id: UUID
+    title: str
+    description: str | None = None
+    location: str | None = None
+    start_time: datetime
+    end_time: datetime | None = None
+    type: str
+    status: str
+    created_by: UUID
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+
+class RSVPDTO(DomainDTO):
+    id: UUID
     event_id: UUID
-    user_id: UUID
-    status: str # e.g., 'going', 'maybe', 'declined'
+    member_id: UUID | None = None
+    guest_email: str | None = None
+    response: str
+    responded_at: datetime | None = None

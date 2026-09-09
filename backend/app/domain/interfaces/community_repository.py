@@ -1,14 +1,17 @@
-from abc import ABC, abstractmethod
-from typing import List
+from abc import abstractmethod
+from typing import Generic, TypeVar
 from uuid import UUID
+
 from app.domain.interfaces.repository_base import BaseRepository
-from app.domain.models.dtos import PostDTO
 
-class ICommunityRepository(BaseRepository[PostDTO], ABC):
+TCommunity = TypeVar("TCommunity")
+
+
+class ICommunityRepository(BaseRepository[TCommunity], Generic[TCommunity]):
     @abstractmethod
-    async def get_posts_by_family(self, family_id: UUID) -> List[PostDTO]:
-        pass
+    async def get_posts_by_family(self, family_id: UUID, skip: int = 0, limit: int = 100):
+        raise NotImplementedError
 
     @abstractmethod
-    async def get_feed(self, user_id: UUID) -> List[PostDTO]:
-        pass
+    async def get_feed(self, family_id: UUID, skip: int = 0, limit: int = 100):
+        raise NotImplementedError
