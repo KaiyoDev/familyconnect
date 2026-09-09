@@ -14,6 +14,7 @@ def register_routes(app: FastAPI) -> None:
     from app.api.controllers.health_controller import router as health_router
     app.include_router(health_router, tags=["Health"])
 
+feature/FT8-43-event-service
     # Future controllers will be registered here:
     # from app.api.controllers.auth_controller import router as auth_router
     # app.include_router(auth_router, prefix="/api/auth", tags=["Auth"])
@@ -48,3 +49,11 @@ from app.api.controllers.event_controller import router as event_router
 api_router = APIRouter()
 api_router.include_router(auth_router)
 api_router.include_router(event_router)
+    # Community (posts, comments, reactions)
+    from app.api.controllers.community_controller import router as community_router
+    app.include_router(community_router, prefix="/api/v1", tags=["Community"])
+
+    # AI Assistant (stub)
+    from app.api.controllers.ai_controller import router as ai_router
+    app.include_router(ai_router, prefix="/api/v1", tags=["AI"])
+develop
