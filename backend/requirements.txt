@@ -17,4 +17,4 @@ python-multipart>=0.0.18
 
 # Utils
 python-jose[cryptography]>=3.3
-passlib[bcrypt]>=1.7
+passlib[bcrypt]>=1.7openai>=1.50
