@@ -1,5 +1,9 @@
-"""Central route registration (mirror of teacher's src/api/routes.py).
+from fastapi import APIRouter
+from app.api.controllers.auth_controller import router as auth_router
 
+fix/FT8-40-auth-service
+api_router = APIRouter(prefix="/api")
+api_router.include_router(auth_router)
 Responsibility: register all API blueprints/routers with the application.
 Teacher used `register_routes(app)` with Flask Blueprints.
 FastAPI adaptation: register all APIRouter instances via `app.include_router`.

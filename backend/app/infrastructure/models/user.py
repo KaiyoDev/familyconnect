@@ -1,38 +1,29 @@
-"""User authentication and profile model."""
-from uuid import UUID
-from sqlalchemy import String, Text, Boolean, func
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.infrastructure.databases.base import Base, UUIDPrimaryKeyMixin, TimestampMixin
+﻿from sqlalchemy import Column, String, DateTime
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
+from app.infrastructure.databases.base import Base  # Hoặc Base từ DB của dự án
 
+class User(Base):
+    __tablename__ = "users"
+    __table_args__ = {'extend_existing': True}
 
-class User(UUIDPrimaryKeyMixin, TimestampMixin, Base):
-    """User account model — stores login credentials and system role."""
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    email = Column(String, unique=True, nullable=False)
+    password = Column(String, nullable=False)
+    full_name = Column(String, nullable=False)
+    phone = Column(String, nullable=True)
+    role = Column(String, default="USER")
+    status = Column(String, default="PENDING")
+from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy.orm import relationship
+from app.infrastructure.databases.database import Base
 
+class User(Base):
     __tablename__ = "users"
 
-    full_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    email: Mapped[str] = mapped_column(String(150), unique=True, nullable=False, index=True)
-    password: Mapped[str] = mapped_column(String(255), nullable=False)
-    phone: Mapped[str] = mapped_column(String(20), nullable=True)
-    role: Mapped[str] = mapped_column(String(20), nullable=False, default="USER")
-    status: Mapped[str] = mapped_column(String(20), nullable=False, default="PENDING")
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    is_active = Column(Boolean, default=True)
 
-    # Relationships
-    families_created = relationship(
-        "Family", back_populates="creator", foreign_keys="[Family.created_by]"
-    )
-    members_linked = relationship(
-        "FamilyMember", back_populates="user", uselist=False
-    )
-    events_created = relationship(
-        "Event", back_populates="creator", foreign_keys="[Event.created_by]"
-    )
-    posts = relationship("Post", back_populates="author")
-    comments = relationship("Comment", back_populates="author")
-    notifications = relationship("Notification", back_populates="user")
-    audit_logs = relationship("AuditLog", back_populates="actor")
-    ai_conversations = relationship("AIConversation", back_populates="user")
-    media_uploads = relationship("MediaAsset", back_populates="uploader")
-
-    def __repr__(self) -> str:
-        return f"<User(id={self.id}, email={self.email})>"
+    events = relationship("Event", back_populates="owner", lazy="select")
