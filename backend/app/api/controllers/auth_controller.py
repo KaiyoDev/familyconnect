@@ -1,43 +1,35 @@
-from fastapi import APIRouter, Depends, status
-from app.services.auth_service import AuthService
-from app.api.dependencies import get_auth_service, get_current_user
-from app.schemas.auth import (
-    RegisterRequest, LoginRequest, RefreshTokenRequest, 
-    ForgotPasswordRequest, ResetPasswordRequest, ProfileUpdateRequest,
-    TokenResponse, UserResponse
-)
-from app.infrastructure.models.user import User
+from fastapi import APIRouter, HTTPException, status
+from datetime import datetime, timedelta, timezone
+from jose import JWTError, jwt
+from config import settings
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
-
-@router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-async def register(dto: RegisterRequest, service: AuthService = Depends(get_auth_service)):
-    return await service.register(dto)
-
-@router.post("/login", response_model=TokenResponse)
-async def login(dto: LoginRequest, service: AuthService = Depends(get_auth_service)):
-    return await service.login(dto)
-
-@router.post("/refresh", response_model=TokenResponse)
-async def refresh_token(dto: RefreshTokenRequest, service: AuthService = Depends(get_auth_service)):
-    return await service.refresh_token(dto.refresh_token)
-
-@router.get("/profile", response_model=UserResponse)
-async def get_profile(current_user: User = Depends(get_current_user), service: AuthService = Depends(get_auth_service)):
-    return await service.get_profile(current_user.id)
-
-@router.put("/profile", response_model=UserResponse)
-async def update_profile(dto: ProfileUpdateRequest, current_user: User = Depends(get_current_user), service: AuthService = Depends(get_auth_service)):
-    return await service.update_profile(current_user.id, dto)
-
-@router.post("/logout")
-async def logout(current_user: User = Depends(get_current_user), service: AuthService = Depends(get_auth_service)):
-    return await service.logout(current_user.id)
+router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 @router.post("/forgot-password")
-async def forgot_password(dto: ForgotPasswordRequest, service: AuthService = Depends(get_auth_service)):
-    return await service.forgot_password(dto.email)
+async def forgot_password(email: str):
+    expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+    reset_token = jwt.encode({"sub": email, "type": "reset_password", "exp": expire}, settings.secret_key, algorithm=settings.jwt_algorithm)
+    return {"message": "Reset token generated", "reset_token": reset_token}
 
 @router.post("/reset-password")
-async def reset_password(dto: ResetPasswordRequest, service: AuthService = Depends(get_auth_service)):
-    return await service.reset_password(dto.reset_token, dto.new_password)
+async def reset_password(reset_token: str, new_password: str):
+    try:
+        payload = jwt.decode(reset_token, settings.secret_key, algorithms=[settings.jwt_algorithm])
+        if payload.get("type") != "reset_password":
+            raise HTTPException(status_code=400, detail="Invalid token type")
+    except JWTError:
+        raise HTTPException(status_code=400, detail="Token expired or invalid")
+    return {"message": "Password updated successfully"}
+
+@router.post("/refresh")
+async def refresh_token(refresh_token: str):
+    try:
+        payload = jwt.decode(refresh_token, settings.secret_key, algorithms=[settings.jwt_algorithm])
+        user_id = payload.get("sub")
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid refresh token")
+    
+    new_access_token = jwt.encode({"sub": user_id, "exp": datetime.now(timezone.utc) + timedelta(minutes=30)}, settings.secret_key, algorithm=settings.jwt_algorithm)
+    new_refresh_token = jwt.encode({"sub": user_id, "exp": datetime.now(timezone.utc) + timedelta(days=7)}, settings.secret_key, algorithm=settings.jwt_algorithm)
+    
+    return {"access_token": new_access_token, "refresh_token": new_refresh_token, "token_type": "bearer"}
