@@ -14,6 +14,9 @@ def register_routes(app: FastAPI) -> None:
     from app.api.controllers.health_controller import router as health_router
     app.include_router(health_router, tags=["Health"])
 
+    from app.api.controllers.family_controller import router as family_router
+    app.include_router(family_router, prefix="/api/families", tags=["Families"])
+
     # Future controllers will be registered here:
     # from app.api.controllers.auth_controller import router as auth_router
     # app.include_router(auth_router, prefix="/api/auth", tags=["Auth"])

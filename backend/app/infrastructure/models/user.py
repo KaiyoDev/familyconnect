@@ -29,9 +29,7 @@ class User(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
     posts = relationship("Post", back_populates="author")
     comments = relationship("Comment", back_populates="author")
-    notifications = relationship("Notification", back_populates="user")
-    audit_logs = relationship("AuditLog", back_populates="actor")
-    ai_conversations = relationship("AIConversation", back_populates="user")
+    post_reactions = relationship("PostReaction", back_populates="user")
     media_uploads = relationship("MediaAsset", back_populates="uploader")
 
     def __repr__(self) -> str:

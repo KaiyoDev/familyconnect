@@ -1,38 +1,4 @@
-"""Import all app_ models for SQLAlchemy model registration."""
-from app.infrastructure.models.app import (
-    AppUser,
-    AppFamily,
-    AppFamilyBranch,
-    AppFamilyMember,
-    AppRelationship,
-    AppPost,
-    AppComment,
-    AppPostReaction,
-    AppEvent,
-    AppEventRSVP,
-    AppHeritageItem,
-    AppMediaAsset,
-    AppEmploymentProfile,
-    AppEducationProfile,
-    AppAIConversation,
-    AppAIMessage,
-)
+"""Database package exports the SQLAlchemy base and session utilities."""
+from app.infrastructure.databases.base import Base, UUIDPrimaryKeyMixin, TimestampMixin
 
-__all__ = [
-    "AppUser",
-    "AppFamily",
-    "AppFamilyBranch",
-    "AppFamilyMember",
-    "AppRelationship",
-    "AppPost",
-    "AppComment",
-    "AppPostReaction",
-    "AppEvent",
-    "AppEventRSVP",
-    "AppHeritageItem",
-    "AppMediaAsset",
-    "AppEmploymentProfile",
-    "AppEducationProfile",
-    "AppAIConversation",
-    "AppAIMessage",
-]
+__all__ = ["Base", "UUIDPrimaryKeyMixin", "TimestampMixin"]

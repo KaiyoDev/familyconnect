@@ -1,6 +1,7 @@
 """Family and genealogy models."""
+from datetime import date
 from uuid import UUID
-from sqlalchemy import String, Text, ForeignKey
+from sqlalchemy import Boolean, CheckConstraint, String, Text, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.infrastructure.databases.base import Base, UUIDPrimaryKeyMixin, TimestampMixin
 
@@ -47,7 +48,11 @@ class FamilyBranch(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     # Relationships
     family = relationship("Family", back_populates="branches")
     founder = relationship("FamilyMember", back_populates="founded_branches", foreign_keys=[founder_id])
-    members = relationship("FamilyMember", back_populates="branch")
+    members = relationship(
+        "FamilyMember",
+        back_populates="branch",
+        foreign_keys="[FamilyMember.branch_id]",
+    )
     heritage_items = relationship("HeritageItem", back_populates="branch")
 
     def __repr__(self) -> str:
@@ -70,17 +75,21 @@ class FamilyMember(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
     full_name: Mapped[str] = mapped_column(String(100), nullable=False)
     gender: Mapped[str] = mapped_column(String(20), nullable=False, default="UNKNOWN")
-    date_of_birth: Mapped[str | None] = mapped_column("date_of_birth", nullable=True)
+    date_of_birth: Mapped[date | None] = mapped_column(nullable=True)
     is_alive: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
-    date_of_death: Mapped[str | None] = mapped_column("date_of_death", nullable=True)
+    date_of_death: Mapped[date | None] = mapped_column(nullable=True)
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="PENDING")
 
     # Relationships — use string annotations to avoid circular imports
     family = relationship("Family", back_populates="members")
-    branch = relationship("FamilyBranch", back_populates="members")
+    branch = relationship(
+        "FamilyBranch",
+        back_populates="members",
+        foreign_keys="[FamilyMember.branch_id]",
+    )
     user = relationship("User", back_populates="members_linked")
     founded_branches = relationship(
-        "FamilyBranch", back_populates="founder", foreign_keys=[founder_id]
+        "FamilyBranch", back_populates="founder", foreign_keys="[FamilyBranch.founder_id]"
     )
     employment_profiles = relationship(
         "EmploymentProfile", back_populates="member", cascade="all, delete-orphan"
@@ -121,6 +130,19 @@ class Relationship(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
     type: Mapped[str] = mapped_column(String(30), nullable=False)
     notes: Mapped[str | None] = mapped_column(String(255), nullable=True)
+
+    __table_args__ = (
+        CheckConstraint(
+            "from_member_id <> to_member_id",
+            name="chk_relationship_different",
+        ),
+        UniqueConstraint(
+            "from_member_id",
+            "to_member_id",
+            "type",
+            name="uq_relationship_unique",
+        ),
+    )
 
     # Relationships
     from_member = relationship(
