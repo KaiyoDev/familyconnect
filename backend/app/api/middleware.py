@@ -29,6 +29,28 @@ def register_middleware(app: FastAPI) -> None:
         response = await call_next(request)
         process_time = time.time() - start_time
 
+        if request.url.path.startswith("/api/admin") and response.status_code < 400:
+            current_user = getattr(request.state, "current_user", None)
+            if current_user and request.method != "GET":
+                from app.infrastructure.databases.database import async_session
+                from app.infrastructure.models.admin import AuditLog
+                from uuid import UUID
+
+                action = "MODERATE" if request.url.path.endswith("/moderate") else "UPDATE"
+                try:
+                    async with async_session() as audit_session:
+                        audit_session.add(
+                            AuditLog(
+                                actor_id=UUID(str(current_user["id"])),
+                                action=action,
+                                resource_type="admin_endpoint",
+                                details={"method": request.method, "path": request.url.path},
+                            )
+                        )
+                        await audit_session.commit()
+                except Exception:
+                    logger.exception("Failed to write admin audit log")
+
         logger.info(
             f"{request.method} {request.url.path} "
             f"- {response.status_code} ({process_time:.3f}s)"

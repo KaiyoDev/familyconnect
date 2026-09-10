@@ -18,8 +18,16 @@ from config import settings
 from app.infrastructure.databases.base import Base
 
 # Import all models here so they register with Base
-from app.infrastructure.models import genealogy, community, event, heritage, directory, user, types
-from app.infrastructure.models import app_ai_model
+from app.infrastructure.models import (
+    admin,
+    genealogy,
+    community,
+    event,
+    heritage,
+    directory,
+    user,
+    types,
+)
 
 # this is the Alembic Config object
 config = context.config
