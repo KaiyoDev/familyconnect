@@ -52,6 +52,7 @@ class Comment(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
     )
     content: Mapped[str] = mapped_column(String(1000), nullable=False)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="PUBLISHED")
 
     # Relationships
     post = relationship("Post", back_populates="comments")
@@ -76,7 +77,7 @@ class PostReaction(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
     # Relationships
     post = relationship("Post", back_populates="reactions")
-    user = relationship("User", back_populates="posts")  # reuse user relationship
+    user = relationship("User", back_populates="reactions")
 
     __table_args__ = (
         UniqueConstraint("post_id", "user_id", "reaction_type", name="uq_post_reaction"),

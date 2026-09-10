@@ -49,7 +49,10 @@ class CommentRepository:
 
         result = await self.db.execute(
             select(Comment)
-            .where(Comment.post_id == post_id)
+            .where(
+                Comment.post_id == post_id,
+                Comment.status != "REMOVED",
+            )
             .order_by(Comment.created_at.asc())
             .offset(offset)
             .limit(limit)
