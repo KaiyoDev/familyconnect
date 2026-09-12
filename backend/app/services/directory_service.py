@@ -6,6 +6,7 @@ from app.domain.exceptions import NotFoundException, ValidationException
 from app.domain.interfaces.branch_repository import IBranchRepository
 from app.domain.interfaces.family_repository import IFamilyRepository
 from app.domain.interfaces.member_repository import IMemberRepository
+from app.domain.interfaces.relationship_repository import IRelationshipRepository
 from app.domain.interfaces.repository import IRepository
 from app.domain.interfaces.unit_of_work import IUnitOfWork
 from app.infrastructure.models.directory import EmploymentProfile, EducationProfile
@@ -21,6 +22,7 @@ class DirectoryService:
         family_repository: IFamilyRepository | None = None,
         member_repository: IMemberRepository | None = None,
         branch_repository: IBranchRepository | None = None,
+        relationship_repository: IRelationshipRepository | None = None,
         employment_repository: IRepository[EmploymentProfile] | None = None,
         education_repository: IRepository[EducationProfile] | None = None,
         unit_of_work: IUnitOfWork | None = None,
@@ -31,6 +33,7 @@ class DirectoryService:
         self.families = family_repository
         self.members = member_repository
         self.branches = branch_repository
+        self.relationships = relationship_repository
         self.employment = employment_repository
         self.education = education_repository
         self.unit_of_work = unit_of_work
@@ -62,6 +65,53 @@ class DirectoryService:
             raise NotFoundException("Member not found")
         return member
 
+    async def _compute_generations(
+        self, family_id: UUID, member_ids: list[UUID]
+    ) -> dict[UUID, int]:
+        """Compute generation depth for each member using PARENT_CHILD relationships.
+
+        Generation 1 = root/oldest ancestor, 2 = their children, etc.
+        Returns a dict mapping member_id -> generation number.
+        """
+        if not self.relationships:
+            return {}
+        member_id_set = {str(mid) for mid in member_ids}
+        relationships = await self.relationships.get_by_family_members(member_id_set)
+
+        # Build parent->children adjacency and find all children
+        children: set[UUID] = set()
+        parent_children: dict[UUID, list[UUID]] = {}
+        for rel in relationships:
+            if rel.type != "PARENT_CHILD":
+                continue
+            parent_id = rel.from_member_id
+            child_id = rel.to_member_id
+            children.add(child_id)
+            parent_children.setdefault(parent_id, []).append(child_id)
+
+        # Roots are members who are never a child in any PARENT_CHILD relationship
+        roots = [mid for mid in member_ids if mid not in children]
+
+        # If there are no PARENT_CHILD relationships at all, all members are roots
+        if not roots:
+            roots = member_ids
+
+        # BFS from roots to assign generations
+        generations: dict[UUID, int] = {}
+        queue = [(rid, 1) for rid in roots]
+        visited: set[UUID] = set()
+        while queue:
+            member_id, gen = queue.pop(0)
+            if member_id in visited:
+                continue
+            visited.add(member_id)
+            generations[member_id] = gen
+            for child_id in parent_children.get(member_id, []):
+                if child_id not in visited:
+                    queue.append((child_id, gen + 1))
+
+        return generations
+
     async def get_directory(
         self,
         family_id: UUID,
@@ -69,19 +119,50 @@ class DirectoryService:
         generation: int | None = None,
         skip: int = 0,
         limit: int = 100,
-    ) -> list[FamilyMember]:
-        """List all members in a family directory (FR-DIR-01)."""
+    ) -> dict:
+        """List all members in a family directory (FR-DIR-01).
+
+        Returns a dict with:
+          - members: list of members with generation info
+          - total: total count
+        """
         await self._ensure_family(family_id)
         members = await self.members.get_by_family(family_id)
-        # Filter by branch if provided
+
         if branch_id:
             members = [m for m in members if m.branch_id == branch_id]
-        # NOTE: generation is a computed/derived attribute not stored on FamilyMember yet.
-        # When genealogy depth tracking is implemented, filter by generation here.
-        # For now, accept the param but skip filtering.
+
+        member_ids = [m.id for m in members]
+        generations = await self._compute_generations(family_id, member_ids)
+
+        # Filter by generation if provided
         if generation is not None:
-            pass  # Reserved for future use
-        return members[skip:skip + limit]
+            members = [
+                m for m in members
+                if generations.get(m.id) == generation
+            ]
+
+        total = len(members)
+        members = members[skip: skip + limit]
+
+        return {
+            "members": [
+                {
+                    "id": str(m.id),
+                    "full_name": m.full_name,
+                    "gender": m.gender,
+                    "date_of_birth": str(m.date_of_birth) if m.date_of_birth else None,
+                    "is_alive": m.is_alive,
+                    "branch_id": str(m.branch_id) if m.branch_id else None,
+                    "status": m.status,
+                    "generation": generations.get(m.id),
+                }
+                for m in members
+            ],
+            "total": total,
+            "skip": skip,
+            "limit": limit,
+        }
 
     async def search_members(
         self,
@@ -97,7 +178,7 @@ class DirectoryService:
         """Search members by name, profession, location, generation (FR-DIR-04).
 
         Returns a dict with:
-          - members: list of matching members with their current employment/education
+          - members: list of matching members with their current employment/education and generation
           - total:   total count of unique matching members
         """
         await self._ensure_family(family_id)
@@ -112,24 +193,38 @@ class DirectoryService:
         if branch_id:
             members = [m for m in members if m.branch_id == branch_id]
 
-        if generation is not None:
-            pass  # Reserved for future use — computed from genealogy depth
+        member_ids = [m.id for m in members]
 
-        # Profession filter: look up members whose employment profiles match
+        # Compute generations for all members
+        generations = await self._compute_generations(family_id, member_ids)
+
+        # Filter by generation
+        if generation is not None:
+            members = [
+                m for m in members
+                if generations.get(m.id) == generation
+            ]
+            member_ids = [m.id for m in members]
+
+        # Profession filter: match position OR company name
         matched_member_ids = {m.id for m in members}
         if profession and self.employment:
-            employment_matches = await self.employment.search_by_company(
+            # Search by both company name and position (profession could be either)
+            company_matches = await self.employment.search_by_company(
                 profession, list(matched_member_ids)
             )
-            matched_from_employment = {e.member_id for e in employment_matches}
-            matched_member_ids &= matched_from_employment
+            position_matches = await self.employment.search_by_position(
+                profession, list(matched_member_ids)
+            )
+            matched_set = {e.member_id for e in company_matches} | {e.member_id for e in position_matches}
+            matched_member_ids &= matched_set
 
-        if location and self.education:
-            # location is resolved via school name for now (extend via member.address later)
-            education_matches = await self.education.search_by_school(
+        # Location filter: use school name as a proxy until a dedicated address field is added
+        if location and self.education and matched_member_ids:
+            school_matches = await self.education.search_by_school(
                 location, list(matched_member_ids)
             )
-            matched_from_education = {e.member_id for e in education_matches}
+            matched_from_education = {e.member_id for e in school_matches}
             matched_member_ids &= matched_from_education
 
         # Build enriched results
@@ -153,6 +248,7 @@ class DirectoryService:
                 "is_alive": m.is_alive,
                 "branch_id": str(m.branch_id) if m.branch_id else None,
                 "status": m.status,
+                "generation": generations.get(m.id),
                 "employment": [
                     {
                         "id": str(e.id),
@@ -194,10 +290,13 @@ class DirectoryService:
         if self.education:
             education = await self.education.get_by_member(member_id)
 
+        generations = await self._compute_generations(family_id, [member_id])
+
         return {
             "id": str(member.id),
             "full_name": member.full_name,
             "gender": member.gender,
+            "generation": generations.get(member.id),
             "date_of_birth": str(member.date_of_birth) if member.date_of_birth else None,
             "date_of_death": str(member.date_of_death) if member.date_of_death else None,
             "is_alive": member.is_alive,

@@ -53,6 +53,7 @@ def get_directory_service(db: AsyncSession = Depends(get_db)) -> DirectoryServic
         family_repository=FamilyRepository(db),
         member_repository=MemberRepository(db),
         branch_repository=BranchRepository(db),
+        relationship_repository=RelationshipRepository(db),
         employment_repository=EmploymentRepository(db),
         education_repository=EducationRepository(db),
         unit_of_work=SQLAlchemyUnitOfWork(db),

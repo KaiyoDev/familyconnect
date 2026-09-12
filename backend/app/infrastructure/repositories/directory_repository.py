@@ -46,6 +46,16 @@ class EmploymentRepository(IRepository[EmploymentProfile]):
         )
         return list(result.scalars().all())
 
+    async def search_by_position(self, position: str, family_member_ids: list[UUID]) -> list[EmploymentProfile]:
+        """Find employment profiles matching a position/job title for a set of family members."""
+        result = await self.session.execute(
+            select(EmploymentProfile).where(
+                EmploymentProfile.member_id.in_(family_member_ids),
+                EmploymentProfile.position.ilike(f"%{position}%"),
+            )
+        )
+        return list(result.scalars().all())
+
 
 class EducationRepository(IRepository[EducationProfile]):
     """Repository for education profile CRUD."""
