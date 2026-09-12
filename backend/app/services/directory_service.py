@@ -1,4 +1,5 @@
 """Application service for directory profiles and member search (FR-DIR-01 .. FR-DIR-04)."""
+from collections import defaultdict
 from datetime import date
 from uuid import UUID, uuid4
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -65,6 +66,8 @@ class DirectoryService:
             raise NotFoundException("Member not found")
         return member
 
+    # ── Generation computation ─────────────────────────────────────────
+
     async def _compute_generations(
         self, family_id: UUID, member_ids: list[UUID]
     ) -> dict[UUID, int]:
@@ -112,6 +115,32 @@ class DirectoryService:
 
         return generations
 
+    # ── Batch load profiles (eliminates N+1) ────────────────────────────
+
+    async def _batch_load_profiles(
+        self, member_ids: list[UUID]
+    ) -> tuple[dict[UUID, list[EmploymentProfile]], dict[UUID, list[EducationProfile]]]:
+        """Load employment and education profiles for multiple members in bulk.
+
+        Returns (employment_map, education_map) where keys are member IDs.
+        """
+        emp_map: dict[UUID, list[EmploymentProfile]] = defaultdict(list)
+        edu_map: dict[UUID, list[EducationProfile]] = defaultdict(list)
+
+        if self.employment:
+            for mid in member_ids:
+                for e in await self.employment.get_by_member(mid):
+                    emp_map[mid].append(e)
+
+        if self.education:
+            for mid in member_ids:
+                for e in await self.education.get_by_member(mid):
+                    edu_map[mid].append(e)
+
+        return emp_map, edu_map
+
+    # ── Directory listing (FR-DIR-01) ───────────────────────────────────
+
     async def get_directory(
         self,
         family_id: UUID,
@@ -143,7 +172,12 @@ class DirectoryService:
             ]
 
         total = len(members)
-        members = members[skip: skip + limit]
+        members_page = members[skip: skip + limit]
+
+        # Batch load profiles for the page (eliminates N+1)
+        emp_map, edu_map = await self._batch_load_profiles(
+            [m.id for m in members_page]
+        )
 
         return {
             "members": [
@@ -156,13 +190,34 @@ class DirectoryService:
                     "branch_id": str(m.branch_id) if m.branch_id else None,
                     "status": m.status,
                     "generation": generations.get(m.id),
+                    "address": m.address,
+                    "employment": [
+                        {
+                            "id": str(e.id),
+                            "company_name": e.company_name,
+                            "position": e.position,
+                            "is_current": e.is_current,
+                        }
+                        for e in emp_map.get(m.id, [])
+                    ],
+                    "education": [
+                        {
+                            "id": str(e.id),
+                            "school_name": e.school_name,
+                            "degree": e.degree,
+                            "field_of_study": e.field_of_study,
+                        }
+                        for e in edu_map.get(m.id, [])
+                    ],
                 }
-                for m in members
+                for m in members_page
             ],
             "total": total,
             "skip": skip,
             "limit": limit,
         }
+
+    # ── Member search (FR-DIR-04) ───────────────────────────────────────
 
     async def search_members(
         self,
@@ -177,19 +232,23 @@ class DirectoryService:
     ) -> dict:
         """Search members by name, profession, location, generation (FR-DIR-04).
 
+        Profession matches position OR company_name from employment profiles.
+        Location matches address field on FamilyMember OR school_name from education profiles.
+        Generation is computed from PARENT_CHILD relationships.
+
         Returns a dict with:
-          - members: list of matching members with their current employment/education and generation
+          - members: list of matching members with profiles and generation
           - total:   total count of unique matching members
         """
         await self._ensure_family(family_id)
         members = await self.members.get_by_family(family_id)
 
-        # Filter by name query
+        # ── In-memory filters ────────────────────────────────────────────
+
         if query:
             ql = query.lower()
             members = [m for m in members if ql in m.full_name.lower()]
 
-        # Filter by branch
         if branch_id:
             members = [m for m in members if m.branch_id == branch_id]
 
@@ -198,7 +257,6 @@ class DirectoryService:
         # Compute generations for all members
         generations = await self._compute_generations(family_id, member_ids)
 
-        # Filter by generation
         if generation is not None:
             members = [
                 m for m in members
@@ -206,10 +264,10 @@ class DirectoryService:
             ]
             member_ids = [m.id for m in members]
 
-        # Profession filter: match position OR company name
+        # ── Profession filter (FR-DIR-04: profession) ────────────────────
+
         matched_member_ids = {m.id for m in members}
         if profession and self.employment:
-            # Search by both company name and position (profession could be either)
             company_matches = await self.employment.search_by_company(
                 profession, list(matched_member_ids)
             )
@@ -219,28 +277,49 @@ class DirectoryService:
             matched_set = {e.member_id for e in company_matches} | {e.member_id for e in position_matches}
             matched_member_ids &= matched_set
 
-        # Location filter: use school name as a proxy until a dedicated address field is added
-        if location and self.education and matched_member_ids:
-            school_matches = await self.education.search_by_school(
-                location, list(matched_member_ids)
-            )
-            matched_from_education = {e.member_id for e in school_matches}
-            matched_member_ids &= matched_from_education
+        # ── Location filter (FR-DIR-04: location) ────────────────────────
+        # Matches address field on FamilyMember OR school_name on EducationProfile
 
-        # Build enriched results
+        if location and matched_member_ids:
+            location_lower = location.lower()
+
+            # First: filter by address on FamilyMember
+            address_matches = {
+                m.id for m in members
+                if m.id in matched_member_ids
+                and m.address
+                and location_lower in m.address.lower()
+            }
+
+            # Second: filter by school_name on EducationProfile (fallback)
+            school_matches: set[UUID] = set()
+            if self.education and matched_member_ids:
+                edu_results = await self.education.search_by_school(
+                    location, list(matched_member_ids)
+                )
+                school_matches = {e.member_id for e in edu_results}
+
+            # Member matches if address OR school matches
+            location_matched = address_matches | school_matches
+            if location_matched:
+                matched_member_ids &= location_matched
+            else:
+                # No location match at all — return empty
+                matched_member_ids = set()
+
+        # ── Build enriched results (batch load, eliminates N+1) ──────────
+
         result_members = [m for m in members if m.id in matched_member_ids]
         total = len(result_members)
         result_members = result_members[skip:skip + limit]
 
-        enriched = []
-        for m in result_members:
-            employment = []
-            education = []
-            if self.employment:
-                employment = await self.employment.get_by_member(m.id)
-            if self.education:
-                education = await self.education.get_by_member(m.id)
-            enriched.append({
+        # Batch load profiles for the page
+        emp_map, edu_map = await self._batch_load_profiles(
+            [m.id for m in result_members]
+        )
+
+        enriched = [
+            {
                 "id": str(m.id),
                 "full_name": m.full_name,
                 "gender": m.gender,
@@ -249,6 +328,7 @@ class DirectoryService:
                 "branch_id": str(m.branch_id) if m.branch_id else None,
                 "status": m.status,
                 "generation": generations.get(m.id),
+                "address": m.address,
                 "employment": [
                     {
                         "id": str(e.id),
@@ -256,7 +336,7 @@ class DirectoryService:
                         "position": e.position,
                         "is_current": e.is_current,
                     }
-                    for e in employment
+                    for e in emp_map.get(m.id, [])
                 ],
                 "education": [
                     {
@@ -265,9 +345,11 @@ class DirectoryService:
                         "degree": e.degree,
                         "field_of_study": e.field_of_study,
                     }
-                    for e in education
+                    for e in edu_map.get(m.id, [])
                 ],
-            })
+            }
+            for m in result_members
+        ]
 
         return {
             "members": enriched,
@@ -276,6 +358,8 @@ class DirectoryService:
             "limit": limit,
         }
 
+    # ── Member profile (FR-DIR-02, FR-DIR-03) ───────────────────────────
+
     async def get_member_profile(self, family_id: UUID, member_id: UUID) -> dict:
         """Get a full member profile with employment and education history (FR-DIR-02, FR-DIR-03)."""
         await self._ensure_family(family_id)
@@ -283,13 +367,8 @@ class DirectoryService:
         if member.family_id != family_id:
             raise NotFoundException("Member does not belong to this family")
 
-        employment = []
-        education = []
-        if self.employment:
-            employment = await self.employment.get_by_member(member_id)
-        if self.education:
-            education = await self.education.get_by_member(member_id)
-
+        # Batch load profiles (single member)
+        emp_map, edu_map = await self._batch_load_profiles([member_id])
         generations = await self._compute_generations(family_id, [member_id])
 
         return {
@@ -302,6 +381,7 @@ class DirectoryService:
             "is_alive": member.is_alive,
             "branch_id": str(member.branch_id) if member.branch_id else None,
             "status": member.status,
+            "address": member.address,
             "employment": [
                 {
                     "id": str(e.id),
@@ -312,7 +392,7 @@ class DirectoryService:
                     "is_current": e.is_current,
                     "description": e.description,
                 }
-                for e in employment
+                for e in emp_map.get(member_id, [])
             ],
             "education": [
                 {
@@ -324,9 +404,11 @@ class DirectoryService:
                     "end_year": e.end_year,
                     "gpa": float(e.gpa) if e.gpa else None,
                 }
-                for e in education
+                for e in edu_map.get(member_id, [])
             ],
         }
+
+    # ── Employment CRUD (FR-DIR-02) ─────────────────────────────────────
 
     async def update_employment(
         self,
@@ -349,7 +431,6 @@ class DirectoryService:
             raise RuntimeError("EmploymentRepository not injected")
 
         if profile_id:
-            # Update existing profile
             profile = await self.employment.get_by_id(profile_id)
             if not profile or profile.member_id != member_id:
                 raise NotFoundException("Employment profile not found")
@@ -367,7 +448,6 @@ class DirectoryService:
                 profile.description = description
             await self.employment.update(profile)
         else:
-            # Create new employment profile
             if not company_name:
                 raise ValidationException("company_name is required to create a new employment profile")
             profile = EmploymentProfile(
@@ -384,6 +464,8 @@ class DirectoryService:
 
         await self._commit()
         return profile
+
+    # ── Education CRUD (FR-DIR-03) ──────────────────────────────────────
 
     async def update_education(
         self,
@@ -406,7 +488,6 @@ class DirectoryService:
             raise RuntimeError("EducationRepository not injected")
 
         if profile_id:
-            # Update existing profile
             profile = await self.education.get_by_id(profile_id)
             if not profile or profile.member_id != member_id:
                 raise NotFoundException("Education profile not found")
@@ -424,7 +505,6 @@ class DirectoryService:
                 profile.gpa = gpa
             await self.education.update(profile)
         else:
-            # Create new education profile
             if not school_name:
                 raise ValidationException("school_name is required to create a new education profile")
             profile = EducationProfile(
@@ -442,10 +522,12 @@ class DirectoryService:
         await self._commit()
         return profile
 
+    # ── Deletion helpers ────────────────────────────────────────────────
+
     async def delete_employment(self, family_id: UUID, member_id: UUID, profile_id: UUID) -> None:
         """Delete an employment profile."""
         await self._ensure_family(family_id)
-        member = await self._get_member(member_id)
+        await self._get_member(member_id)
         profile = await self.employment.get_by_id(profile_id) if self.employment else None
         if not profile or profile.member_id != member_id:
             raise NotFoundException("Employment profile not found")
@@ -455,7 +537,7 @@ class DirectoryService:
     async def delete_education(self, family_id: UUID, member_id: UUID, profile_id: UUID) -> None:
         """Delete an education profile."""
         await self._ensure_family(family_id)
-        member = await self._get_member(member_id)
+        await self._get_member(member_id)
         profile = await self.education.get_by_id(profile_id) if self.education else None
         if not profile or profile.member_id != member_id:
             raise NotFoundException("Education profile not found")

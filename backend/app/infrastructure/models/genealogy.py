@@ -78,6 +78,7 @@ class FamilyMember(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     date_of_birth: Mapped[date | None] = mapped_column(nullable=True)
     is_alive: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     date_of_death: Mapped[date | None] = mapped_column(nullable=True)
+    address: Mapped[str | None] = mapped_column(String(300), nullable=True)
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="PENDING")
 
     # Relationships — use string annotations to avoid circular imports

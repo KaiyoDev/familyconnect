@@ -12,8 +12,7 @@ from config import settings
 from app.infrastructure.databases.base import Base
 
 # Import all models here so they register with Base
-# from app.infrastructure.models.user_model import User
-# from app.infrastructure.models.family_model import Family
+from app.infrastructure.models import *  # noqa: F401, F403
 
 # this is the Alembic Config object
 config = context.config

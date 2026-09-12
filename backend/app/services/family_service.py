@@ -84,6 +84,7 @@ class FamilyService:
                 raise ValidationException("Branch does not belong to the family")
         member = FamilyMember(id=uuid4(), family_id=family_id, branch_id=branch_id, full_name=full_name,
                               gender=data.get("gender", "UNKNOWN"), date_of_birth=data.get("date_of_birth"),
+                              address=data.get("address"),
                               is_alive=data.get("is_alive", True), date_of_death=data.get("date_of_death"),
                               status=data.get("status", "PENDING"))
         await self.members.create(member)
@@ -94,7 +95,7 @@ class FamilyService:
         member = await self.members.get_by_id(member_id)
         if not member:
             raise NotFoundException("Member not found")
-        for key in ("full_name", "branch_id", "gender", "date_of_birth", "date_of_death", "is_alive", "status"):
+        for key in ("full_name", "branch_id", "gender", "date_of_birth", "date_of_death", "address", "is_alive", "status"):
             if key in data and data[key] is not None:
                 setattr(member, key, data[key])
         await self.members.update(member)

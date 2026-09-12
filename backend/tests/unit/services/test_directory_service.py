@@ -56,7 +56,7 @@ def context():
     )
 
 
-def _make_member(member_repo, family_id, member_id, full_name, branch_id=None):
+def _make_member(member_repo, family_id, member_id, full_name, branch_id=None, address=None):
     """Helper to create a minimal FamilyMember-like object."""
     from types import SimpleNamespace as NS
     m = NS(
@@ -67,6 +67,7 @@ def _make_member(member_repo, family_id, member_id, full_name, branch_id=None):
         gender="MALE",
         date_of_birth=date(1990, 1, 1),
         date_of_death=None,
+        address=address,
         is_alive=True,
         status="ACTIVE",
     )
@@ -355,3 +356,88 @@ async def test_foreign_member_raises(context):
 
     with pytest.raises(NotFoundException):
         await context.service.get_member_profile(family_id, m.id)
+
+
+# ── Location / address search ────────────────────────────────────────────
+
+
+@pytest.mark.asyncio
+async def test_search_members_by_address(context):
+    family_id = uuid4()
+    context.families.items[family_id] = SimpleNamespace(id=family_id)
+    m1 = _make_member(context.members, family_id, uuid4(), "Alice", address="123 Hanoi Street")
+    m2 = _make_member(context.members, family_id, uuid4(), "Bob", address="456 Saigon Road")
+    m3 = _make_member(context.members, family_id, uuid4(), "Charlie", address="789 Da Nang Ave")
+
+    result = await context.service.search_members(family_id, location="Hanoi")
+
+    assert len(result["members"]) == 1
+    assert result["members"][0]["full_name"] == "Alice"
+    assert result["members"][0]["address"] == "123 Hanoi Street"
+
+
+@pytest.mark.asyncio
+async def test_search_members_by_location_falls_back_to_school(context):
+    family_id = uuid4()
+    context.families.items[family_id] = SimpleNamespace(id=family_id)
+    m1 = _make_member(context.members, family_id, uuid4(), "Alice")
+    m2 = _make_member(context.members, family_id, uuid4(), "Bob")
+
+    from types import SimpleNamespace as NS
+    edu = NS(id=uuid4(), member_id=m2.id, school_name="Hanoi University", degree="BA",
+             field_of_study="Economics", start_year=2015, end_year=2019, gpa=3.0)
+    context.education.items[edu.id] = edu
+
+    result = await context.service.search_members(family_id, location="Hanoi")
+
+    assert len(result["members"]) == 1
+    assert result["members"][0]["full_name"] == "Bob"
+
+
+@pytest.mark.asyncio
+async def test_search_members_by_location_combined(context):
+    """address AND school should both match"""
+    family_id = uuid4()
+    context.families.items[family_id] = SimpleNamespace(id=family_id)
+    m1 = _make_member(context.members, family_id, uuid4(), "Alice", address="Hanoi, Vietnam")
+    m2 = _make_member(context.members, family_id, uuid4(), "Bob")
+
+    from types import SimpleNamespace as NS
+    edu = NS(id=uuid4(), member_id=m2.id, school_name="Saigon University", degree="BS",
+             field_of_study="Engineering", start_year=2015, end_year=2019, gpa=3.5)
+    context.education.items[edu.id] = edu
+
+    # Search "Vietnam" should match Alice's address but not Bob's school
+    result = await context.service.search_members(family_id, location="Vietnam")
+    assert len(result["members"]) == 1
+    assert result["members"][0]["full_name"] == "Alice"
+
+    # Search "Saigon" should match Bob's school
+    result = await context.service.search_members(family_id, location="Saigon")
+    assert len(result["members"]) == 1
+    assert result["members"][0]["full_name"] == "Bob"
+
+
+# ── N+1 batch loading ───────────────────────────────────────────────────
+
+
+@pytest.mark.asyncio
+async def test_directory_includes_profiles_via_batch(context):
+    """Verify that get_directory returns employment/education without N+1."""
+    family_id = uuid4()
+    context.families.items[family_id] = SimpleNamespace(id=family_id)
+    m = _make_member(context.members, family_id, uuid4(), "Alice", address="Somewhere")
+
+    from types import SimpleNamespace as NS
+    emp = NS(id=uuid4(), member_id=m.id, company_name="Big Corp", position="Engineer",
+             start_date=date(2020, 1, 1), end_date=None, is_current=True, description=None)
+    context.employment.items[emp.id] = emp
+
+    result = await context.service.get_directory(family_id)
+
+    member = result["members"][0]
+    assert member["address"] == "Somewhere"
+    assert len(member["employment"]) == 1
+    assert member["employment"][0]["company_name"] == "Big Corp"
+    assert member["employment"][0]["position"] == "Engineer"
+    assert member["education"] == []

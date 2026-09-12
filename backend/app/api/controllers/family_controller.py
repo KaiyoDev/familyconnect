@@ -24,6 +24,7 @@ class MemberCreate(BaseModel):
     full_name: str = Field(min_length=1, max_length=100)
     branch_id: UUID | None = None
     gender: str = "UNKNOWN"
+    address: str | None = Field(default=None, max_length=300)
 
 
 class RelationshipCreate(BaseModel):

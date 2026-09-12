@@ -3,7 +3,7 @@ from datetime import date
 from uuid import UUID
 from fastapi import APIRouter, Depends, Query, status
 from pydantic import BaseModel, Field
-from app.api.dependencies import get_directory_service, require_family_access
+from app.api.dependencies import get_directory_service, require_family_membership
 from app.services.directory_service import DirectoryService
 
 router = APIRouter()
@@ -31,7 +31,7 @@ class EducationUpdate(BaseModel):
 
 @router.get("")
 async def get_directory(
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     branch_id: UUID | None = None,
     generation: int | None = None,
     skip: int = Query(default=0, ge=0),
@@ -49,7 +49,7 @@ async def get_directory(
 
 @router.get("/search")
 async def search_members(
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     q: str | None = Query(default=None, alias="q"),
     profession: str | None = None,
     location: str | None = None,
@@ -74,7 +74,7 @@ async def search_members(
 @router.get("/members/{member_id}")
 async def get_member_profile(
     member_id: UUID,
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     svc: DirectoryService = Depends(get_directory_service),
 ):
     return await svc.get_member_profile(family_id, member_id)
@@ -84,7 +84,7 @@ async def get_member_profile(
 async def create_employment(
     payload: EmploymentUpdate,
     member_id: UUID,
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     svc: DirectoryService = Depends(get_directory_service),
 ):
     return await svc.update_employment(
@@ -105,7 +105,7 @@ async def update_employment(
     payload: EmploymentUpdate,
     member_id: UUID,
     profile_id: UUID,
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     svc: DirectoryService = Depends(get_directory_service),
 ):
     return await svc.update_employment(
@@ -125,7 +125,7 @@ async def update_employment(
 async def delete_employment(
     member_id: UUID,
     profile_id: UUID,
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     svc: DirectoryService = Depends(get_directory_service),
 ):
     await svc.delete_employment(family_id, member_id, profile_id)
@@ -135,7 +135,7 @@ async def delete_employment(
 async def create_education(
     payload: EducationUpdate,
     member_id: UUID,
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     svc: DirectoryService = Depends(get_directory_service),
 ):
     return await svc.update_education(
@@ -156,7 +156,7 @@ async def update_education(
     payload: EducationUpdate,
     member_id: UUID,
     profile_id: UUID,
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     svc: DirectoryService = Depends(get_directory_service),
 ):
     return await svc.update_education(
@@ -176,7 +176,7 @@ async def update_education(
 async def delete_education(
     member_id: UUID,
     profile_id: UUID,
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     svc: DirectoryService = Depends(get_directory_service),
 ):
     await svc.delete_education(family_id, member_id, profile_id)

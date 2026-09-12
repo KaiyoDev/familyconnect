@@ -58,6 +58,7 @@ class FamilyMemberData:
     gender: Gender = Gender.UNKNOWN
     date_of_birth: date | None = None
     date_of_death: date | None = None
+    address: str | None = None
     is_alive: bool = True
     status: MemberStatus = MemberStatus.PENDING
 

@@ -24,7 +24,8 @@ class MemberMapper:
     @staticmethod
     def to_domain(model: FamilyMember) -> FamilyMemberData:
         return FamilyMemberData(model.id, model.family_id, model.full_name, model.branch_id, model.user_id,
-                                 model.gender, model.date_of_birth, model.date_of_death, model.is_alive, model.status)
+                                 model.gender, model.date_of_birth, model.date_of_death, model.address,
+                                 model.is_alive, model.status)
 
 
 class RelationshipMapper:

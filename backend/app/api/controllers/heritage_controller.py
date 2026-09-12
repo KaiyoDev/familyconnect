@@ -2,7 +2,7 @@
 from uuid import UUID
 from fastapi import APIRouter, Depends, Query, status
 from pydantic import BaseModel, Field
-from app.api.dependencies import get_heritage_service, require_family_access
+from app.api.dependencies import get_heritage_service, require_family_membership
 from app.services.heritage_service import HeritageService
 
 router = APIRouter()
@@ -39,7 +39,7 @@ class MediaAssetCreate(BaseModel):
 @router.post("", status_code=status.HTTP_201_CREATED)
 async def create_heritage_item(
     payload: HeritageItemCreate,
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     svc: HeritageService = Depends(get_heritage_service),
 ):
     return await svc.create_heritage_item(
@@ -58,7 +58,7 @@ async def create_heritage_item(
 
 @router.get("")
 async def list_heritage_items(
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     item_type: str | None = Query(default=None, alias="type"),
     status: str | None = None,
     skip: int = Query(default=0, ge=0),
@@ -70,7 +70,7 @@ async def list_heritage_items(
 
 @router.get("/search")
 async def search_heritage_items(
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     q: str | None = Query(default=None, alias="q"),
     item_type: str | None = Query(default=None, alias="type"),
     category: str | None = None,
@@ -94,7 +94,7 @@ async def search_heritage_items(
 
 @router.get("/featured-members")
 async def featured_members(
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=20, ge=1, le=100),
     svc: HeritageService = Depends(get_heritage_service),
@@ -104,7 +104,7 @@ async def featured_members(
 
 @router.get("/stats")
 async def heritage_stats(
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     svc: HeritageService = Depends(get_heritage_service),
 ):
     return await svc.archive_stats(family_id)
@@ -113,7 +113,7 @@ async def heritage_stats(
 @router.get("/{item_id}")
 async def get_heritage_item(
     item_id: UUID,
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     svc: HeritageService = Depends(get_heritage_service),
 ):
     return await svc.get_item(family_id, item_id)
@@ -123,7 +123,7 @@ async def get_heritage_item(
 async def update_heritage_item(
     payload: HeritageItemUpdate,
     item_id: UUID,
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     svc: HeritageService = Depends(get_heritage_service),
 ):
     return await svc.update_item(family_id, item_id, **payload.model_dump(exclude_none=True))
@@ -132,7 +132,7 @@ async def update_heritage_item(
 @router.delete("/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_heritage_item(
     item_id: UUID,
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     svc: HeritageService = Depends(get_heritage_service),
 ):
     await svc.delete_item(family_id, item_id)
@@ -142,7 +142,7 @@ async def delete_heritage_item(
 @router.post("/media", status_code=status.HTTP_201_CREATED)
 async def add_media(
     payload: MediaAssetCreate,
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     svc: HeritageService = Depends(get_heritage_service),
 ):
     return await svc.add_media(
@@ -154,7 +154,7 @@ async def add_media(
 
 @router.get("/media")
 async def list_media(
-    family_id: UUID = Depends(require_family_access),
+    family_id: UUID = Depends(require_family_membership),
     skip: int = Query(default=0, ge=0),
     limit: int = Query(default=100, ge=1, le=500),
     svc: HeritageService = Depends(get_heritage_service),

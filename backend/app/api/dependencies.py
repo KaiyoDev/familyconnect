@@ -2,6 +2,7 @@
 from uuid import UUID
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.api.auth import require_family_membership as require_family_membership_auth
 from app.infrastructure.databases.database import get_db
 from app.infrastructure.repositories.branch_repository import BranchRepository
 from app.infrastructure.repositories.directory_repository import (
@@ -19,10 +20,17 @@ from app.services.heritage_service import HeritageService
 
 
 async def require_family_access(family_id: UUID, db: AsyncSession = Depends(get_db)) -> UUID:
-    """Temporary authorization seam until the authentication task is integrated."""
+    """Temporary authorization seam — validates family id existence.
+
+    NOTE: Used by legacy family_controller. New controllers use require_family_membership.
+    """
     if not family_id:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid family id")
     return family_id
+
+
+# RBAC-aware variant that also verifies the user belongs to the family
+require_family_membership = require_family_membership_auth
 
 
 def get_family_service(db: AsyncSession = Depends(get_db)) -> FamilyService:
@@ -66,4 +74,5 @@ __all__ = [
     "get_heritage_service",
     "get_directory_service",
     "require_family_access",
+    "require_family_membership",
 ]
