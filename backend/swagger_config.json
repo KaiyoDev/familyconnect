@@ -1,0 +1,78 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "FamilyConnect API",
+    "description": "Backend API for FamilyConnect platform",
+    "version": "0.1.0",
+    "contact": {
+      "name": "FamilyConnect Team"
+    }
+  },
+  "host": "localhost:8000",
+  "basePath": "/api",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\""
+    }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Health",
+      "description": "Health check endpoints"
+    },
+    {
+      "name": "Auth",
+      "description": "Authentication endpoints"
+    },
+    {
+      "name": "Users",
+      "description": "User management endpoints"
+    },
+    {
+      "name": "Families",
+      "description": "Family management endpoints"
+    },
+    {
+      "name": "Family Members",
+      "description": "Family member management endpoints"
+    },
+    {
+      "name": "Relationships",
+      "description": "Family relationship endpoints"
+    },
+    {
+      "name": "Events",
+      "description": "Event management endpoints"
+    },
+    {
+      "name": "Posts",
+      "description": "Community post endpoints"
+    },
+    {
+      "name": "Heritage",
+      "description": "Heritage item endpoints"
+    },
+    {
+      "name": "AI",
+      "description": "AI assistant endpoints"
+    }
+  ]
+}
