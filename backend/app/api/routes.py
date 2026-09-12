@@ -17,6 +17,12 @@ def register_routes(app: FastAPI) -> None:
     from app.api.controllers.family_controller import router as family_router
     app.include_router(family_router, prefix="/api/families", tags=["Families"])
 
+    from app.api.controllers.heritage_controller import router as heritage_router
+    app.include_router(heritage_router, prefix="/api/families/{family_id}/heritage", tags=["Heritage"])
+
+    from app.api.controllers.directory_controller import router as directory_router
+    app.include_router(directory_router, prefix="/api/families/{family_id}/directory", tags=["Directory"])
+
     # Future controllers will be registered here:
     # from app.api.controllers.auth_controller import router as auth_router
     # app.include_router(auth_router, prefix="/api/auth", tags=["Auth"])
