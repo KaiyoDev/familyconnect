@@ -15,6 +15,8 @@ def register_routes(app: FastAPI) -> None:
     from app.api.controllers.community_controller import router as community_router
     from app.api.controllers.ai_controller import router as ai_router
     from app.api.controllers.admin_controller import router as admin_router
+    from app.api.controllers.heritage_controller import router as heritage_router
+    from app.api.controllers.directory_controller import router as directory_router
 
     app.include_router(health_router, tags=["Health"])
     app.include_router(auth_router, prefix="/api/v1", tags=["Auth"])
@@ -22,3 +24,5 @@ def register_routes(app: FastAPI) -> None:
     app.include_router(community_router, prefix="/api/v1", tags=["Community"])
     app.include_router(ai_router, prefix="/api/v1", tags=["AI"])
     app.include_router(admin_router)
+    app.include_router(heritage_router, tags=["Heritage"])
+    app.include_router(directory_router, tags=["Directory"])
