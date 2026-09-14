@@ -13,7 +13,7 @@ from app.infrastructure.repositories.directory_repository import (
 )
 from app.services.directory_service import DirectoryService
 
-router = APIRouter(tags=["Directory"])
+router = APIRouter(prefix="/api", tags=["Directory"])
 
 
 def get_service(db: AsyncSession = Depends(get_db)) -> DirectoryService:
@@ -45,7 +45,7 @@ class EducationUpdate(BaseModel):
     gpa: float | None = None
 
 
-@router.get("/api/families/{family_id}/directory")
+@router.get("/families/{family_id}/directory")
 async def get_directory(
     family_id: UUID,
     branch_id: UUID | None = None,
@@ -57,7 +57,7 @@ async def get_directory(
     return await svc.get_directory(family_id, branch_id=branch_id, skip=skip, limit=limit)
 
 
-@router.get("/api/families/{family_id}/directory/search")
+@router.get("/families/{family_id}/directory/search")
 async def search_members(
     family_id: UUID,
     q: str | None = Query(default=None),
@@ -73,7 +73,7 @@ async def search_members(
                                     branch_id=branch_id, skip=skip, limit=limit)
 
 
-@router.get("/api/families/{family_id}/directory/members/{member_id}")
+@router.get("/families/{family_id}/directory/members/{member_id}")
 async def get_member_profile(
     family_id: UUID,
     member_id: UUID,
@@ -83,7 +83,7 @@ async def get_member_profile(
     return await svc.get_member_profile(family_id, member_id)
 
 
-@router.post("/api/families/{family_id}/directory/members/{member_id}/employment", status_code=status.HTTP_201_CREATED)
+@router.post("/families/{family_id}/directory/members/{member_id}/employment", status_code=status.HTTP_201_CREATED)
 async def create_employment(
     family_id: UUID,
     member_id: UUID,
@@ -99,7 +99,7 @@ async def create_employment(
     )
 
 
-@router.put("/api/families/{family_id}/directory/members/{member_id}/employment/{profile_id}")
+@router.put("/families/{family_id}/directory/members/{member_id}/employment/{profile_id}")
 async def update_employment(
     family_id: UUID,
     member_id: UUID,
@@ -116,7 +116,7 @@ async def update_employment(
     )
 
 
-@router.delete("/api/families/{family_id}/directory/members/{member_id}/employment/{profile_id}",
+@router.delete("/families/{family_id}/directory/members/{member_id}/employment/{profile_id}",
               status_code=status.HTTP_204_NO_CONTENT)
 async def delete_employment(
     family_id: UUID,
@@ -128,7 +128,7 @@ async def delete_employment(
     await svc.delete_employment(family_id, member_id, profile_id)
 
 
-@router.post("/api/families/{family_id}/directory/members/{member_id}/education", status_code=status.HTTP_201_CREATED)
+@router.post("/families/{family_id}/directory/members/{member_id}/education", status_code=status.HTTP_201_CREATED)
 async def create_education(
     family_id: UUID,
     member_id: UUID,
@@ -144,7 +144,7 @@ async def create_education(
     )
 
 
-@router.put("/api/families/{family_id}/directory/members/{member_id}/education/{profile_id}")
+@router.put("/families/{family_id}/directory/members/{member_id}/education/{profile_id}")
 async def update_education(
     family_id: UUID,
     member_id: UUID,
@@ -161,7 +161,7 @@ async def update_education(
     )
 
 
-@router.delete("/api/families/{family_id}/directory/members/{member_id}/education/{profile_id}",
+@router.delete("/families/{family_id}/directory/members/{member_id}/education/{profile_id}",
               status_code=status.HTTP_204_NO_CONTENT)
 async def delete_education(
     family_id: UUID,

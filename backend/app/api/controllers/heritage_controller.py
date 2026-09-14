@@ -8,7 +8,7 @@ from app.infrastructure.databases.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.infrastructure.repositories.heritage_repository import HeritageRepository
 
-router = APIRouter(tags=["Heritage"])
+router = APIRouter(prefix="/api", tags=["Heritage"])
 
 
 def get_service(db: AsyncSession = Depends(get_db)) -> HeritageService:
@@ -42,7 +42,7 @@ class MediaCreate(BaseModel):
     caption: str | None = None
 
 
-@router.post("/api/families/{family_id}/heritage", status_code=status.HTTP_201_CREATED)
+@router.post("/families/{family_id}/heritage", status_code=status.HTTP_201_CREATED)
 async def create_heritage_item(
     family_id: UUID,
     payload: HeritageItemCreate,
@@ -55,7 +55,7 @@ async def create_heritage_item(
     )
 
 
-@router.get("/api/families/{family_id}/heritage")
+@router.get("/families/{family_id}/heritage")
 async def list_heritage_items(
     family_id: UUID,
     item_type: str | None = Query(default=None, alias="type"),
@@ -68,7 +68,7 @@ async def list_heritage_items(
     return await svc.get_items(family_id, type_filter=item_type, status=status, skip=skip, limit=limit)
 
 
-@router.get("/api/families/{family_id}/heritage/search")
+@router.get("/families/{family_id}/heritage/search")
 async def search_heritage_items(
     family_id: UUID,
     q: str | None = Query(default=None),
@@ -85,7 +85,7 @@ async def search_heritage_items(
                                   period=period, status=status, skip=skip, limit=limit)
 
 
-@router.get("/api/families/{family_id}/heritage/featured-members")
+@router.get("/families/{family_id}/heritage/featured-members")
 async def featured_members(
     family_id: UUID,
     skip: int = Query(default=0, ge=0),
@@ -96,7 +96,7 @@ async def featured_members(
     return await svc.list_featured_members(family_id, skip=skip, limit=limit)
 
 
-@router.get("/api/families/{family_id}/heritage/stats")
+@router.get("/families/{family_id}/heritage/stats")
 async def heritage_stats(
     family_id: UUID,
     _current_user: dict = Depends(get_current_user),
@@ -105,7 +105,7 @@ async def heritage_stats(
     return await svc.archive_stats(family_id)
 
 
-@router.get("/api/families/{family_id}/heritage/{item_id}")
+@router.get("/families/{family_id}/heritage/{item_id}")
 async def get_heritage_item(
     family_id: UUID,
     item_id: UUID,
@@ -115,7 +115,7 @@ async def get_heritage_item(
     return await svc.get_item(family_id, item_id)
 
 
-@router.put("/api/families/{family_id}/heritage/{item_id}")
+@router.put("/families/{family_id}/heritage/{item_id}")
 async def update_heritage_item(
     family_id: UUID,
     item_id: UUID,
@@ -126,7 +126,7 @@ async def update_heritage_item(
     return await svc.update_item(family_id, item_id, **payload.model_dump(exclude_none=True))
 
 
-@router.delete("/api/families/{family_id}/heritage/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/families/{family_id}/heritage/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_heritage_item(
     family_id: UUID,
     item_id: UUID,
@@ -136,7 +136,7 @@ async def delete_heritage_item(
     await svc.delete_item(family_id, item_id)
 
 
-@router.post("/api/families/{family_id}/heritage/media", status_code=status.HTTP_201_CREATED)
+@router.post("/families/{family_id}/heritage/media", status_code=status.HTTP_201_CREATED)
 async def add_media(
     family_id: UUID,
     payload: MediaCreate,
@@ -147,7 +147,7 @@ async def add_media(
     return await svc.add_media(family_id, uploaded_by=user_id, **payload.model_dump())
 
 
-@router.get("/api/families/{family_id}/heritage/media")
+@router.get("/families/{family_id}/heritage/media")
 async def list_media(
     family_id: UUID,
     skip: int = Query(default=0, ge=0),

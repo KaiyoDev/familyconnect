@@ -1,18 +1,6 @@
-<<<<<<< HEAD
-# File: backend/main.py
-from fastapi import FastAPI
+"""FastAPI application entry point.
 
-app = FastAPI(title="Family Connect API")
-
-# Route mặc định để kiểm tra API sống hay không
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to Family Connect API"}
-=======
-"""FastAPI application entry point (mirror of teacher's src/app.py).
-
-Responsibility: create app instance and run the server.
-Teacher used `create_app()` from `create_app.py` and ran on port 9999.
+Uses create_app() factory from create_app.py with Windows event loop policy.
 """
 import sys
 if sys.platform == "win32":
@@ -33,4 +21,3 @@ if __name__ == "__main__":
         port=8000,
         reload=False,
     )
->>>>>>> develop

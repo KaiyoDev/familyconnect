@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from app.api.dependencies import get_family_service, require_family_access
 from app.services.family_service import FamilyService
 
-router = APIRouter()
+router = APIRouter(prefix="/families", tags=["Family"])
 
 
 class FamilyCreate(BaseModel):
@@ -64,6 +64,12 @@ async def delete_family(family_id: UUID = Depends(require_family_access),
 async def add_member(payload: MemberCreate, family_id: UUID = Depends(require_family_access),
                      svc: FamilyService = Depends(get_family_service)):
     return await svc.add_member(family_id, **payload.model_dump())
+
+
+@router.get("/{family_id}/members")
+async def list_members(family_id: UUID = Depends(require_family_access),
+                       svc: FamilyService = Depends(get_family_service)):
+    return await svc.list_members(family_id)
 
 
 @router.get("/{family_id}/tree")
