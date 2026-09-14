@@ -108,6 +108,24 @@ class FamilyService:
         await self.members.delete(member)
         await self._commit()
 
+    async def list_members(self, family_id: UUID):
+        """List all members of a family."""
+        await self.get_family(family_id)
+        members = await self.members.get_by_family(family_id)
+        return [self._member_to_dict(m) for m in members]
+
+    @staticmethod
+    def _member_to_dict(m):
+        return {
+            "id": str(m.id),
+            "full_name": m.full_name,
+            "gender": m.gender,
+            "date_of_birth": str(m.date_of_birth) if m.date_of_birth else None,
+            "is_alive": m.is_alive,
+            "branch_id": str(m.branch_id) if m.branch_id else None,
+            "status": m.status,
+        }
+
     async def add_relationship(self, family_id: UUID, from_member_id: UUID, to_member_id: UUID, relationship_type: str, notes=None):
         if from_member_id == to_member_id:
             raise ValidationException("A member cannot relate to itself")
