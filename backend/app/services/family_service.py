@@ -54,6 +54,19 @@ class FamilyService:
         await self.session.refresh(family)
         return family
 
+    async def create_branch(self, family_id: UUID, branch_name: str, description: str | None = None,
+                            founder_id: UUID | None = None) -> FamilyBranch:
+        """Add a branch to a family (FR: chi/nhánh)."""
+        family = await self.families.get_by_id(family_id)
+        if not family:
+            raise NotFoundException(f"Family {family_id} not found")
+        branch = FamilyBranch(id=uuid4(), family_id=family_id, branch_name=branch_name,
+                              description=description, founder_id=founder_id)
+        await self.branches.create(branch)
+        await self._commit()
+        await self.session.refresh(branch)
+        return branch
+
     async def get_family(self, family_id: UUID):
         family = await self.families.get_by_id(family_id)
         if not family:

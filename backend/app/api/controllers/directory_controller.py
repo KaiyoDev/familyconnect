@@ -13,7 +13,7 @@ from app.infrastructure.repositories.directory_repository import (
 )
 from app.services.directory_service import DirectoryService
 
-router = APIRouter(prefix="/api", tags=["Directory"])
+router = APIRouter(tags=["Directory"])
 
 
 def get_service(db: AsyncSession = Depends(get_db)) -> DirectoryService:

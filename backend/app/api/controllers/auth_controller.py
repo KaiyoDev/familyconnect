@@ -11,6 +11,7 @@ from app.schemas.auth import (
     RefreshTokenRequest,
     TokenResponse,
     UserResponse,
+    VerifyEmailRequest,
 )
 from app.services.auth_service import AuthService
 from app.domain.utils.jwt import create_access_token, create_refresh_token, decode_token
@@ -88,6 +89,12 @@ async def reset_password(reset_token: str, new_password: str, svc: AuthService =
         return await svc.reset_password(reset_token, new_password)
     except HTTPException as exc:
         raise exc
+
+
+@router.post("/verify-email")
+async def verify_email(payload: VerifyEmailRequest, svc: AuthService = Depends(get_auth_service)):
+    """Activate the account referenced by an activation token."""
+    return await svc.verify_email(payload.token)
 
 
 @router.put("/me", response_model=UserResponse)

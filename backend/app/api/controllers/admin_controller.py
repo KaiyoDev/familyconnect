@@ -8,7 +8,7 @@ from app.api.dependencies import get_db, require_admin
 from app.infrastructure.repositories.admin_repository import AdminRepository
 from app.services.admin_service import AdminNotFoundError, AdminService, AdminServiceError
 
-router = APIRouter(prefix="/api/admin", tags=["Admin"], dependencies=[Depends(require_admin)])
+router = APIRouter(prefix="/admin", tags=["Admin"], dependencies=[Depends(require_admin)])
 
 
 def get_admin_service(db=Depends(get_db)) -> AdminService:

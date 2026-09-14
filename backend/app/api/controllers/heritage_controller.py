@@ -8,7 +8,8 @@ from app.infrastructure.databases.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.infrastructure.repositories.heritage_repository import HeritageRepository
 
-router = APIRouter(prefix="/api", tags=["Heritage"])
+# No /api prefix — frontend calls /families/{id}/heritage/... and /families/{id}/photos
+router = APIRouter(tags=["Heritage"])
 
 
 def get_service(db: AsyncSession = Depends(get_db)) -> HeritageService:
@@ -41,6 +42,190 @@ class MediaCreate(BaseModel):
     media_type: str = Field(..., description="IMAGE|VIDEO|AUDIO|DOCUMENT")
     caption: str | None = None
 
+
+class DocumentCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=200)
+    content: str | None = None
+    period: str | None = None
+    category: str | None = "GENERAL"
+    media_url: str | None = None
+
+
+class StoryCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=200)
+    content: str | None = None
+    category: str | None = "GENERAL"
+    media_url: str | None = None
+
+
+class OutstandingCreate(BaseModel):
+    member_id: UUID | None = None  # accepted; member linkage stored via content (no dedicated column yet)
+    title: str = Field(min_length=1, max_length=200)
+    description: str | None = None
+
+
+# ── Typed collections (documents / stories / outstanding / photos) ────────
+# NOTE: these must be registered before the generic /heritage/{item_id} routes
+# below, otherwise "documents"/"stories" would be captured as an (invalid) UUID.
+
+@router.get("/families/{family_id}/heritage/documents")
+async def list_documents(
+    family_id: UUID,
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=100, ge=1, le=500),
+    _current_user: dict = Depends(get_current_user),
+    svc: HeritageService = Depends(get_service),
+):
+    return await svc.get_items(family_id, type_filter="DOCUMENT", skip=skip, limit=limit)
+
+
+@router.post("/families/{family_id}/heritage/documents", status_code=status.HTTP_201_CREATED)
+async def create_document(
+    family_id: UUID,
+    payload: DocumentCreate,
+    _current_user: dict = Depends(get_current_user),
+    svc: HeritageService = Depends(get_service),
+):
+    return await svc.create_heritage_item(
+        family_id=family_id,
+        item_type="DOCUMENT",
+        title=payload.title,
+        content=payload.content,
+        period=payload.period,
+        category=payload.category,
+        media_url=payload.media_url,
+    )
+
+
+@router.put("/families/{family_id}/heritage/documents/{item_id}")
+async def update_document(
+    family_id: UUID,
+    item_id: UUID,
+    payload: HeritageItemUpdate,
+    _current_user: dict = Depends(get_current_user),
+    svc: HeritageService = Depends(get_service),
+):
+    return await svc.update_item(family_id, item_id, **payload.model_dump(exclude_none=True))
+
+
+@router.delete("/families/{family_id}/heritage/documents/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_document(
+    family_id: UUID,
+    item_id: UUID,
+    _current_user: dict = Depends(get_current_user),
+    svc: HeritageService = Depends(get_service),
+):
+    await svc.delete_item(family_id, item_id)
+
+
+@router.post("/families/{family_id}/heritage/documents/{item_id}/approve")
+async def approve_document(
+    family_id: UUID,
+    item_id: UUID,
+    _current_user: dict = Depends(get_current_user),
+    svc: HeritageService = Depends(get_service),
+):
+    return await svc.update_item(family_id, item_id, status="PUBLISHED")
+
+
+@router.post("/families/{family_id}/heritage/documents/{item_id}/reject")
+async def reject_document(
+    family_id: UUID,
+    item_id: UUID,
+    _current_user: dict = Depends(get_current_user),
+    svc: HeritageService = Depends(get_service),
+):
+    return await svc.update_item(family_id, item_id, status="DRAFT")
+
+
+@router.get("/families/{family_id}/heritage/stories")
+async def list_stories(
+    family_id: UUID,
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=100, ge=1, le=500),
+    _current_user: dict = Depends(get_current_user),
+    svc: HeritageService = Depends(get_service),
+):
+    return await svc.get_items(family_id, type_filter="STORY", skip=skip, limit=limit)
+
+
+@router.post("/families/{family_id}/heritage/stories", status_code=status.HTTP_201_CREATED)
+async def create_story(
+    family_id: UUID,
+    payload: StoryCreate,
+    _current_user: dict = Depends(get_current_user),
+    svc: HeritageService = Depends(get_service),
+):
+    return await svc.create_heritage_item(
+        family_id=family_id,
+        item_type="STORY",
+        title=payload.title,
+        content=payload.content,
+        category=payload.category,
+        media_url=payload.media_url,
+    )
+
+
+@router.put("/families/{family_id}/heritage/stories/{item_id}")
+async def update_story(
+    family_id: UUID,
+    item_id: UUID,
+    payload: HeritageItemUpdate,
+    _current_user: dict = Depends(get_current_user),
+    svc: HeritageService = Depends(get_service),
+):
+    return await svc.update_item(family_id, item_id, **payload.model_dump(exclude_none=True))
+
+
+@router.delete("/families/{family_id}/heritage/stories/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_story(
+    family_id: UUID,
+    item_id: UUID,
+    _current_user: dict = Depends(get_current_user),
+    svc: HeritageService = Depends(get_service),
+):
+    await svc.delete_item(family_id, item_id)
+
+
+@router.get("/families/{family_id}/heritage/outstanding")
+async def list_outstanding(
+    family_id: UUID,
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=20, ge=1, le=100),
+    _current_user: dict = Depends(get_current_user),
+    svc: HeritageService = Depends(get_service),
+):
+    return await svc.list_featured_members(family_id, skip=skip, limit=limit)
+
+
+@router.post("/families/{family_id}/heritage/outstanding", status_code=status.HTTP_201_CREATED)
+async def add_outstanding(
+    family_id: UUID,
+    payload: OutstandingCreate,
+    _current_user: dict = Depends(get_current_user),
+    svc: HeritageService = Depends(get_service),
+):
+    return await svc.create_heritage_item(
+        family_id=family_id,
+        item_type="OTHER",
+        category="OUTSTANDING",
+        title=payload.title,
+        content=payload.description,
+    )
+
+
+@router.get("/families/{family_id}/photos")
+async def list_photos(
+    family_id: UUID,
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=100, ge=1, le=500),
+    _current_user: dict = Depends(get_current_user),
+    svc: HeritageService = Depends(get_service),
+):
+    return await svc.list_media(family_id, skip=skip, limit=limit)
+
+
+# ── Generic heritage item routes (FR-HER-01 .. FR-HER-05) ────────────────
 
 @router.post("/families/{family_id}/heritage", status_code=status.HTTP_201_CREATED)
 async def create_heritage_item(
@@ -143,7 +328,7 @@ async def add_media(
     current_user: dict = Depends(get_current_user),
     svc: HeritageService = Depends(get_service),
 ):
-    user_id = UUID(current_user["id"])
+    user_id = UUID(str(current_user.get("id") or current_user.get("sub")))
     return await svc.add_media(family_id, uploaded_by=user_id, **payload.model_dump())
 
 

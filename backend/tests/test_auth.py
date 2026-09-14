@@ -40,9 +40,11 @@ def test_login_success(client, test_user):
         "password": "password123",
     })
     assert response.status_code == 200
-    data = response.json()
+    data = response.json().get("data") or {}
     assert "access_token" in data
     assert data["token_type"] == "bearer"
+    # login now returns the user object alongside tokens
+    assert data.get("user", {}).get("email") == test_user["email"]
 
 
 def test_login_wrong_password(client, test_user):
@@ -57,7 +59,7 @@ def test_profile_get_with_token(client, test_user):
     headers = {"Authorization": f"Bearer {test_user['token']}"}
     response = client.get("/auth/profile", headers=headers)
     assert response.status_code == 200
-    assert response.json()["email"] == test_user["email"]
+    assert response.json().get("data", {}).get("email") == test_user["email"]
 
 
 def test_profile_get_without_token(client):
@@ -70,7 +72,7 @@ def test_token_refresh(client, test_user):
     response = client.post("/auth/refresh", json={"refresh_token": test_user["refresh_token"]})
     if response.status_code != 404:
         assert response.status_code == 200
-        assert "access_token" in response.json()
+        assert "access_token" in (response.json().get("data") or {})
 
 
 def test_logout(client, test_user):

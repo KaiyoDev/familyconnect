@@ -11,6 +11,7 @@ def register_routes(app: FastAPI) -> None:
     """Register the existing application routes and administrator routes."""
     from app.api.controllers.health_controller import router as health_router
     from app.api.controllers.auth_controller import router as auth_router
+    from app.api.controllers.user_controller import router as user_router
     from app.api.controllers.family_controller import router as family_router
     from app.api.controllers.event_controller import family_router as event_family_router
     from app.api.controllers.event_controller import event_router as event_single_router
@@ -21,6 +22,8 @@ def register_routes(app: FastAPI) -> None:
     from app.api.controllers.directory_controller import router as directory_router
     # Auth
     app.include_router(auth_router, tags=["Authentication"])
+    # User (root-level /users/me)
+    app.include_router(user_router, tags=["User"])
     # Health
     app.include_router(health_router, tags=["Health"])
     # Family & Genealogy

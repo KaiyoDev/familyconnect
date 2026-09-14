@@ -65,7 +65,7 @@ def test_user(client):
     token = None
     refresh_token = None
     if login_resp.status_code == 200:
-        data = login_resp.json()
+        data = login_resp.json().get("data") or {}
         token = data.get("access_token")
         refresh_token = data.get("refresh_token")
     return {
