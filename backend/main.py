@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-# File: backend/main.py
-from fastapi import FastAPI
-
-app = FastAPI(title="Family Connect API")
-
-# Route mặc định để kiểm tra API sống hay không
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to Family Connect API"}
-=======
 """FastAPI application entry point (mirror of teacher's src/app.py).
 
 Responsibility: create app instance and run the server.
@@ -33,4 +22,3 @@ if __name__ == "__main__":
         port=8000,
         reload=False,
     )
->>>>>>> develop

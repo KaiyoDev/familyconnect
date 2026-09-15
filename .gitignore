@@ -54,3 +54,5 @@ docs/superpowers/
 .codegraph
 docs/audit
 .task
+.coverage
+*.coverage

@@ -1,9 +1,10 @@
 # Test Cases - FamilyConnect
 
 > **Dự án:** FamilyConnect, Nền tảng Cộng đồng Gia đình số tích hợp Trí tuệ nhân tạo
-> **Tài liệu:** Bộ trường hợp kiểm thử (Test Cases)
-> **Phiên bản:** v1.0
+> **Tài liệu:** Bộ trường hợp kiểm thử (Test Cases) — Updated with execution results
+> **Phiên bản:** v1.1
 > **Ngày tạo:** 2026-08-20
+> **Ngày cập nhật:** 2025-09-15
 
 ---
 
@@ -610,3 +611,193 @@
 | TC-ADM-005A | FR-ADM-05, BR-ADM-003, UC-12 | Family Owner không thể cấu hình hệ thống | 1. Family Owner đã đăng nhập. | Token: owner_token | 1. Gọi API cấu hình hệ thống. | API trả về 403 Forbidden. | NOT RUN | | |
 | TC-ADM-005P2 | FR-ADM-05, UC-12 | Tắt dịch vụ AI - kiểm tra fallback | 1. Administrator đã đăng nhập. | AI service: OFF | 1. Tắt AI service.<br>2. Family Member dùng AI Assistant. | 1. Cấu hình lưu thành công.<br>2. AI Assistant hiển thị trạng thái không khả dụng + fallback. | NOT RUN | | |
 | TC-ADM-005P3 | FR-ADM-05, UC-12 | Khôi phục cấu hình mặc định | 1. Administrator đã đăng nhập. | Nhóm: bảo mật | 1. Chọn "Khôi phục mặc định" cho nhóm bảo mật. | Các tham số trong nhóm trở về giá trị mặc định. | NOT RUN | | |
+
+---
+
+## Execution Report
+
+> ⚡ **Cập nhật kết quả thực thi Unit & Integration Testing — 2025-09-15**
+> Phiên bản này ghi nhận kết quả từ automated test suite (pytest + coverage).
+> Chi tiết: [`execution/Unit-Integration-Report.md`](execution/Unit-Integration-Report.md)
+
+### Tổng quan
+
+| Metric | Value |
+|--------|-------|
+| **Total Tests** | 213 |
+| **PASS** | 206 (96.7%) |
+| **FAIL** | 7 (3.3%) |
+| **BLOCKED** | 0 |
+| **NOT RUN** | Các test case UI/E2E trong file này chưa được automate (xem ghi chú) |
+| **Coverage** | 82% (3,629 / 4,446 lines) |
+| **Defects Found** | 2 (BUG-001: ✅ Fixed, BUG-002: ❌ Unresolved) |
+
+> 📝 **Ghi chú:** Test cases trong file này được viết ở mức UI/E2E (dạng step-by-step). Tests được thực thi ở unit, service, repository và integration (API contract) level. Các TC mapping dưới đây cho thấy kết quả tương ứng từ automated tests hiện tại.
+
+---
+
+### Kết quả theo Module
+
+#### Module US — User & Security
+
+| Test Case ID | Kết quả từ Automation | Ghi chú evidence |
+|:------------:|:---------------------:|:-----------------|
+| TC-US-001P, TC-US-001N, TC-US-001N2, TC-US-001V | **FAIL** 🔴 | Endpoint `/api/auth/register` chưa được implement trong `auth_controller.py`. Service layer (`AuthService.register`) đã có code nhưng controller không expose. → **BUG-002** |
+| TC-US-001N3, TC-US-001N4, TC-US-001N5, TC-US-001B, TC-US-001E | **NOT RUN** | Các test case này yêu cầu UI (form validation, email flow). Chưa có test frontend. |
+| TC-US-002P, TC-US-002N | **FAIL** 🔴 | Endpoint `/api/auth/login` chưa được implement. → **BUG-002** |
+| TC-US-002N2, TC-US-002N3, TC-US-002V, TC-US-002B | **NOT RUN** | Yêu cầu UI hoặc DB seeding (trạng thái account PENDING/BLOCKED, brute-force counter, perf). |
+| TC-US-002N4 (login non-existent email) | **PASS** ✅ | Unit test `test_login_nonexistent_email` xác nhận trả về 401 mà không tiết lộ email không tồn tại. |
+| TC-US-002A (refresh token) | **PASS** ✅ | Unit test `test_refresh_token_success` + `test_refresh_token_invalid` xác nhận luồng. |
+| TC-US-003P, TC-US-003N, TC-US-003A (logout) | **PASS** ✅ | Unit test `test_logout` xác nhận. |
+| TC-US-004P (forgot password) | **PASS** ✅ | Unit test `test_forgot_password` xác nhận. |
+| TC-US-004N, TC-US-004N2, TC-US-004V | **PASS** ✅ | Unit tests `test_forgot_password_nonexistent`, `test_reset_password_success`, `test_reset_password_invalid_token` xác nhận. |
+| TC-US-005P ... TC-US-005E (RBAC) | **NOT RUN** | Yêu cầu integration test với token giả định các role. Có thể triển khai với `test_auth.py` pattern. |
+| TC-US-006P (get profile with token) | **FAIL** 🔴 | Endpoint `/api/auth/profile` (thực tế là `/users/me`) chưa được implement. → **BUG-002** |
+| TC-US-006N, TC-US-006P2 (profile not found, update) | **PASS** ✅ | Unit tests `test_get_profile_not_found`, `test_update_profile` xác nhận. |
+| TC-US-007P... (reset password) | **PASS** ✅ | Unit test `test_reset_password_success`, `test_reset_password_invalid_token` pass. |
+
+#### Module FG — Family & Genealogy (Full PASS ✅)
+
+| Test Case ID | Kết quả | Evidence |
+|:------------:|:-------:|:--------:|
+| TC-FG-001P (create family) | **PASS** | `test_create_family_creates_default_branch_and_commits`, `test_create_family` (repo) |
+| TC-FG-001N (get non-existent) | **PASS** | `test_get_family_raises_when_missing`, `test_get_by_id_not_found` (repo) |
+| TC-FG-001P2 (update family) | **PASS** | `test_update_family` |
+| TC-FG-001P3 (delete family) | **PASS** | `test_delete_family` |
+| TC-FG-001V (reject foreign branch) | **PASS** | `test_add_member_rejects_branch_from_another_family` |
+| TC-FG-002P (add member) | **PASS** | `test_add_member_to_valid_branch` |
+| TC-FG-003P (relationships) | **PASS** | `test_add_parent_child_relationship`, `test_add_marriage_relationship` |
+| TC-FG-003V (validation) | **PASS** | `test_relationship_validation` (self-relationship, non-member, invalid type) |
+| TC-FG-004P (genealogy tree) | **PASS** | `test_genealogy_tree_contains_roots_children_and_spouses` |
+| TC-FG-004P2 (relationship lookup) | **PASS** | `test_lookup_relationship_returns_direct_relationship` |
+
+#### Module COM — Community (Full PASS ✅)
+
+| Test Case ID | Kết quả | Evidence |
+|:------------:|:-------:|:--------:|
+| TC-COM-001P (create post) | **PASS** | `test_create_post_success` |
+| TC-COM-001N (empty content) | **PASS** | `test_create_post_empty` |
+| TC-COM-001P2, 001P3 (update/delete own post) | **PASS** | `test_update_post`, `test_delete_post` |
+| TC-COM-001N2 (non-author forbidden) | **PASS** | `test_update_post_forbidden`, `test_delete_post_forbidden` |
+| TC-COM-003P (feed) | **PASS** | `test_get_feed_success`, `test_get_feed_invalid_page`, `test_get_feed_invalid_page_size` |
+| TC-COM-002P (comment) | **PASS** | `test_add_comment_success` |
+| TC-COM-002N (empty/long comment) | **PASS** | `test_add_comment_empty`, `test_add_comment_too_long` |
+| TC-COM-002P2 (reaction) | **PASS** | `test_add_reaction_success` |
+| TC-COM-002N (invalid reaction) | **PASS** | `test_add_reaction_invalid_type` |
+| TC-COM-002V (duplicate reaction) | **PASS** | `test_add_reaction_duplicate` |
+| TC-COM-002E (integrity error) | **PASS** | `test_add_reaction_integrity_error` |
+| TC-COM-005P (announcement) | **PASS** | `test_create_announcement` |
+
+#### Module EVT — Events (Full PASS ✅)
+
+| Test Case ID | Kết quả | Evidence |
+|:------------:|:-------:|:--------:|
+| TC-EVT-001P (CRUD event) | **PASS** | `test_create_event_success`, `test_get_events`, `test_get_event_success` |
+| TC-EVT-001N (not found → 404) | **PASS** | `test_get_event_not_found`, `test_update_event_not_found`, `test_cancel_event_not_found` |
+| TC-EVT-001V (update event) | **PASS** | `test_update_event_success` |
+| TC-EVT-001E (empty list) | **PASS** | `test_get_events_empty` |
+| TC-EVT-002P (RSVP) | **PASS** | `test_rsvp_going`, `test_rsvp_maybe`, `test_rsvp_not_going` |
+| TC-EVT-002N (invalid status → 400) | **PASS** | `test_rsvp_invalid_status` |
+| TC-EVT-002V (update RSVP) | **PASS** | `test_rsvp_update_existing` |
+| TC-EVT-003P (attendees) | **PASS** | `test_get_attendees_all`, `test_get_attendees_filtered` |
+| TC-EVT-003E (empty attendees) | **PASS** | `test_get_attendees_empty` |
+| TC-EVT-005P (reminder) | **PASS** | `test_send_reminder` |
+
+#### Module AI — AI Services (Full PASS ✅)
+
+| Test Case ID | Kết quả | Evidence |
+|:------------:|:-------:|:--------:|
+| TC-AI-001P (semantic search) | **PASS** | `test_semantic_search` |
+| TC-AI-001N (no results) | **PASS** | `test_semantic_search_no_results` |
+| TC-AI-002P (conversation CRUD) | **PASS** | `test_create_conversation`, `test_get_conversation_with_messages`, `test_list_conversations`, `test_delete_conversation` |
+| TC-AI-002N (not found) | **PASS** | `test_get_conversation_not_found`, `test_delete_conversation_not_found` |
+| TC-AI-002P5 (chat mock) | **PASS** | `test_chat_mock_provider` |
+| TC-AI-003P (explain relationship) | **PASS** | `test_explain_relationship_parent_child`, `test_explain_relationship_marriage` |
+| TC-AI-004P (summarize) | **PASS** | `test_summarize_short`, `test_summarize_medium`, `test_summarize_full` |
+| TC-AI-004N (invalid length) | **PASS** | `test_summarize_invalid_length` |
+
+#### Module ADM — Administration (Full PASS ✅)
+
+| Test Case ID | Kết quả | Evidence |
+|:------------:|:-------:|:--------:|
+| TC-ADM-001P (list users) | **PASS** | `test_list_users_valid`, `test_list_users_with_filter` |
+| TC-ADM-001N (invalid page size) | **PASS** | `test_list_users_invalid_page_size` |
+| TC-ADM-001P2 (activate/block user) | **PASS** | `test_activate_user_success`, `test_suspend_user` |
+| TC-ADM-001N (invalid status, not found) | **PASS** | `test_activate_user_invalid_status`, `test_activate_user_not_found` |
+| TC-ADM-002P (moderate post) | **PASS** | `test_moderate_post` |
+| TC-ADM-002N (invalid type) | **PASS** | `test_moderate_invalid_type` |
+| TC-ADM-003P (audit log) | **PASS** | `test_get_audit_log`, `test_list_audit_logs` (repo), `test_add_audit_log` (repo) |
+| TC-ADM-005P (update config) | **PASS** | `test_update_config`, `test_update_config_new` (repo) |
+| TC-ADM-005N (empty config) | **PASS** | `test_update_config_empty` |
+
+---
+
+### Danh sách Defect
+
+#### BUG-001: Missing Route Registration ✅ &#0208;Đã sửa
+
+| Field | Value |
+|-------|-------|
+| **ID** | BUG-001 |
+| **Mức độ** | 🔴 Critical |
+| **Trạng thái** | **Fixed** |
+| **Mô tả** | `register_routes()` trong `app/api/routes.py` import 8 routers nhưng chỉ đăng ký 2 (`heritage`, `directory`). 6 router còn lại không được `app.include_router()`, dẫn đến 404 cho toàn bộ API. |
+| **Fix** | Thêm `app.include_router()` cho: `health`, `auth`, `event`, `community`, `ai`, `admin`, `family`. |
+
+#### BUG-002: Missing Auth Endpoints ❌ Chưa sửa
+
+| Field | Value |
+|-------|-------|
+| **ID** | BUG-002 |
+| **Mức độ** | 🔴 Critical |
+| **Trạng thái** | **Unresolved** |
+| **Mô tả** | `auth_controller.py` chỉ có 3 endpoints (`/auth/forgot-password`, `/auth/reset-password`, `/auth/refresh`). Frontend cần thêm: `POST /auth/register`, `POST /auth/login`, `POST /auth/logout`, `POST /auth/verify-email`, `GET /users/me`. `AuthService` đã code đầy đủ nhưng controller chưa expose. |
+| **Impact** | 7 integration tests FAIL. Người dùng không thể register, login, xem profile. |
+| **Affected TC** | TC-US-001P, TC-US-001N, TC-US-001N2, TC-US-001V, TC-US-002P, TC-US-002N, TC-US-006P |
+
+---
+
+### Coverage Summary (82%)
+
+| Service | Coverage | | Repository | Coverage |
+|---------|:--------:|-|------------|:--------:|
+| `event_service.py` | **100%** | | `reaction_repository.py` | **100%** |
+| `community_service.py` | **99%** | | `rsvp_repository.py` | **100%** |
+| `auth_service.py` | **98%** | | `ai_repository.py` | **100%** |
+| `admin_service.py` | **91%** | | `admin_repository.py` | **97%** |
+| `family_service.py` | **84%** | | `user_repository.py` | **95%** |
+| `ai_service.py` | **61%** | | `event_repository.py` | **97%** |
+| `directory_service.py` | **20%** | | `post_repository.py` | **91%** |
+| `heritage_service.py` | **40%** | | `directory_repository.py` | **39%** |
+
+---
+
+### Evidence Files
+
+| File | Description |
+|------|-------------|
+| [`evidence/unit-integration/unit-tests-full.log`](evidence/unit-integration/unit-tests-full.log) | Full pytest output — Unit tests (160 passed) |
+| [`evidence/unit-integration/all-tests-full.log`](evidence/unit-integration/all-tests-full.log) | Full pytest output — All tests (206 passed, 7 failed) |
+| [`evidence/unit-integration/all-tests-summary.log`](evidence/unit-integration/all-tests-summary.log) | PASS/FAIL summary list per test case |
+| [`execution/Unit-Integration-Report.md`](execution/Unit-Integration-Report.md) | Detailed Unit & Integration Test Report |
+
+### Hướng dẫn chạy lại
+
+```bash
+# Yêu cầu: Python 3.14+, dependencies từ backend/requirements.txt
+
+cd familyconnect
+
+# 1. Unit tests only (160 tests)
+DATABASE_URL="sqlite+aiosqlite:///./test.db" python3 -m pytest backend/tests/unit/ -v --cov=backend
+
+# 2. All tests (unit + integration, 213 tests)
+DATABASE_URL="sqlite+aiosqlite:///./test.db" python3 -m pytest backend/tests/ -v --cov=backend
+
+# 3. With coverage report
+DATABASE_URL="sqlite+aiosqlite:///./test.db" python3 -m pytest backend/tests/ --cov=backend --cov-report=html
+```
+
+---
+
+*Báo cáo được tạo tự động từ automated test suite. Chi tiết tại [execution/Unit-Integration-Report.md](execution/Unit-Integration-Report.md).*
