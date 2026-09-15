@@ -1,0 +1,161 @@
+{
+  "family": {
+    "id": "family-A",
+    "family_name": "Dòng Họ Nguyễn Văn (Đồng Nai)",
+    "status": "ACTIVE",
+    "description": "Dòng họ gốc tại Đồng Nai, 5 thế hệ",
+    "created_by": "user-owner-A"
+  },
+  "branches": [
+    {
+      "id": "branch-01",
+      "family_id": "family-A",
+      "branch_name": "Chi trưởng",
+      "founder_id": "member-grandfather"
+    },
+    {
+      "id": "branch-02",
+      "family_id": "family-A",
+      "branch_name": "Chi thứ",
+      "founder_id": "member-uncle"
+    }
+  ],
+  "members": [
+    {
+      "id": "member-grandfather",
+      "family_id": "family-A",
+      "branch_id": "branch-01",
+      "full_name": "Nguyễn Văn Tổ",
+      "gender": "MALE",
+      "date_of_birth": "1940-03-15",
+      "is_alive": false,
+      "date_of_death": "2010-01-01",
+      "generation": 1,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "member-grandmother",
+      "family_id": "family-A",
+      "branch_id": "branch-01",
+      "full_name": "Nguyễn Thị Cố",
+      "gender": "FEMALE",
+      "date_of_birth": "1945-07-20",
+      "is_alive": true,
+      "generation": 1,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "member-father",
+      "family_id": "family-A",
+      "branch_id": "branch-01",
+      "full_name": "Nguyễn Văn Cha",
+      "gender": "MALE",
+      "date_of_birth": "1965-05-10",
+      "is_alive": true,
+      "generation": 2,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "member-mother",
+      "family_id": "family-A",
+      "branch_id": "branch-01",
+      "full_name": "Trần Thị Mẹ",
+      "gender": "FEMALE",
+      "date_of_birth": "1968-12-25",
+      "is_alive": true,
+      "generation": 2,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "member-child",
+      "family_id": "family-A",
+      "branch_id": "branch-01",
+      "full_name": "Nguyễn Văn Con",
+      "gender": "MALE",
+      "date_of_birth": "1995-08-30",
+      "is_alive": true,
+      "generation": 3,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "member-uncle",
+      "family_id": "family-A",
+      "branch_id": "branch-02",
+      "full_name": "Nguyễn Văn Chú",
+      "gender": "MALE",
+      "date_of_birth": "1970-02-14",
+      "is_alive": true,
+      "generation": 2,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "member-aunt",
+      "family_id": "family-A",
+      "branch_id": "branch-02",
+      "full_name": "Lê Thị Thím",
+      "gender": "FEMALE",
+      "date_of_birth": "1972-09-01",
+      "is_alive": true,
+      "generation": 2,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "member-grandson",
+      "family_id": "family-A",
+      "branch_id": "branch-01",
+      "full_name": "Nguyễn Văn Cháu",
+      "gender": "MALE",
+      "date_of_birth": "2020-06-01",
+      "is_alive": true,
+      "generation": 4,
+      "status": "ACTIVE"
+    }
+  ],
+  "relationships": [
+    {
+      "from_member_id": "member-grandfather",
+      "to_member_id": "member-father",
+      "type": "PARENT_CHILD"
+    },
+    {
+      "from_member_id": "member-grandmother",
+      "to_member_id": "member-father",
+      "type": "PARENT_CHILD"
+    },
+    {
+      "from_member_id": "member-grandfather",
+      "to_member_id": "member-uncle",
+      "type": "PARENT_CHILD"
+    },
+    {
+      "from_member_id": "member-grandmother",
+      "to_member_id": "member-uncle",
+      "type": "PARENT_CHILD"
+    },
+    {
+      "from_member_id": "member-father",
+      "to_member_id": "member-mother",
+      "type": "MARRIAGE"
+    },
+    {
+      "from_member_id": "member-father",
+      "to_member_id": "member-child",
+      "type": "PARENT_CHILD"
+    },
+    {
+      "from_member_id": "member-mother",
+      "to_member_id": "member-child",
+      "type": "PARENT_CHILD"
+    },
+    {
+      "from_member_id": "member-uncle",
+      "to_member_id": "member-aunt",
+      "type": "MARRIAGE"
+    },
+    {
+      "from_member_id": "member-child",
+      "to_member_id": "member-grandson",
+      "type": "PARENT_CHILD"
+    }
+  ]
+}
