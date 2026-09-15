@@ -41,16 +41,16 @@ class EventService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Event not found")
         return {"message": "Event cancelled successfully"}
 
-    async def rsvp(self, event_id: UUID, user_id: UUID, rsvp_status: str) -> dict:
+    async def rsvp(self, event_id: UUID, member_id: UUID, rsvp_status: str) -> dict:
         allowed = ["going", "maybe", "not_going"]
         if rsvp_status not in allowed:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid RSVP status")
-        await self.rsvp_repo.upsert_rsvp(event_id, user_id, rsvp_status)
+        await self.rsvp_repo.upsert_rsvp(event_id, member_id, rsvp_status)
         return {"message": f"RSVP updated to {rsvp_status}"}
 
     async def get_attendees(self, event_id: UUID, rsvp_status: Optional[str] = None) -> List[dict]:
         attendees = await self.rsvp_repo.get_attendees(event_id, rsvp_status)
-        return [{"user_id": str(a.user_id), "status": a.status} for a in attendees]
+        return [{"member_id": str(a.member_id), "status": a.response} for a in attendees]
 
     async def send_reminder(self, event_id: UUID) -> dict:
         logger.info(f"[DEFERRED REMINDER] Notification logged for event_id: {event_id}")
