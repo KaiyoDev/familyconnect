@@ -1,0 +1,26 @@
+{
+  "request": {
+    "email": "user@example.com",
+    "password": "Password123!"
+  },
+  "response_success": {
+    "success": true,
+    "data": {
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "refresh_token": "d9b2d63d-a233-4123-bf3e-123456789abc",
+      "token_type": "Bearer",
+      "expires_in": 1800
+    },
+    "message": "Operation successful",
+    "timestamp": "2026-08-13T08:45:00Z"
+  },
+  "response_error": {
+    "success": false,
+    "error": {
+      "code": "AUTHENTICATION_FAILED",
+      "message": "Thông tin đăng nhập không chính xác"
+    },
+    "timestamp": "2026-08-13T08:45:00Z"
+  }
+}
+          
