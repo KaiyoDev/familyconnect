@@ -230,6 +230,21 @@ class CommunityService:
             content=content,
         )
 
+    async def get_comments(
+        self,
+        post_id: UUID,
+        page: int = 1,
+        page_size: int = 50,
+    ) -> list[Comment]:
+        await self.get_post(post_id)
+        if page < 1 or page_size < 1 or page_size > 100:
+            raise ValidationError("Invalid pagination values.")
+        return await self.comment_repository.get_by_post(
+            post_id=post_id,
+            offset=(page - 1) * page_size,
+            limit=page_size,
+        )
+
     # =========================================================
     # ADD REACTION
     # FR-COM-02

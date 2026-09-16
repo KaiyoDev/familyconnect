@@ -369,6 +369,41 @@ async def add_comment(
             detail=str(exc),
         )
 
+@router.get("/posts/{post_id}/comments")
+async def list_comments(
+    post_id: UUID,
+    page: int = Query(default=1, ge=1),
+    page_size: int = Query(default=50, ge=1, le=100),
+    service: CommunityService = Depends(get_community_service),
+):
+    try:
+        comments = await service.get_comments(post_id, page, page_size)
+        return {
+            "items": [
+                {
+                    "id": str(comment.id),
+                    "post_id": str(comment.post_id),
+                    "author_id": str(comment.author_id),
+                    "content": comment.content,
+                    "status": comment.status,
+                    "created_at": comment.created_at.isoformat(),
+                    "updated_at": comment.updated_at.isoformat(),
+                    "author": {
+                        "id": str(comment.author.id),
+                        "name": comment.author.full_name,
+                    } if comment.author else None,
+                }
+                for comment in comments
+            ],
+            "page": page,
+            "page_size": page_size,
+            "count": len(comments),
+        }
+    except NotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+    except ValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
 
 # =========================================================
 # ADD REACTION
