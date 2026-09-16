@@ -174,3 +174,25 @@ FamilyBranch.founder = relationship(
     back_populates="founded_branches",
     foreign_keys="[FamilyBranch.founder_id]",
 )
+
+# FamilyMember.branch → FamilyBranch, foreign key is FamilyMember.branch_id → family_branches.id
+# Must specify foreign_keys because FamilyBranch.founder_id also links to family_members
+FamilyMember.branch = relationship(
+    "FamilyBranch",
+    back_populates="members",
+    foreign_keys="[FamilyMember.branch_id]",
+)
+
+# FamilyMember.relationships_as_from → Relationship, foreign key is Relationship.from_member_id
+FamilyMember.relationships_as_from = relationship(
+    "Relationship",
+    back_populates="from_member",
+    foreign_keys="[Relationship.from_member_id]",
+)
+
+# FamilyMember.relationships_as_to → Relationship, foreign key is Relationship.to_member_id
+FamilyMember.relationships_as_to = relationship(
+    "Relationship",
+    back_populates="to_member",
+    foreign_keys="[Relationship.to_member_id]",
+)

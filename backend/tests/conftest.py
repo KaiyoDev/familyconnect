@@ -1,59 +1,75 @@
-import sys
-import os
-
-# --- THÊM 4 DÒNG NÀY ĐỂ FIX LỖI IMPORT ---
-# Lấy đường dẫn tuyệt đối của thư mục gốc 'familyconnect' và thư mục 'backend'
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
-BACKEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.insert(0, BASE_DIR)
-sys.path.insert(0, BACKEND_DIR)
-# ----------------------------------------
-
+"""Test configuration — async database for FastAPI test client."""
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
-# Import code của bạn
-try:
-    from backend.main import app 
-    from backend.database import Base, get_db
-except ModuleNotFoundError:
-    # Nếu code của bạn không dùng tiền tố 'backend.', thử import trực tiếp
-    from main import app
-    from database import Base, get_db
+from create_app import create_app
+from app.infrastructure.databases.base import Base
+from app.infrastructure.databases.database import get_db as prod_get_db
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+TEST_DATABASE_URL = "sqlite+aiosqlite:///./test.db"
 
-@pytest.fixture(scope="session")
-def db_session():
-    Base.metadata.create_all(bind=engine)
-    db = TestingSessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-        Base.metadata.drop_all(bind=engine)
+test_engine = create_async_engine(
+    TEST_DATABASE_URL,
+    echo=False,
+    connect_args={"check_same_thread": False},
+)
+TestingAsyncSessionLocal = async_sessionmaker(
+    test_engine, class_=AsyncSession, expire_on_commit=False
+)
 
-@pytest.fixture(scope="module")
-def client(db_session):
-    def override_get_db():
+
+async def test_get_db() -> AsyncSession:
+    """Override dependency that yields an async session bound to test engine."""
+    async with TestingAsyncSessionLocal() as session:
         try:
-            yield db_session
+            yield session
         finally:
             pass
-    app.dependency_overrides[get_db] = override_get_db
+
+
+@pytest.fixture(scope="session", autouse=True)
+async def setup_db():
+    """Create tables once before all tests."""
+    async with test_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+    async with test_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+    await test_engine.dispose()
+
+
+@pytest.fixture(scope="session")
+def client():
+    app = create_app()
+    app.dependency_overrides[prod_get_db] = test_get_db
     with TestClient(app) as c:
         yield c
+    app.dependency_overrides.clear()
+
 
 @pytest.fixture
 def test_user(client):
-    user_data = {"email": "test@example.com", "password": "password123"}
-    client.post("/api/auth/register", json=user_data)
-    response = client.post("/api/auth/login", data={"username": "test@example.com", "password": "password123"})
+    email = "test@example.com"
+    # Try to register — ignore if already exists
+    client.post("/auth/register", json={
+        "email": email,
+        "password": "password123",
+        "full_name": "Test User",
+        "phone": None,
+    })
+    login_resp = client.post("/auth/login", json={
+        "email": email,
+        "password": "password123",
+    })
     token = None
-    if response.status_code == 200:
-        token = response.json().get("access_token")
-    return {"email": "test@example.com", "token": token}
+    refresh_token = None
+    if login_resp.status_code == 200:
+        data = login_resp.json().get("data") or {}
+        token = data.get("access_token")
+        refresh_token = data.get("refresh_token")
+    return {
+        "email": email,
+        "token": token,
+        "refresh_token": refresh_token,
+    }

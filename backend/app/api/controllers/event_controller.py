@@ -1,97 +1,143 @@
+"""Event API endpoints — wired to EventService (FR: EVT services)."""
 from uuid import UUID
+from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.api.dependencies import get_current_user
+from sqlalchemy.ext.asyncio import AsyncSession
 
-router = APIRouter(tags=["Event Services"])
+from app.api.dependencies import get_current_user, get_event_service
+from app.infrastructure.databases.database import get_db
+from app.infrastructure.repositories.user_repository import UserRepository
+from app.services.event_service import EventService
+
+# ── Family-scoped events:  /families/{family_id}/events* ─────────────────
+family_router = APIRouter(prefix="/families", tags=["Event Services"])
+
+# ── Single-event endpoints:  /events/{event_id}* ──────────────────────────
+event_router = APIRouter(prefix="/events", tags=["Event Services"])
 
 
 class EventCreateSchema(BaseModel):
     title: str
     description: Optional[str] = None
     location: Optional[str] = None
+    start_time: datetime  # ISO format, parsed to datetime
+    end_time: Optional[datetime] = None
+    type: Optional[str] = None  # defaults to GENERAL
+
+
+class EventUpdateSchema(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    location: Optional[str] = None
+    start_time: Optional[datetime] = None
+    end_time: Optional[datetime] = None
+    type: Optional[str] = None
+    status: Optional[str] = None
 
 
 class RSVPSchema(BaseModel):
-    status: str
+    status: str  # going | maybe | not_going
 
 
 def check_family_access(user: dict, family_id: UUID):
-    """Kiểm tra quyền truy cập của người dùng đối với Family (tránh lỗi IDOR)"""
-    user_id = user.get("user_id") if isinstance(user, dict) else getattr(user, "id", None)
+    user_id = user.get("id") or user.get("sub")
     if not user_id:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials"
-        )
-    # TODO: Gọi service/repository kiểm tra user_id có thuộc family_id hay không
-    # if not is_member(user_id, family_id):
-    #     raise HTTPException(status_code=403, detail="Not authorized to access this family")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials")
+    # TODO: verify user belongs to family (security hardening tracked separately)
 
 
-@router.post("/api/families/{family_id}/events", status_code=201)
+def _user_id(user: dict) -> UUID:
+    uid = user.get("id") or user.get("sub")
+    if not uid:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not resolve user id")
+    return UUID(str(uid))
+
+
+async def _user_email(db: AsyncSession, user: dict) -> str:
+    user_obj = await UserRepository(db).get_by_id(_user_id(user))
+    if not user_obj:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    return user_obj.email
+
+
+# ── Family-scoped routes ───────────────────────────────────────────────────
+
+@family_router.post("/{family_id}/events", status_code=status.HTTP_201_CREATED)
 async def create_event(
-    family_id: UUID, 
-    payload: EventCreateSchema, 
-    current_user: dict = Depends(get_current_user)
+    family_id: UUID,
+    payload: EventCreateSchema,
+    current_user: dict = Depends(get_current_user),
+    svc: EventService = Depends(get_event_service),
 ):
     check_family_access(current_user, family_id)
-    user_id = current_user.get("user_id") if isinstance(current_user, dict) else current_user.id
-    return {
-        "message": "Event created", 
-        "family_id": str(family_id),
-        "created_by": user_id
-    }
+    data = payload.model_dump(exclude_none=True)
+    return await svc.create_event(family_id, _user_id(current_user), data)
 
 
-@router.get("/api/families/{family_id}/events")
+@family_router.get("/{family_id}/events")
 async def get_events(
-    family_id: UUID, 
-    current_user: dict = Depends(get_current_user)
+    family_id: UUID,
+    current_user: dict = Depends(get_current_user),
+    svc: EventService = Depends(get_event_service),
 ):
     check_family_access(current_user, family_id)
-    return []
+    return await svc.get_events(family_id)
 
 
-@router.get("/api/events/{event_id}")
-async def get_event(
-    event_id: UUID, 
-    current_user: dict = Depends(get_current_user)
-):
-    return {"event_id": str(event_id)}
+# ── Single-event routes ────────────────────────────────────────────────────
+
+@event_router.get("/{event_id}")
+async def get_event(event_id: UUID, current_user: dict = Depends(get_current_user),
+                    svc: EventService = Depends(get_event_service)):
+    return await svc.get_event(event_id)
 
 
-@router.put("/api/events/{event_id}")
+@event_router.put("/{event_id}")
 async def update_event(
-    event_id: UUID, 
-    payload: EventCreateSchema, 
-    current_user: dict = Depends(get_current_user)
+    event_id: UUID,
+    payload: EventUpdateSchema,
+    current_user: dict = Depends(get_current_user),
+    svc: EventService = Depends(get_event_service),
 ):
-    return {"message": "Event updated"}
+    return await svc.update_event(event_id, payload.model_dump(exclude_none=True))
 
 
-@router.delete("/api/events/{event_id}")
-async def cancel_event(
-    event_id: UUID, 
-    current_user: dict = Depends(get_current_user)
-):
-    return {"message": "Event cancelled"}
+@event_router.delete("/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def cancel_event(event_id: UUID, current_user: dict = Depends(get_current_user),
+                       svc: EventService = Depends(get_event_service)):
+    await svc.cancel_event(event_id)
 
 
-@router.post("/api/events/{event_id}/rsvp")
+@event_router.post("/{event_id}/rsvp", status_code=status.HTTP_201_CREATED)
 async def rsvp_event(
-    event_id: UUID, 
-    payload: RSVPSchema, 
-    current_user: dict = Depends(get_current_user)
+    event_id: UUID,
+    payload: RSVPSchema,
+    current_user: dict = Depends(get_current_user),
+    svc: EventService = Depends(get_event_service),
+    db: AsyncSession = Depends(get_db),
 ):
-    return {"message": "RSVP recorded"}
+    guest_email = await _user_email(db, current_user)
+    return await svc.rsvp(event_id, guest_email, payload.status)
 
 
-@router.get("/api/events/{event_id}/attendees")
+@event_router.get("/{event_id}/attendees")
 async def get_attendees(
-    event_id: UUID, 
-    status: Optional[str] = None, 
-    current_user: dict = Depends(get_current_user)
+    event_id: UUID,
+    status: Optional[str] = None,
+    current_user: dict = Depends(get_current_user),
+    svc: EventService = Depends(get_event_service),
 ):
-    return []
+    return await svc.get_attendees(event_id, status)
+
+
+# Frontend `eventApi` calls /events/{id}/participants — alias of attendees
+@event_router.get("/{event_id}/participants")
+async def get_participants(
+    event_id: UUID,
+    status: Optional[str] = None,
+    current_user: dict = Depends(get_current_user),
+    svc: EventService = Depends(get_event_service),
+):
+    return await svc.get_attendees(event_id, status)

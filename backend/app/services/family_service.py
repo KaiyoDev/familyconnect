@@ -54,6 +54,19 @@ class FamilyService:
         await self.session.refresh(family)
         return family
 
+    async def create_branch(self, family_id: UUID, branch_name: str, description: str | None = None,
+                            founder_id: UUID | None = None) -> FamilyBranch:
+        """Add a branch to a family (FR: chi/nhánh)."""
+        family = await self.families.get_by_id(family_id)
+        if not family:
+            raise NotFoundException(f"Family {family_id} not found")
+        branch = FamilyBranch(id=uuid4(), family_id=family_id, branch_name=branch_name,
+                              description=description, founder_id=founder_id)
+        await self.branches.create(branch)
+        await self._commit()
+        await self.session.refresh(branch)
+        return branch
+
     async def get_family(self, family_id: UUID):
         family = await self.families.get_by_id(family_id)
         if not family:
@@ -107,6 +120,24 @@ class FamilyService:
             raise NotFoundException("Member not found")
         await self.members.delete(member)
         await self._commit()
+
+    async def list_members(self, family_id: UUID):
+        """List all members of a family."""
+        await self.get_family(family_id)
+        members = await self.members.get_by_family(family_id)
+        return [self._member_to_dict(m) for m in members]
+
+    @staticmethod
+    def _member_to_dict(m):
+        return {
+            "id": str(m.id),
+            "full_name": m.full_name,
+            "gender": m.gender,
+            "date_of_birth": str(m.date_of_birth) if m.date_of_birth else None,
+            "is_alive": m.is_alive,
+            "branch_id": str(m.branch_id) if m.branch_id else None,
+            "status": m.status,
+        }
 
     async def add_relationship(self, family_id: UUID, from_member_id: UUID, to_member_id: UUID, relationship_type: str, notes=None):
         if from_member_id == to_member_id:
