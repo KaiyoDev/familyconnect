@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../store/auth'
 import { 
   Home, Users, Calendar, Archive, User, Menu, Bell, Search, 
@@ -21,13 +21,13 @@ export default function Layout({ children }: LayoutProps) {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate({ to: '/login' })
+      navigate('/login')
     }
   }, [isAuthenticated, navigate])
 
   const handleLogout = () => {
     logout()
-    navigate({ to: '/login' })
+    navigate('/login')
   }
 
   const navItems = [
@@ -47,7 +47,7 @@ export default function Layout({ children }: LayoutProps) {
         </Button>
         <span className="font-semibold text-primary">FamilyConnect</span>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={() => navigate({ to: '/notifications' })}>
+          <Button variant="ghost" size="icon" onClick={() => navigate('/notifications')}>
             <Bell className="h-5 w-5" />
           </Button>
           <Avatar src={user?.avatar_url} fallback={user?.full_name?.[0] || 'U'} size="sm" />
@@ -67,7 +67,7 @@ export default function Layout({ children }: LayoutProps) {
           {navItems.map((item) => (
             <button
               key={item.path}
-              onClick={() => navigate({ to: item.path })}
+              onClick={() => navigate(item.path)}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors ${
                 sidebarOpen ? 'justify-start' : 'justify-center'
               } hover:bg-accent text-muted-foreground hover:text-foreground`}
@@ -117,7 +117,7 @@ export default function Layout({ children }: LayoutProps) {
                 <button
                   key={item.path}
                   onClick={() => {
-                    navigate({ to: item.path })
+                    navigate(item.path)
                     setMobileMenuOpen(false)
                   }}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-md hover:bg-accent"
@@ -161,7 +161,7 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="relative" onClick={() => navigate({ to: '/notifications' })}>
+            <Button variant="ghost" size="icon" className="relative" onClick={() => navigate('/notifications')}>
               <Bell className="h-5 w-5" />
               <Badge className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center" variant="destructive">
                 3
@@ -182,7 +182,7 @@ export default function Layout({ children }: LayoutProps) {
           {navItems.map((item) => (
             <button
               key={item.path}
-              onClick={() => navigate({ to: item.path })}
+              onClick={() => navigate(item.path)}
               className="flex flex-col items-center justify-center w-full h-full gap-1 text-muted-foreground"
             >
               <item.icon className="h-5 w-5" />

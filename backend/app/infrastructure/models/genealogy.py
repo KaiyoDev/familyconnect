@@ -46,8 +46,16 @@ class FamilyBranch(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
     # Relationships — foreign_keys omitted; set up deferred
     family = relationship("Family", back_populates="branches")
-    founder = relationship("FamilyMember", back_populates="founded_branches")
-    members = relationship("FamilyMember", back_populates="branch")
+    founder = relationship(
+        "FamilyMember",
+        back_populates="founded_branches",
+        foreign_keys="[FamilyBranch.founder_id]",
+    )
+    members = relationship(
+        "FamilyMember",
+        back_populates="branch",
+        foreign_keys="[FamilyMember.branch_id]",
+    )
     heritage_items = relationship("HeritageItem", back_populates="branch")
 
     def __repr__(self) -> str:
@@ -77,9 +85,17 @@ class FamilyMember(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
     # Relationships — foreign_keys omitted; set up deferred
     family = relationship("Family", back_populates="members")
-    branch = relationship("FamilyBranch", back_populates="members")
+    branch = relationship(
+        "FamilyBranch",
+        back_populates="members",
+        foreign_keys="[FamilyMember.branch_id]",
+    )
     user = relationship("User", back_populates="members_linked")
-    founded_branches = relationship("FamilyBranch", back_populates="founder")
+    founded_branches = relationship(
+        "FamilyBranch",
+        back_populates="founder",
+        foreign_keys="[FamilyBranch.founder_id]",
+    )
     employment_profiles = relationship(
         "EmploymentProfile", back_populates="member", cascade="all, delete-orphan"
     )
@@ -88,9 +104,11 @@ class FamilyMember(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
     relationships_as_from = relationship(
         "Relationship", back_populates="from_member",
+        foreign_keys="[Relationship.from_member_id]",
     )
     relationships_as_to = relationship(
         "Relationship", back_populates="to_member",
+        foreign_keys="[Relationship.to_member_id]",
     )
     event_rsvps = relationship("EventRSVP", back_populates="member")
 
@@ -118,10 +136,14 @@ class Relationship(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
     # Relationships
     from_member = relationship(
-        "FamilyMember", back_populates="relationships_as_from",
+        "FamilyMember",
+        back_populates="relationships_as_from",
+        foreign_keys="[Relationship.from_member_id]",
     )
     to_member = relationship(
-        "FamilyMember", back_populates="relationships_as_to",
+        "FamilyMember",
+        back_populates="relationships_as_to",
+        foreign_keys="[Relationship.to_member_id]",
     )
 
     def __repr__(self) -> str:

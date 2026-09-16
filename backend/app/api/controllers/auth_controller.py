@@ -1,9 +1,45 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from config import settings
+from app.api.dependencies import get_db
+from app.infrastructure.repositories.user_repository import UserRepository
+from app.schemas.auth import LoginRequest, RegisterRequest, UserResponse
+from app.services.auth_service import AuthService
+from sqlalchemy.ext.asyncio import AsyncSession
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
+
+
+def get_auth_service(db: AsyncSession = Depends(get_db)) -> AuthService:
+    return AuthService(UserRepository(db))
+
+
+@router.post("/register", status_code=status.HTTP_201_CREATED)
+async def register(
+    request: RegisterRequest,
+    service: AuthService = Depends(get_auth_service),
+):
+    user = await service.register(request)
+    return {"data": UserResponse.model_validate(user).model_dump(mode="json")}
+
+
+@router.post("/login")
+async def login(
+    request: LoginRequest,
+    service: AuthService = Depends(get_auth_service),
+):
+    user = await service.user_repo.get_by_email(request.email)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+
+    tokens = await service.login(request)
+    return {
+        "data": {
+            **tokens,
+            "user": UserResponse.model_validate(user).model_dump(mode="json"),
+        }
+    }
 
 @router.post("/forgot-password")
 async def forgot_password(email: str):

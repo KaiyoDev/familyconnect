@@ -6,15 +6,21 @@ if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.engine import make_url
 from config import settings
 from app.infrastructure.databases.base import Base
 
-# asyncpg requires ssl_mode as a connect argument, not in URL
+database_url = make_url(settings.database_url)
+use_ssl = (
+    database_url.drivername == "postgresql+asyncpg"
+    and database_url.host not in {"localhost", "127.0.0.1", "::1"}
+)
+
 engine = create_async_engine(
     settings.database_url,
     echo=settings.debug,
     future=True,
-    connect_args={"ssl": "require"} if "asyncpg" in settings.database_url else {},
+    connect_args={"ssl": "require"} if use_ssl else {},
 )
 
 async_session = async_sessionmaker(

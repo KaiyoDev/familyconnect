@@ -129,7 +129,7 @@ export const postApi = {
   addComment: (postId: string, data: { content: string }) =>
     api.post<ApiResponse<any>>(`/posts/${postId}/comments`, data),
   listComments: (postId: string, params?: { page?: number; page_size?: number }) =>
-    api.get<ApiResponse<any[]>>(`/posts/${postId}/comments`, { params }),
+    api.get<{ items: any[]; page: number; page_size: number; count: number }>(`/posts/${postId}/comments`, { params }),
   updateComment: (commentId: string, data: { content: string }) =>
     api.put<ApiResponse<any>>(`/comments/${commentId}`, data),
   deleteComment: (commentId: string) => api.delete<ApiResponse<any>>(`/comments/${commentId}`),

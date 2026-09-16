@@ -7,6 +7,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy import inspect
 
 revision: str = "a1b2c3d4e5f6"
 down_revision: Union[str, None] = "78ad87157e85"
@@ -59,7 +60,14 @@ def upgrade() -> None:
         sa.UniqueConstraint("key"),
     )
     op.create_index("ix_system_configs_key", "system_configs", ["key"])
-    op.add_column("comments", sa.Column("status", sa.String(length=20), nullable=False, server_default="PUBLISHED"))
+    comments_columns = {
+        column["name"] for column in inspect(op.get_bind()).get_columns("comments")
+    }
+    if "status" not in comments_columns:
+        op.add_column(
+            "comments",
+            sa.Column("status", sa.String(length=20), nullable=False, server_default="PUBLISHED"),
+        )
 
 
 def downgrade() -> None:
