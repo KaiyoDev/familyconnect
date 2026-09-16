@@ -3,7 +3,7 @@ from uuid import UUID
 from app.infrastructure.repositories.user_repository import UserRepository
 from app.domain.utils.password import hash_password, verify_password
 from app.domain.utils.jwt import create_access_token, create_refresh_token, decode_token
-from app.schemas.auth import RegisterRequest, LoginRequest, ProfileUpdateRequest
+from app.schemas.auth import RegisterRequest, LoginRequest, ProfileUpdateRequest, UserResponse
 
 class AuthService:
     def __init__(self, user_repo: UserRepository):
@@ -30,7 +30,12 @@ class AuthService:
         
         access_token = create_access_token(str(user.id), user.role)
         refresh_token = create_refresh_token(str(user.id))
-        return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
+        return {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer",
+            "user": UserResponse.model_validate(user).model_dump(mode="json"),
+        }
 
     async def refresh_token(self, refresh_token: str):
         payload = decode_token(refresh_token)
@@ -56,6 +61,18 @@ class AuthService:
         update_data = {k: v for k, v in dto.model_dump().items() if v is not None}
         return await self.user_repo.update(user_id, update_data)
 
+    async def change_password(self, user_id: UUID, current_password: str, new_password: str):
+        """User-initiated password change (frontend userApi.changePassword)."""
+        user = await self.user_repo.get_by_id(user_id)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        if not verify_password(current_password, user.password):
+            raise HTTPException(status_code=400, detail="Current password is incorrect")
+        if len(new_password) < 8:
+            raise HTTPException(status_code=422, detail="New password must be at least 8 characters")
+        await self.user_repo.update(user_id, {"password": hash_password(new_password)})
+        return {"message": "Password changed successfully"}
+
     async def logout(self, user_id: UUID):
         return {"message": "Successfully logged out"}
 
@@ -72,3 +89,23 @@ class AuthService:
         user_id = payload.get("sub")
         await self.user_repo.update(UUID(user_id), {"password": hash_password(new_password)})
         return {"message": "Password updated successfully"}
+
+    async def verify_email(self, token: str):
+        """Activate the account referenced by an activation token.
+
+        Activation tokens are issued with type='activation'. Email delivery is
+        not wired yet (AI/mail provider pending), so links are server-generated;
+        an invalid/missing token yields 400 so the frontend shows its error toast.
+        """
+        payload = decode_token(token) if token else None
+        if not payload or payload.get("type") != "activation":
+            raise HTTPException(status_code=400, detail="Invalid or expired activation link")
+        user_id = payload.get("sub")
+        if not user_id:
+            raise HTTPException(status_code=400, detail="Invalid activation link")
+        user = await self.user_repo.get_by_id(UUID(user_id))
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        if user.status != "ACTIVE":
+            await self.user_repo.update(user.id, {"status": "ACTIVE"})
+        return {"message": "Account activated successfully"}

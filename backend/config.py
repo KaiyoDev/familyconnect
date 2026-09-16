@@ -1,4 +1,6 @@
-﻿from pydantic_settings import BaseSettings, SettingsConfigDict
+"""Application configuration using pydantic-settings."""
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 
 class Settings(BaseSettings):
@@ -16,8 +18,8 @@ class Settings(BaseSettings):
     # AI Provider Settings (stub — wire real provider when API key available)
     ai_provider: str = "mock"  # "mock" | "openai" | "claude"
     ai_api_key: str = ""
-    ai_base_url: str = ""  # custom endpoint (Ollama, vLLM, LM Studio, gateway…)
-    ai_model: str = "gpt-4o-mini"  # model name used by provider
+    ai_base_url: str = ""
+    ai_model: str = "gpt-4o-mini"
     ai_max_tokens: int = 1024
     ai_temperature: float = 0.7
 
@@ -25,7 +27,8 @@ class Settings(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
         extra="ignore",
-        case_sensitive=False
+        case_sensitive=False,
     )
+
 
 settings = Settings()
