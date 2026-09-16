@@ -454,7 +454,7 @@ async def remove_reaction(
 
         await service.remove_reaction(
             post_id=post_id,
-            user_id=current_user.id,
+            user_id=current_user["id"],
             reaction_type=type,
         )
 

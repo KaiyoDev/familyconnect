@@ -1,37 +1,72 @@
-"""FastAPI dependencies for dependency injection."""
-from fastapi import Depends, HTTPException, status
+"""FastAPI dependencies for dependency injection and access control."""
+from fastapi import Depends, HTTPException, Request, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from uuid import UUID
+from jose import JWTError, jwt
+
+from config import settings
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from app.infrastructure.databases.database import get_db
+from app.infrastructure.repositories.branch_repository import BranchRepository
+from app.infrastructure.repositories.family_repository import FamilyRepository
+from app.infrastructure.repositories.member_repository import MemberRepository
+from app.infrastructure.repositories.relationship_repository import RelationshipRepository
+from app.infrastructure.repositories.sqlalchemy_unit_of_work import SQLAlchemyUnitOfWork
+from app.services.family_service import FamilyService
 
+bearer_scheme = HTTPBearer(auto_error=False)
 
-# ---------------------------------------------------------------------------
-# Database session dependency (re-exported for convenience)
-# ---------------------------------------------------------------------------
-
-__all__ = ["get_db", "get_current_user"]
-
-
-# ---------------------------------------------------------------------------
-# Current user stub — to be replaced by real JWT auth (FR-US-02)
-#
-# While auth is not yet implemented, this stub accepts an optional
-# Authorization header and returns a deterministic demo user.
-# Real implementation will verify JWT and extract user_id / role.
-# ---------------------------------------------------------------------------
 
 async def get_current_user(
-    authorization: str | None = None,
-    db: AsyncSession = Depends(get_db),
+	request: Request,
+	credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
 ) -> dict:
-    """Return a mock current user for development.
+	"""Decode the access token and expose its claims to controllers."""
+	if credentials is None:
+		raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required")
 
-    TODO: FT8-40 — Replace with real JWT verification once auth service is ready.
-    """
-    # TODO: Implement JWT decode + DB lookup here (FR-US-02)
-    return {
-        "id": "00000000-0000-0000-0000-000000000001",
-        "email": "demo@familyconnect.vn",
-        "full_name": "Demo User",
-        "role": "USER",
-    }
+	try:
+		user = jwt.decode(credentials.credentials, settings.secret_key, algorithms=["HS256"])
+		if "id" not in user and "sub" in user:
+			user["id"] = user["sub"]
+		if "id" not in user or "role" not in user:
+			raise JWTError
+	except JWTError as exc:
+		raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid access token") from exc
+
+	request.state.current_user = user
+	return user
+
+
+async def require_admin(current_user: dict = Depends(get_current_user)) -> dict:
+	"""Allow only administrators to access administration endpoints."""
+	if str(current_user.get("role", "")).upper() not in {"ADMIN", "SUPER_ADMIN"}:
+		raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Administrator role required")
+	return current_user
+
+
+async def require_family_access(family_id: UUID, _current_user: dict = Depends(get_current_user)) -> UUID:
+	"""Authorization seam — returns the validated family id (membership check tracked as security task)."""
+	return family_id
+
+
+def get_family_service(db: AsyncSession = Depends(get_db)) -> FamilyService:
+	return FamilyService(
+		db,
+		family_repository=FamilyRepository(db),
+		member_repository=MemberRepository(db),
+		relationship_repository=RelationshipRepository(db),
+		branch_repository=BranchRepository(db),
+		unit_of_work=SQLAlchemyUnitOfWork(db),
+	)
+
+
+__all__ = ["get_db", "get_current_user", "require_admin", "require_family_access", "get_family_service"]
+
+
+def get_event_service(db: AsyncSession = Depends(get_db)):
+    from app.infrastructure.repositories.event_repository import EventRepository
+    from app.infrastructure.repositories.rsvp_repository import RSVPRepository
+    from app.services.event_service import EventService
+
+    return EventService(EventRepository(db), RSVPRepository(db))

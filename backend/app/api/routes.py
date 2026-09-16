@@ -8,52 +8,42 @@ from fastapi import FastAPI
 
 
 def register_routes(app: FastAPI) -> None:
-    """Register all API routers with the FastAPI application."""
-
-    # Health check
+    """Register the existing application routes and administrator routes."""
     from app.api.controllers.health_controller import router as health_router
-    app.include_router(health_router, tags=["Health"])
-
-feature/FT8-43-event-service
-    # Future controllers will be registered here:
-    # from app.api.controllers.auth_controller import router as auth_router
-    # app.include_router(auth_router, prefix="/api/auth", tags=["Auth"])
-    #
-    # from app.api.controllers.user_controller import router as user_router
-    # app.include_router(user_router, prefix="/api/users", tags=["Users"])
-    #
-    # from app.api.controllers.family_controller import router as family_router
-    # app.include_router(family_router, prefix="/api/families", tags=["Families"])
-    #
-    # from app.api.controllers.family_member_controller import router as family_member_router
-    # app.include_router(family_member_router, prefix="/api/family-members", tags=["Family Members"])
-    #
-    # from app.api.controllers.relationship_controller import router as relationship_router
-    # app.include_router(relationship_router, prefix="/api/relationships", tags=["Relationships"])
-    #
-    # from app.api.controllers.event_controller import router as event_router
-    # app.include_router(event_router, prefix="/api/events", tags=["Events"])
-    #
-    # from app.api.controllers.post_controller import router as post_router
-    # app.include_router(post_router, prefix="/api/posts", tags=["Posts"])
-    #
-    # from app.api.controllers.heritage_controller import router as heritage_router
-    # app.include_router(heritage_router, prefix="/api/heritage", tags=["Heritage"])
-    #
-    # from app.api.controllers.ai_controller import router as ai_router
-    # app.include_router(ai_router, prefix="/api/ai", tags=["AI"])
-from fastapi import APIRouter
-from app.api.controllers.auth_controller import router as auth_router
-from app.api.controllers.event_controller import router as event_router
-
-api_router = APIRouter()
-api_router.include_router(auth_router)
-api_router.include_router(event_router)
-    # Community (posts, comments, reactions)
+    from app.api.controllers.auth_controller import router as auth_router
+    from app.api.controllers.user_controller import router as user_router
+    from app.api.controllers.family_controller import router as family_router
+    from app.api.controllers.event_controller import family_router as event_family_router
+    from app.api.controllers.event_controller import event_router as event_single_router
     from app.api.controllers.community_controller import router as community_router
-    app.include_router(community_router, prefix="/api/v1", tags=["Community"])
-
-    # AI Assistant (stub)
     from app.api.controllers.ai_controller import router as ai_router
-    app.include_router(ai_router, prefix="/api/v1", tags=["AI"])
-develop
+    from app.api.controllers.admin_controller import router as admin_router
+    from app.api.controllers.heritage_controller import router as heritage_router
+    from app.api.controllers.directory_controller import router as directory_router
+    from app.api.controllers.notification_controller import router as notification_router
+    from app.api.controllers.analytics_controller import router as analytics_router
+    # Auth
+    app.include_router(auth_router, tags=["Authentication"])
+    # User (root-level /users/me)
+    app.include_router(user_router, tags=["User"])
+    # Health
+    app.include_router(health_router, tags=["Health"])
+    # Family & Genealogy
+    app.include_router(family_router, tags=["Family"])
+    # Event Services
+    app.include_router(event_family_router, tags=["Event Services"])
+    app.include_router(event_single_router, tags=["Event Services"])
+    # Community
+    app.include_router(community_router, tags=["Community"])
+    # AI
+    app.include_router(ai_router, tags=["AI"])
+    # Admin
+    app.include_router(admin_router, tags=["Admin"])
+    # Heritage
+    app.include_router(heritage_router, tags=["Heritage"])
+    # Directory
+    app.include_router(directory_router, tags=["Directory"])
+    # Notifications (real Notification model)
+    app.include_router(notification_router, tags=["Notifications"])
+    # Analytics / reports (DSH screens)
+    app.include_router(analytics_router, tags=["Analytics"])
