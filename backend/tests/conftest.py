@@ -1,11 +1,17 @@
 """Test configuration — async database for FastAPI test client."""
 import pytest
+import sqlite3
+import uuid as _uuid
 from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
 from create_app import create_app
 from app.infrastructure.databases.base import Base
 from app.infrastructure.databases.database import get_db as prod_get_db
+
+# Test-harness only: let SQLite bind raw UUID objects (generic Uuid PK columns);
+# PostgreSQL production is unaffected (native uuid via asyncpg).
+sqlite3.register_adapter(_uuid.UUID, str)
 
 TEST_DATABASE_URL = "sqlite+aiosqlite:///./test.db"
 

@@ -1,6 +1,7 @@
 """Root-level user endpoints — align with frontend `userApi` calls (/users/me)."""
 from uuid import UUID
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.infrastructure.databases.database import get_db
@@ -21,6 +22,11 @@ def _current_user_id(current_user: dict) -> UUID:
 
 def get_auth_service(db: AsyncSession = Depends(get_db)) -> AuthService:
     return AuthService(UserRepository(db))
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str = Field(..., min_length=1)
+    new_password: str = Field(..., min_length=8, max_length=128)
 
 
 @router.get("/me", response_model=UserResponse)
@@ -48,3 +54,25 @@ async def update_me(
     if not updated:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return updated
+
+
+@router.put("/me/password")
+async def change_password(
+    payload: ChangePasswordRequest,
+    current_user: dict = Depends(get_current_user),
+    svc: AuthService = Depends(get_auth_service),
+):
+    """Frontend userApi.changePassword — {current_password, new_password}."""
+    user_id = _current_user_id(current_user)
+    return await svc.change_password(user_id, payload.current_password, payload.new_password)
+
+
+@router.post("/me/avatar")
+async def upload_avatar(
+    file: UploadFile = File(...),
+    current_user: dict = Depends(get_current_user),
+):
+    """Frontend userApi.uploadAvatar — User model has no avatar column and object
+    storage is not wired yet; acknowledge so the profile flow does not 404."""
+    return {"message": "Avatar upload acknowledged (storage not configured yet)",
+            "filename": file.filename}

@@ -71,6 +71,26 @@ class AdminRepository:
         await self.db.refresh(content)
         return content
 
+    async def list_moderation(self, limit: int = 100) -> list[dict]:
+        """Latest posts + comments as moderation items (frontend ModerationItem shape)."""
+        from app.infrastructure.models.community import Post, Comment as C
+        posts = (await self.db.execute(select(Post).order_by(Post.created_at.desc()).limit(limit))).scalars().all()
+        comments = (await self.db.execute(select(C).order_by(C.created_at.desc()).limit(limit))).scalars().all()
+        status_map = {"PUBLISHED": "approved", "DRAFT": "pending", "REMOVED": "removed"}
+        items = []
+        for p in posts:
+            items.append({"id": str(p.id), "type": "post", "author": str(p.author_id),
+                         "content": (p.content or "")[:120], "reported_by": "system",
+                         "reported_at": p.created_at.isoformat() if p.created_at else None,
+                         "status": status_map.get(p.status, "pending"), "db_status": p.status})
+        for c in comments:
+            items.append({"id": str(c.id), "type": "comment", "author": str(c.author_id),
+                         "content": (c.content or "")[:120], "reported_by": "system",
+                         "reported_at": c.created_at.isoformat() if c.created_at else None,
+                         "status": status_map.get(c.status, "pending"), "db_status": c.status})
+        items.sort(key=lambda i: i["reported_at"] or "", reverse=True)
+        return items
+
     async def get_config(self) -> list[SystemConfig]:
         result = await self.db.execute(select(SystemConfig).order_by(SystemConfig.key))
         return list(result.scalars().all())

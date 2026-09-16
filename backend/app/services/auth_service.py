@@ -61,6 +61,18 @@ class AuthService:
         update_data = {k: v for k, v in dto.model_dump().items() if v is not None}
         return await self.user_repo.update(user_id, update_data)
 
+    async def change_password(self, user_id: UUID, current_password: str, new_password: str):
+        """User-initiated password change (frontend userApi.changePassword)."""
+        user = await self.user_repo.get_by_id(user_id)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        if not verify_password(current_password, user.password):
+            raise HTTPException(status_code=400, detail="Current password is incorrect")
+        if len(new_password) < 8:
+            raise HTTPException(status_code=422, detail="New password must be at least 8 characters")
+        await self.user_repo.update(user_id, {"password": hash_password(new_password)})
+        return {"message": "Password changed successfully"}
+
     async def logout(self, user_id: UUID):
         return {"message": "Successfully logged out"}
 

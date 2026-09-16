@@ -46,12 +46,16 @@ class AIRepository:
         row = result.fetchone()
         if not row:
             return None
+        # raw text() query returns dialect-native values: datetime on PostgreSQL,
+        # str on SQLite — normalize so both work
+        created_at = row[3]
+        updated_at = row[4]
         return {
             "id": str(row[0]),
             "user_id": str(row[1]),
             "title": row[2],
-            "created_at": row[3].isoformat() if row[3] else None,
-            "updated_at": row[4].isoformat() if row[4] else None,
+            "created_at": (created_at.isoformat() if hasattr(created_at, "isoformat") else created_at) if created_at else None,
+            "updated_at": (updated_at.isoformat() if hasattr(updated_at, "isoformat") else updated_at) if updated_at else None,
         }
 
     async def list_by_user(self, user_id: UUID, limit: int = 20, offset: int = 0) -> list[dict]:
@@ -134,7 +138,9 @@ class AIRepository:
                 "conversation_id": str(r[1]),
                 "role": r[2],
                 "content": r[3],
-                "created_at": r[4].isoformat() if r[4] else None,
+                # raw text() query returns dialect-native values: datetime on PostgreSQL,
+                # str on SQLite — normalize so both work
+                "created_at": (r[4].isoformat() if hasattr(r[4], "isoformat") else r[4]) if r[4] else None,
             }
             for r in rows
         ]
