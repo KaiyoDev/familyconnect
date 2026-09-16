@@ -1,0 +1,91 @@
+{
+  "users": [
+    {
+      "id": "user-admin-01",
+      "full_name": "Admin Hệ Thống",
+      "email": "admin@familyconnect.com",
+      "role": "ADMIN",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "user-owner-A",
+      "full_name": "Nguyễn Văn A (Owner)",
+      "email": "owner@example.com",
+      "role": "USER",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "user-member-B",
+      "full_name": "Nguyễn Thị B (Member)",
+      "email": "memberB@example.com",
+      "role": "USER",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "user-member-C",
+      "full_name": "Nguyễn Văn C (Member)",
+      "email": "memberC@example.com",
+      "role": "USER",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "user-guest-D",
+      "full_name": "Guest D (Pending)",
+      "email": "guestD@example.com",
+      "role": "USER",
+      "status": "PENDING"
+    },
+    {
+      "id": "user-blocked-E",
+      "full_name": "User E (Blocked)",
+      "email": "blockedE@example.com",
+      "role": "USER",
+      "status": "BLOCKED"
+    },
+    {
+      "id": "user-inactive-F",
+      "full_name": "User F (Inactive)",
+      "email": "inactiveF@example.com",
+      "role": "USER",
+      "status": "INACTIVE"
+    }
+  ],
+  "family_memberships": [
+    {
+      "user_id": "user-owner-A",
+      "family_id": "family-A",
+      "role": "FAMILY_OWNER",
+      "status": "ACTIVE"
+    },
+    {
+      "user_id": "user-member-B",
+      "family_id": "family-A",
+      "role": "FAMILY_MEMBER",
+      "status": "ACTIVE"
+    },
+    {
+      "user_id": "user-member-C",
+      "family_id": "family-A",
+      "role": "FAMILY_MEMBER",
+      "status": "ACTIVE"
+    }
+  ],
+  "test_credentials": {
+    "admin": {
+      "email": "admin@familyconnect.com",
+      "password": "Admin@2026"
+    },
+    "owner": {
+      "email": "owner@example.com",
+      "password": "Owner@123"
+    },
+    "member": {
+      "email": "memberB@example.com",
+      "password": "Member@123"
+    },
+    "blocked": {
+      "email": "blockedE@example.com",
+      "password": "Blocked@123"
+    }
+  }
+}

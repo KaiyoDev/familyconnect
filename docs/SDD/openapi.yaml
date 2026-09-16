@@ -1,0 +1,214 @@
+openapi: 3.0.3
+info:
+  title: FamilyConnect API Specification
+  description: API Backend cho hệ thống gia phả và kết nối gia đình FamilyConnect.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Development Server
+  - url: https://api.familyconnect.vn/api/v1
+    description: Production Server
+
+paths:
+  /auth/register:
+    post:
+      summary: Đăng ký tài khoản
+      operationId: registerUser
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Đăng ký thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/400Error'
+
+  /auth/login:
+    post:
+      summary: Đăng nhập
+      operationId: loginUser
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Đăng nhập thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/401Error'
+
+  /users/me:
+    get:
+      summary: Lấy thông tin cá nhân
+      operationId: getMyProfile
+      tags:
+        - Profile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        '401':
+          $ref: '#/components/responses/401Error'
+
+  /families:
+    get:
+      summary: Danh sách gia đình người dùng tham gia
+      operationId: getMyFamilies
+      tags:
+        - Family
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FamilyItem'
+    post:
+      summary: Tạo gia đình mới
+      operationId: createFamily
+      tags:
+        - Family
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFamilyRequest'
+      responses:
+        '201':
+          description: Tạo mới thành công
+
+  /families/{family_id}/tree:
+    get:
+      summary: Dữ liệu cây gia phả
+      operationId: getFamilyTree
+      tags:
+        - Genealogy
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: family_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lấy dữ liệu cây thành công
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - full_name
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        full_name:
+          type: string
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            access_token:
+              type: string
+            refresh_token:
+              type: string
+            token_type:
+              type: string
+              example: Bearer
+
+    UserProfileResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        full_name:
+          type: string
+
+    CreateFamilyRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+
+    FamilyItem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+
+  responses:
+    400Error:
+      description: Bad Request
+    401Error:
+      description: Unauthorized
+      #updated for PR review
