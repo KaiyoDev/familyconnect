@@ -49,7 +49,7 @@ Giới Hạn Hệ Thống Đã Biết (Known Limitations):
 2. Thời gian phản hồi của AI với tập dữ liệu gia phả cực lớn (> 500 nút) có thể kéo dài từ 3–5 giây.
 
 Kết Luận Nghiệm Thu:
-Hệ thống FamilyConnect đã đáp ứng đủ các yêu cầu nghiệp vụ cốt lõi và tiêu chuẩn chất lượng cam kết. Các bên liên quan đồng ý nghiệm thu và chuyển dự án sang giai đoạn chuẩn bị phát hành.
+Hệ thốngGet-ChildItem -Path "testing\evidence\uat" FamilyConnect đã đáp ứng đủ các yêu cầu nghiệp vụ cốt lõi và tiêu chuẩn chất lượng cam kết. Các bên liên quan đồng ý nghiệm thu và chuyển dự án sang giai đoạn chuẩn bị phát hành.
 
 * Đại Diện Phát Triển: (Đã ký)
 * Đại Diện Khách Hàng/Product Owner: (Đã ký)
