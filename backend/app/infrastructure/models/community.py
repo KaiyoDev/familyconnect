@@ -1,8 +1,7 @@
 """Community models: Post, Comment, PostReaction."""
 from uuid import UUID
-from sqlalchemy import String, Text, ForeignKey, UniqueConstraint, func
+from sqlalchemy import String, Text, ForeignKey, UniqueConstraint, func, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.dialects.postgresql import JSONB
 from app.infrastructure.databases.base import Base, UUIDPrimaryKeyMixin, TimestampMixin
 
 
@@ -23,7 +22,7 @@ class Post(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         ForeignKey("family_branches.id", ondelete="SET NULL"), nullable=True
     )
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="PUBLISHED")
-    media_urls: Mapped[list | None] = mapped_column(JSONB, nullable=True)
+    media_urls: Mapped[list | None] = mapped_column(JSON, nullable=True)
 
     # Relationships
     family = relationship("Family", back_populates="posts")
