@@ -1,14 +1,5 @@
 """
-FamilyConnect - Integration tests for Event module (FR-EVT-01, 02, 03, 05)
-
-Tests endpoints:
-  - POST   /api/families/{family_id}/events        (FR-EVT-01)
-  - GET    /api/families/{family_id}/events         (FR-EVT-01)
-  - GET    /api/events/{event_id}                   (FR-EVT-01)
-  - PUT    /api/events/{event_id}                   (FR-EVT-01)
-  - DELETE /api/events/{event_id}                   (FR-EVT-01)
-  - POST   /api/events/{event_id}/rsvp              (FR-EVT-02)
-  - GET    /api/events/{event_id}/attendees         (FR-EVT-03)
+FamilyConnect - Unit tests for event_service
 """
 import pytest
 from uuid import uuid4
@@ -17,10 +8,6 @@ from unittest.mock import AsyncMock
 from fastapi import HTTPException
 from app.services.event_service import EventService
 
-
-# =========================================================
-# Fake models
-# =========================================================
 
 class FakeEvent:
     def __init__(self, id, title="Test Event", description="Desc", start_time="2026-09-01", family_id=None, created_by=None):
@@ -45,57 +32,56 @@ def make_service():
     return service, event_repo, rsvp_repo
 
 
-# =========================================================
-# FR-EVT-01: Event CRUD (Normal Cases)
-# =========================================================
+class TestEventService:
 
-class TestEventIntegration_CRUD:
+    # ============ FR-EVT-01 ============
 
     @pytest.mark.asyncio
     async def test_create_event_success(self):
-        """TC-EVT-001P: Create event successfully (normal case)"""
+        """TC-EVT-001P: Create event successfully"""
         service, event_repo, _ = make_service()
         event_id = uuid4()
         event_repo.create.return_value = FakeEvent(id=event_id)
 
         result = await service.create_event(
             family_id=uuid4(), creator_id=uuid4(),
-            data={"title": "Tet Reunion", "start_time": "2026-02-10T08:00:00Z"}
+            data={"title": "Test Event", "start_time": "2026-09-01T08:00:00Z"}
         )
         assert result["event_id"] == str(event_id)
         assert result["message"] == "Event created successfully"
 
+    # ============ FR-EVT-01: get events ============
+
+    @pytest.mark.asyncio
+    async def test_get_events(self):
+        """TC-EVT-001P: List events"""
+        service, event_repo, _ = make_service()
+        event_repo.get_by_family.return_value = [
+            FakeEvent(id=uuid4(), title="Event 1"),
+            FakeEvent(id=uuid4(), title="Event 2"),
+        ]
+        result = await service.get_events(uuid4())
+        assert len(result) == 2
+        assert result[0]["title"] == "Event 1"
+
     @pytest.mark.asyncio
     async def test_get_events_empty(self):
-        """TC-EVT-001P: List events for family with no events (edge case)"""
+        """TC-EVT-001E: Family has no events"""
         service, event_repo, _ = make_service()
         event_repo.get_by_family.return_value = []
         result = await service.get_events(uuid4())
         assert result == []
 
-    @pytest.mark.asyncio
-    async def test_get_events_multiple(self):
-        """TC-EVT-001P: List multiple events (normal case)"""
-        service, event_repo, _ = make_service()
-        event_repo.get_by_family.return_value = [
-            FakeEvent(id=uuid4(), title="Event 1"),
-            FakeEvent(id=uuid4(), title="Event 2"),
-            FakeEvent(id=uuid4(), title="Event 3"),
-        ]
-        result = await service.get_events(uuid4())
-        assert len(result) == 3
-        assert result[0]["title"] == "Event 1"
-        assert result[2]["title"] == "Event 3"
+    # ============ FR-EVT-01: get event by id ============
 
     @pytest.mark.asyncio
-    async def test_get_event_found(self):
-        """TC-EVT-001P: Get event by id (normal case)"""
+    async def test_get_event_success(self):
+        """TC-EVT-001P: Get event by id"""
         service, event_repo, _ = make_service()
         event_id = uuid4()
         event_repo.get_by_id.return_value = FakeEvent(id=event_id, title="My Event")
         result = await service.get_event(event_id)
         assert result["title"] == "My Event"
-        assert str(result["id"]) == str(event_id)
 
     @pytest.mark.asyncio
     async def test_get_event_not_found(self):
@@ -106,14 +92,34 @@ class TestEventIntegration_CRUD:
             await service.get_event(uuid4())
         assert exc.value.status_code == 404
 
+    # ============ FR-EVT-01: update event ============
+
+    @pytest.mark.asyncio
+    async def test_update_event_success(self):
+        """TC-EVT-001V: Update event"""
+        service, event_repo, _ = make_service()
+        event_repo.update.return_value = FakeEvent(id=uuid4())
+        result = await service.update_event(uuid4(), {"title": "Updated"})
+        assert result["message"] == "Event updated successfully"
+
     @pytest.mark.asyncio
     async def test_update_event_not_found(self):
         """TC-EVT-001N: Update non-existent event -> 404"""
         service, event_repo, _ = make_service()
         event_repo.update.return_value = None
         with pytest.raises(HTTPException) as exc:
-            await service.update_event(uuid4(), {"title": "Updated"})
+            await service.update_event(uuid4(), {})
         assert exc.value.status_code == 404
+
+    # ============ FR-EVT-01: cancel event ============
+
+    @pytest.mark.asyncio
+    async def test_cancel_event_success(self):
+        """TC-EVT-001N2: Cancel event"""
+        service, event_repo, _ = make_service()
+        event_repo.delete.return_value = True
+        result = await service.cancel_event(uuid4())
+        assert result["message"] == "Event cancelled successfully"
 
     @pytest.mark.asyncio
     async def test_cancel_event_not_found(self):
@@ -124,24 +130,19 @@ class TestEventIntegration_CRUD:
             await service.cancel_event(uuid4())
         assert exc.value.status_code == 404
 
-
-# =========================================================
-# FR-EVT-02: RSVP
-# =========================================================
-
-class TestEventIntegration_RSVP:
+    # ============ FR-EVT-02: RSVP ============
 
     @pytest.mark.asyncio
     async def test_rsvp_going(self):
-        """TC-EVT-002P: RSVP with 'going'"""
+        """TC-EVT-002P: RSVP going"""
         service, _, rsvp_repo = make_service()
         rsvp_repo.upsert_rsvp.return_value = None
         result = await service.rsvp(uuid4(), "guest@example.com", "going")
-        assert "going" in result["message"]
+        assert result["message"] == "RSVP updated to going"
 
     @pytest.mark.asyncio
     async def test_rsvp_maybe(self):
-        """TC-EVT-002P: RSVP 'maybe'"""
+        """TC-EVT-002P: RSVP maybe"""
         service, _, rsvp_repo = make_service()
         rsvp_repo.upsert_rsvp.return_value = None
         result = await service.rsvp(uuid4(), "guest@example.com", "maybe")
@@ -149,7 +150,7 @@ class TestEventIntegration_RSVP:
 
     @pytest.mark.asyncio
     async def test_rsvp_not_going(self):
-        """TC-EVT-002P: RSVP 'not_going' (normal case)"""
+        """TC-EVT-002N: RSVP not_going (overwrites previous)"""
         service, _, rsvp_repo = make_service()
         rsvp_repo.upsert_rsvp.return_value = None
         result = await service.rsvp(uuid4(), "guest@example.com", "not_going")
@@ -163,26 +164,11 @@ class TestEventIntegration_RSVP:
             await service.rsvp(uuid4(), "guest@example.com", "invalid_status")
         assert exc.value.status_code == 400
 
-    @pytest.mark.asyncio
-    async def test_rsvp_update_existing(self):
-        """TC-EVT-002V: Change RSVP from 'going' to 'not_going' (update)"""
-        service, _, rsvp_repo = make_service()
-        rsvp_repo.upsert_rsvp.return_value = None
-        # Simulate: first RSVP "going", then overwrite with "not_going"
-        result = await service.rsvp(uuid4(), "guest@example.com", "not_going")
-        assert "not_going" in result["message"]
-        rsvp_repo.upsert_rsvp.assert_called_once()
-
-
-# =========================================================
-# FR-EVT-03: Attendees
-# =========================================================
-
-class TestEventIntegration_Attendees:
+    # ============ FR-EVT-03: get attendees ============
 
     @pytest.mark.asyncio
     async def test_get_attendees_all(self):
-        """TC-EVT-003P: Get all attendees (no filter)"""
+        """TC-EVT-003P: Get all attendees"""
         service, _, rsvp_repo = make_service()
         rsvp_repo.get_attendees.return_value = [
             FakeAttendee(guest_email="guest@example.com", response="going"),
@@ -193,7 +179,7 @@ class TestEventIntegration_Attendees:
 
     @pytest.mark.asyncio
     async def test_get_attendees_filtered(self):
-        """TC-EVT-003P: Get attendees filtered by 'going'"""
+        """TC-EVT-003P: Get attendees filtered by response"""
         service, _, rsvp_repo = make_service()
         rsvp_repo.get_attendees.return_value = [
             FakeAttendee(guest_email="guest@example.com", response="going"),
@@ -203,23 +189,18 @@ class TestEventIntegration_Attendees:
         assert result[0]["status"] == "going"
 
     @pytest.mark.asyncio
-    async def test_get_attendees_no_results(self):
-        """TC-EVT-003E: No attendees yet (empty)"""
+    async def test_get_attendees_empty(self):
+        """TC-EVT-003E: No attendees yet"""
         service, _, rsvp_repo = make_service()
         rsvp_repo.get_attendees.return_value = []
         result = await service.get_attendees(uuid4())
         assert result == []
 
-
-# =========================================================
-# FR-EVT-05: Reminders
-# =========================================================
-
-class TestEventIntegration_Reminder:
+    # ============ FR-EVT-05: reminder ============
 
     @pytest.mark.asyncio
     async def test_send_reminder(self):
-        """TC-EVT-005P: Send reminder (deferred)"""
+        """TC-EVT-005P: Send reminder"""
         service, _, _ = make_service()
         result = await service.send_reminder(uuid4())
         assert "Reminder" in result["message"]

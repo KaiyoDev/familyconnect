@@ -17,7 +17,7 @@ class Family(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="ACTIVE")
 
-    # Relationships — foreign_keys omitted; set up deferred after all classes defined
+    # Relationships
     creator = relationship("User", back_populates="families_created")
     branches = relationship("FamilyBranch", back_populates="family", cascade="all, delete-orphan")
     members = relationship("FamilyMember", back_populates="family", cascade="all, delete-orphan")
@@ -44,7 +44,7 @@ class FamilyBranch(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    # Relationships — foreign_keys omitted; set up deferred
+    # Relationships — founder and members need foreign_keys due to multiple FK paths
     family = relationship("Family", back_populates="branches")
     founder = relationship(
         "FamilyMember",
@@ -83,7 +83,7 @@ class FamilyMember(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     date_of_death: Mapped[str | None] = mapped_column("date_of_death", nullable=True)
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="PENDING")
 
-    # Relationships — foreign_keys omitted; set up deferred
+    # Relationships — branch needs foreign_keys due to multiple FK paths
     family = relationship("Family", back_populates="members")
     branch = relationship(
         "FamilyBranch",
@@ -103,11 +103,13 @@ class FamilyMember(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         "EducationProfile", back_populates="member", cascade="all, delete-orphan"
     )
     relationships_as_from = relationship(
-        "Relationship", back_populates="from_member",
+        "Relationship",
+        back_populates="from_member",
         foreign_keys="[Relationship.from_member_id]",
     )
     relationships_as_to = relationship(
-        "Relationship", back_populates="to_member",
+        "Relationship",
+        back_populates="to_member",
         foreign_keys="[Relationship.to_member_id]",
     )
     event_rsvps = relationship("EventRSVP", back_populates="member")
@@ -136,13 +138,11 @@ class Relationship(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
     # Relationships
     from_member = relationship(
-        "FamilyMember",
-        back_populates="relationships_as_from",
+        "FamilyMember", back_populates="relationships_as_from",
         foreign_keys="[Relationship.from_member_id]",
     )
     to_member = relationship(
-        "FamilyMember",
-        back_populates="relationships_as_to",
+        "FamilyMember", back_populates="relationships_as_to",
         foreign_keys="[Relationship.to_member_id]",
     )
 
@@ -151,70 +151,8 @@ class Relationship(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
 
 # ---------------------------------------------------------------------------
-# Deferred relationship configuration
-# After all classes are defined, re-configure relationships with proper foreign_keys.
-# This avoids NameError that occurs when referencing the class inside its own body.
+# Note: All relationships with foreign_keys ambiguity are configured inline
+# in the class definitions above. No deferred overrides needed.
+# The relationships_as_from, relationships_as_to, founder, members, and branch
+# relationships all specify foreign_keys explicitly.
 # ---------------------------------------------------------------------------
-
-# Family.creator → User, foreign key is Family.created_by → users.id
-# SQLAlchemy auto-detects this since there's only one FK, so we can leave it as-is.
-
-# FamilyBranch.founder → FamilyMember, foreign key is FamilyBranch.founder_id → family_members.id
-# Auto-detected since only one FK.
-
-# FamilyBranch.members → FamilyMember, foreign key is FamilyMember.branch_id → family_branches.id
-# Must specify foreign_keys because FamilyBranch.founder_id also links to family_members
-FamilyBranch.members = relationship(
-    "FamilyMember",
-    back_populates="branch",
-    foreign_keys="[FamilyMember.branch_id]",
-)
-
-# FamilyMember.founded_branches → FamilyBranch, foreign key is FamilyBranch.founder_id → family_members.id
-FamilyMember.founded_branches = relationship(
-    "FamilyBranch",
-    back_populates="founder",
-    foreign_keys="[FamilyBranch.founder_id]",
-)
-
-Relationship.from_member = relationship(
-    "FamilyMember",
-    back_populates="relationships_as_from",
-    foreign_keys="[Relationship.from_member_id]",
-)
-
-Relationship.to_member = relationship(
-    "FamilyMember",
-    back_populates="relationships_as_to",
-    foreign_keys="[Relationship.to_member_id]",
-)
-
-# FamilyBranch.founder → FamilyMember, foreign key is FamilyBranch.founder_id → family_members.id
-# Must specify foreign_keys because FamilyMember.branch_id also links to family_branches
-FamilyBranch.founder = relationship(
-    "FamilyMember",
-    back_populates="founded_branches",
-    foreign_keys="[FamilyBranch.founder_id]",
-)
-
-# FamilyMember.branch → FamilyBranch, foreign key is FamilyMember.branch_id → family_branches.id
-# Must specify foreign_keys because FamilyBranch.founder_id also links to family_members
-FamilyMember.branch = relationship(
-    "FamilyBranch",
-    back_populates="members",
-    foreign_keys="[FamilyMember.branch_id]",
-)
-
-# FamilyMember.relationships_as_from → Relationship, foreign key is Relationship.from_member_id
-FamilyMember.relationships_as_from = relationship(
-    "Relationship",
-    back_populates="from_member",
-    foreign_keys="[Relationship.from_member_id]",
-)
-
-# FamilyMember.relationships_as_to → Relationship, foreign key is Relationship.to_member_id
-FamilyMember.relationships_as_to = relationship(
-    "Relationship",
-    back_populates="to_member",
-    foreign_keys="[Relationship.to_member_id]",
-)
