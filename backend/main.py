@@ -1,6 +1,7 @@
-"""FastAPI application entry point.
+"""FastAPI application entry point (mirror of teacher's src/app.py).
 
-Uses create_app() factory from create_app.py with Windows event loop policy.
+Responsibility: create app instance and run the server.
+Teacher used `create_app()` from `create_app.py` and ran on port 9999.
 """
 import sys
 if sys.platform == "win32":
