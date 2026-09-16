@@ -2,6 +2,7 @@ from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from app.infrastructure.models.community import Comment
 
@@ -25,6 +26,7 @@ class CommentRepository:
 
         self.db.add(comment)
         await self.db.flush()
+        await self.db.commit()
         await self.db.refresh(comment)
 
         return comment
@@ -53,6 +55,7 @@ class CommentRepository:
                 Comment.post_id == post_id,
                 Comment.status != "REMOVED",
             )
+            .options(selectinload(Comment.author))
             .order_by(Comment.created_at.asc())
             .offset(offset)
             .limit(limit)

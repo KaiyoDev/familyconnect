@@ -20,8 +20,8 @@ class FakeEvent:
 
 
 class FakeAttendee:
-    def __init__(self, member_id, response):
-        self.member_id = member_id
+    def __init__(self, guest_email, response):
+        self.guest_email = guest_email
         self.response = response
 
 
@@ -137,7 +137,7 @@ class TestEventService:
         """TC-EVT-002P: RSVP going"""
         service, _, rsvp_repo = make_service()
         rsvp_repo.upsert_rsvp.return_value = None
-        result = await service.rsvp(uuid4(), uuid4(), "going")
+        result = await service.rsvp(uuid4(), "guest@example.com", "going")
         assert result["message"] == "RSVP updated to going"
 
     @pytest.mark.asyncio
@@ -145,7 +145,7 @@ class TestEventService:
         """TC-EVT-002P: RSVP maybe"""
         service, _, rsvp_repo = make_service()
         rsvp_repo.upsert_rsvp.return_value = None
-        result = await service.rsvp(uuid4(), uuid4(), "maybe")
+        result = await service.rsvp(uuid4(), "guest@example.com", "maybe")
         assert "maybe" in result["message"]
 
     @pytest.mark.asyncio
@@ -153,7 +153,7 @@ class TestEventService:
         """TC-EVT-002N: RSVP not_going (overwrites previous)"""
         service, _, rsvp_repo = make_service()
         rsvp_repo.upsert_rsvp.return_value = None
-        result = await service.rsvp(uuid4(), uuid4(), "not_going")
+        result = await service.rsvp(uuid4(), "guest@example.com", "not_going")
         assert "not_going" in result["message"]
 
     @pytest.mark.asyncio
@@ -161,7 +161,7 @@ class TestEventService:
         """TC-EVT-002N: Invalid RSVP status -> 400"""
         service, _, _ = make_service()
         with pytest.raises(HTTPException) as exc:
-            await service.rsvp(uuid4(), uuid4(), "invalid_status")
+            await service.rsvp(uuid4(), "guest@example.com", "invalid_status")
         assert exc.value.status_code == 400
 
     # ============ FR-EVT-03: get attendees ============
@@ -171,8 +171,8 @@ class TestEventService:
         """TC-EVT-003P: Get all attendees"""
         service, _, rsvp_repo = make_service()
         rsvp_repo.get_attendees.return_value = [
-            FakeAttendee(member_id=uuid4(), response="going"),
-            FakeAttendee(member_id=uuid4(), response="maybe"),
+            FakeAttendee(guest_email="guest@example.com", response="going"),
+            FakeAttendee(guest_email="guest@example.com", response="maybe"),
         ]
         result = await service.get_attendees(uuid4())
         assert len(result) == 2
@@ -182,7 +182,7 @@ class TestEventService:
         """TC-EVT-003P: Get attendees filtered by response"""
         service, _, rsvp_repo = make_service()
         rsvp_repo.get_attendees.return_value = [
-            FakeAttendee(member_id=uuid4(), response="going"),
+            FakeAttendee(guest_email="guest@example.com", response="going"),
         ]
         result = await service.get_attendees(uuid4(), rsvp_status="going")
         assert len(result) == 1

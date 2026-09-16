@@ -190,6 +190,14 @@ class AIService:
             raise NotFoundError(f"Conversation {conversation_id} not found")
         await self.repo.delete_conversation(conv)
 
+    async def get_messages(self, conversation_id: UUID) -> list[dict]:
+        """Frontend aiApi.getMessages — conversation transcript."""
+        conv = await self.repo.get_by_id(conversation_id)
+        if conv is None:
+            raise NotFoundError(f"Conversation {conversation_id} not found")
+        raw = await self.repo.get_messages(conversation_id)
+        return [self._msg_to_dict(m) for m in raw]
+
     # ---------------------------------------------------------------
     # Chat
     # ---------------------------------------------------------------

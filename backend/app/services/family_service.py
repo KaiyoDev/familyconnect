@@ -54,6 +54,67 @@ class FamilyService:
         await self.session.refresh(family)
         return family
 
+    async def create_branch(self, family_id: UUID, branch_name: str, description: str | None = None,
+                            founder_id: UUID | None = None) -> FamilyBranch:
+        """Add a branch to a family (FR: chi/nhánh)."""
+        family = await self.families.get_by_id(family_id)
+        if not family:
+            raise NotFoundException(f"Family {family_id} not found")
+        branch = FamilyBranch(id=uuid4(), family_id=family_id, branch_name=branch_name,
+                              description=description, founder_id=founder_id)
+        await self.branches.create(branch)
+        await self._commit()
+        await self.session.refresh(branch)
+        return branch
+
+    async def list_branches(self, family_id: UUID) -> list[dict]:
+        """List branches of a family (frontend branchApi.list)."""
+        await self.get_family(family_id)
+        branches = await self.branches.get_by_family(family_id)
+        return [
+            {"id": str(b.id), "branch_name": b.branch_name, "description": b.description,
+             "family_id": str(family_id)}
+            for b in branches
+        ]
+
+    async def update_branch(self, family_id: UUID, branch_id: UUID, **data) -> dict:
+        branch = await self.branches.get_by_id(branch_id)
+        if not branch or branch.family_id != family_id:
+            raise NotFoundException("Branch not found")
+        for key in ("branch_name", "description"):
+            if key in data and data[key] is not None:
+                setattr(branch, key, data[key])
+        # accept frontend alias `name` → branch_name
+        if data.get("name") is not None:
+            branch.branch_name = data["name"]
+        await self.branches.update(branch)
+        await self._commit()
+        await self.session.refresh(branch)
+        return {"id": str(branch.id), "branch_name": branch.branch_name,
+                "description": branch.description, "family_id": str(family_id)}
+
+    async def delete_branch(self, family_id: UUID, branch_id: UUID) -> None:
+        branch = await self.branches.get_by_id(branch_id)
+        if not branch or branch.family_id != family_id:
+            raise NotFoundException("Branch not found")
+        await self.branches.delete(branch)
+        await self._commit()
+
+    async def update_relationship(self, relationship_id: UUID, **data) -> Relationship:
+        relationship = await self.relationships.get_by_id(relationship_id)
+        if not relationship:
+            raise NotFoundException("Relationship not found")
+        new_type = data.get("type") or data.get("relationship_type")
+        if new_type is not None:
+            if new_type not in {"PARENT_CHILD", "MARRIAGE"}:
+                raise ValidationException("Unsupported relationship type")
+            relationship.type = new_type
+        if data.get("notes") is not None:
+            relationship.notes = data["notes"]
+        await self.relationships.update(relationship)
+        await self._commit()
+        return relationship
+
     async def get_family(self, family_id: UUID):
         family = await self.families.get_by_id(family_id)
         if not family:
@@ -108,6 +169,24 @@ class FamilyService:
         await self.members.delete(member)
         await self._commit()
 
+    async def list_members(self, family_id: UUID):
+        """List all members of a family."""
+        await self.get_family(family_id)
+        members = await self.members.get_by_family(family_id)
+        return [self._member_to_dict(m) for m in members]
+
+    @staticmethod
+    def _member_to_dict(m):
+        return {
+            "id": str(m.id),
+            "full_name": m.full_name,
+            "gender": m.gender,
+            "date_of_birth": str(m.date_of_birth) if m.date_of_birth else None,
+            "is_alive": m.is_alive,
+            "branch_id": str(m.branch_id) if m.branch_id else None,
+            "status": m.status,
+        }
+
     async def add_relationship(self, family_id: UUID, from_member_id: UUID, to_member_id: UUID, relationship_type: str, notes=None):
         if from_member_id == to_member_id:
             raise ValidationException("A member cannot relate to itself")
@@ -144,6 +223,7 @@ class FamilyService:
         return [node for member_id, node in nodes.items() if member_id not in child_ids]
 
     async def lookup_relationship(self, family_id: UUID, from_member_id: UUID, to_member_id: UUID):
-        member_ids = {str(from_member_id), str(to_member_id)}
+        member_ids = {from_member_id, to_member_id}
         relations = await self.relationships.get_by_family_members(member_ids)
-        return [r for r in relations if {str(r.from_member_id), str(r.to_member_id)} == member_ids]
+        pair = {str(from_member_id), str(to_member_id)}
+        return [r for r in relations if {str(r.from_member_id), str(r.to_member_id)} == pair]

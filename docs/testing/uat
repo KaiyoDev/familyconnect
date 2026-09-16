@@ -1,0 +1,55 @@
+# Báo Cáo Tổng Hợp Kết Quả UAT & Biên Bản Nghiệm Thu
+
+* Dự án: FamilyConnect
+* Ngày thực hiện: 16/09/2026
+* Môi trường kiểm thử: Staging (https://staging.familyconnect.app)
+
+==================================================
+
+1. Tóm Tắt Kết Quả Thực Thi
+
+* Tổng số kịch bản: 49
+* Pass: 47
+* Fail: 1
+* Blocked: 1
+* N/A: 0
+* Tỷ lệ đạt: 95.9%
+
+==================================================
+
+2. Danh Sách Lỗi (Defects) & Tình Trạng
+
+* Defect ID: DEF-UAT-01
+  - Mức độ: Minor
+  - Mô tả lỗi: Lỗi hiển thị font tiếng Việt khi xuất cây gia phả ra file PDF.
+  - Test case liên quan: TC-UAT-FG-09
+  - Tình trạng: Open (Chờ Fix)
+
+* Defect ID: DEF-UAT-02
+  - Mức độ: Major
+  - Mô tả lỗi: Đôi lúc AI Assistant phản hồi chậm (> 5s) khi truy vấn các cây gia phả > 500 thành viên.
+  - Test case liên quan: TC-UAT-AI-02
+  - Tình trạng: Accepted Risk (Đã chấp nhận)
+
+==================================================
+
+3. Bằng Chứng Kiểm Thử (Evidence Reference)
+
+Toàn bộ hình ảnh, log hệ thống và video ghi lại quá trình thực thi UAT được lưu trữ tại các tệp:
+* testing/evidence/uat/US-Auth-Pass.png
+* testing/evidence/uat/FG-Graph-Render.png
+* testing/evidence/uat/AI-Response-Log.json
+
+==================================================
+
+4. Biên Bản Nghiệm Thu Cuối (Final Acceptance Record)
+
+Giới Hạn Hệ Thống Đã Biết (Known Limitations):
+1. Tính năng xuất cây gia phả định dạng PDF có thể bị lỗi hiển thị ký tự đặc biệt đối với một số font hiếm (sẽ nâng cấp ở bản 1.1).
+2. Thời gian phản hồi của AI với tập dữ liệu gia phả cực lớn (> 500 nút) có thể kéo dài từ 3–5 giây.
+
+Kết Luận Nghiệm Thu:
+Hệ thốngGet-ChildItem -Path "testing\evidence\uat" FamilyConnect đã đáp ứng đủ các yêu cầu nghiệp vụ cốt lõi và tiêu chuẩn chất lượng cam kết. Các bên liên quan đồng ý nghiệm thu và chuyển dự án sang giai đoạn chuẩn bị phát hành.
+
+* Đại Diện Phát Triển: (Đã ký)
+* Đại Diện Khách Hàng/Product Owner: (Đã ký)

@@ -1,6 +1,7 @@
 """FastAPI dependencies for dependency injection and access control."""
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from uuid import UUID
 from jose import JWTError, jwt
 
 from config import settings
@@ -44,8 +45,8 @@ async def require_admin(current_user: dict = Depends(get_current_user)) -> dict:
 	return current_user
 
 
-async def require_family_access(family_id: str, _current_user: dict = Depends(get_current_user)) -> str:
-	"""Temporary authorization seam — validates family id."""
+async def require_family_access(family_id: UUID, _current_user: dict = Depends(get_current_user)) -> UUID:
+	"""Authorization seam — returns the validated family id (membership check tracked as security task)."""
 	return family_id
 
 
@@ -61,3 +62,11 @@ def get_family_service(db: AsyncSession = Depends(get_db)) -> FamilyService:
 
 
 __all__ = ["get_db", "get_current_user", "require_admin", "require_family_access", "get_family_service"]
+
+
+def get_event_service(db: AsyncSession = Depends(get_db)):
+    from app.infrastructure.repositories.event_repository import EventRepository
+    from app.infrastructure.repositories.rsvp_repository import RSVPRepository
+    from app.services.event_service import EventService
+
+    return EventService(EventRepository(db), RSVPRepository(db))

@@ -4,6 +4,8 @@ import Layout from '@/components/Layout'
 import { Card, CardContent } from '@/components/ui/basic'
 import { Button } from '@/components/ui/basic'
 import { ArrowLeft, Heart, MessageCircle, Share2, Send } from 'lucide-react'
+import { postApi } from '@/services/api'
+import { toast } from 'sonner'
 
 interface Comment {
   id: string
@@ -21,23 +23,72 @@ export default function Com02PostDetail() {
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(12)
   const [commentText, setCommentText] = useState('')
-  const [comments, setComments] = useState<Comment[]>([
-    { id: '1', post_id: id!, author_id: 'user2', content: 'Thật vui! Mình sẽ về đầy đủ ạ!', created_at: '2026-09-09T11:00:00Z', updated_at: '2026-09-09T11:00:00Z', author: { id: 'user2', name: 'Trần Thị B', avatar_url: undefined } },
-    { id: '2', post_id: id!, author_id: 'user3', content: 'Gia đình sum họp thật hạnh phúc', created_at: '2026-09-09T12:00:00Z', updated_at: '2026-09-09T12:00:00Z', author: { id: 'user3', name: 'Lê Văn C', avatar_url: undefined } },
+  const isPersistedPostId = Boolean(id && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id))
+  const [comments, setComments] = useState<Comment[]>(() => isPersistedPostId ? [] : [
+    {
+      id: 'demo-comment-1',
+      post_id: id!,
+      author_id: 'user2',
+      content: 'Thật vui! Mình sẽ về đầy đủ ạ!',
+      created_at: '2026-09-09T11:00:00Z',
+      updated_at: '2026-09-09T11:00:00Z',
+      author: { id: 'user2', name: 'Trần Thị B' },
+    },
+    {
+      id: 'demo-comment-2',
+      post_id: id!,
+      author_id: 'user3',
+      content: 'Gia đình sum họp thật hạnh phúc',
+      created_at: '2026-09-09T12:00:00Z',
+      updated_at: '2026-09-09T12:00:00Z',
+      author: { id: 'user3', name: 'Lê Văn C' },
+    },
   ])
 
-  const handleComment = () => {
+  const getErrorMessage = (error: any, fallback: string) => {
+    const detail = error?.response?.data?.detail
+    if (Array.isArray(detail)) {
+      return detail
+        .map((item) => typeof item === 'string' ? item : item?.msg)
+        .filter(Boolean)
+        .join(', ') || fallback
+    }
+    return typeof detail === 'string' ? detail : fallback
+  }
+
+  React.useEffect(() => {
+    if (!isPersistedPostId) return
+    postApi.listComments(id)
+      .then((response) => setComments(response.data.items ?? []))
+      .catch((error) => toast.error(getErrorMessage(error, 'Không tải được bình luận')))
+  }, [id, isPersistedPostId])
+
+  const handleComment = async () => {
     if (!commentText.trim()) return
-    setComments([...comments, {
-      id: Date.now().toString(),
-      post_id: id!,
-      author_id: 'current-user',
-      content: commentText,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      author: { id: 'current-user', name: 'Nguyễn Văn A', avatar_url: undefined },
-    }])
-    setCommentText('')
+    if (!isPersistedPostId) {
+      const now = new Date().toISOString()
+      setComments((current) => [...current, {
+        id: `demo-comment-${Date.now()}`,
+        post_id: id!,
+        author_id: 'current-user',
+        content: commentText.trim(),
+        created_at: now,
+        updated_at: now,
+        author: { id: 'current-user', name: 'Bạn' },
+      }])
+      setCommentText('')
+      toast.success('Đã thêm bình luận demo')
+      return
+    }
+    try {
+      const response = await postApi.addComment(id!, { content: commentText.trim() })
+      const comment = response.data.data ?? response.data
+      setComments((current) => [...current, comment])
+      setCommentText('')
+      toast.success('Đã thêm bình luận')
+    } catch (error: any) {
+      toast.error(getErrorMessage(error, 'Thêm bình luận thất bại'))
+    }
   }
 
   return (

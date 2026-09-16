@@ -31,7 +31,7 @@ class TestRSVPRepository:
 
         from app.infrastructure.repositories.rsvp_repository import RSVPRepository
         repo = RSVPRepository(db)
-        result = await repo.upsert_rsvp(uuid4(), uuid4(), "going")
+        result = await repo.upsert_rsvp(uuid4(), "guest@example.com", "going")
         db.add.assert_called_once()
         db.commit.assert_called_once()
         assert result is not None
@@ -49,7 +49,7 @@ class TestRSVPRepository:
 
         from app.infrastructure.repositories.rsvp_repository import RSVPRepository
         repo = RSVPRepository(db)
-        result = await repo.upsert_rsvp(uuid4(), uuid4(), "going")
+        result = await repo.upsert_rsvp(uuid4(), "guest@example.com", "going")
         assert existing.response == "going"
         db.commit.assert_called_once()
 

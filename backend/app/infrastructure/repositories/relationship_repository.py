@@ -13,7 +13,7 @@ class RelationshipRepository(IRelationshipRepository):
     async def get_by_id(self, relationship_id: UUID) -> Relationship | None:
         return await self.session.get(Relationship, relationship_id)
 
-    async def get_by_family_members(self, member_ids: set[str]) -> list[Relationship]:
+    async def get_by_family_members(self, member_ids: set[UUID]) -> list[Relationship]:
         result = await self.session.execute(
             select(Relationship).where(
                 Relationship.from_member_id.in_(member_ids),

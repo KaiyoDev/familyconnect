@@ -16,6 +16,8 @@ class EventService:
     async def create_event(self, family_id: UUID, creator_id: UUID, data: dict) -> dict:
         data["family_id"] = family_id
         data["created_by"] = creator_id
+        data.setdefault("type", "GENERAL")
+        data.setdefault("status", "OPEN")
         event = await self.event_repo.create(data)
         return {"message": "Event created successfully", "event_id": str(event.id)}
 
@@ -41,16 +43,16 @@ class EventService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Event not found")
         return {"message": "Event cancelled successfully"}
 
-    async def rsvp(self, event_id: UUID, member_id: UUID, rsvp_status: str) -> dict:
+    async def rsvp(self, event_id: UUID, guest_email: str, rsvp_status: str) -> dict:
         allowed = ["going", "maybe", "not_going"]
         if rsvp_status not in allowed:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid RSVP status")
-        await self.rsvp_repo.upsert_rsvp(event_id, member_id, rsvp_status)
+        await self.rsvp_repo.upsert_rsvp(event_id, guest_email, rsvp_status)
         return {"message": f"RSVP updated to {rsvp_status}"}
 
     async def get_attendees(self, event_id: UUID, rsvp_status: Optional[str] = None) -> List[dict]:
         attendees = await self.rsvp_repo.get_attendees(event_id, rsvp_status)
-        return [{"member_id": str(a.member_id), "status": a.response} for a in attendees]
+        return [{"guest_email": a.guest_email, "status": a.response} for a in attendees]
 
     async def send_reminder(self, event_id: UUID) -> dict:
         logger.info(f"[DEFERRED REMINDER] Notification logged for event_id: {event_id}")
