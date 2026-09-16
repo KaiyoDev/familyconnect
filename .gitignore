@@ -48,9 +48,3 @@ Desktop.ini
 tmp/
 temp/
 *.tmp
-docs/superpowers/
-.claude
-.omo
-.codegraph
-docs/audit
-.task
