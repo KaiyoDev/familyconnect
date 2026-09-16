@@ -20,6 +20,8 @@ def register_routes(app: FastAPI) -> None:
     from app.api.controllers.admin_controller import router as admin_router
     from app.api.controllers.heritage_controller import router as heritage_router
     from app.api.controllers.directory_controller import router as directory_router
+    from app.api.controllers.notification_controller import router as notification_router
+    from app.api.controllers.analytics_controller import router as analytics_router
     # Auth
     app.include_router(auth_router, tags=["Authentication"])
     # User (root-level /users/me)
@@ -41,3 +43,7 @@ def register_routes(app: FastAPI) -> None:
     app.include_router(heritage_router, tags=["Heritage"])
     # Directory
     app.include_router(directory_router, tags=["Directory"])
+    # Notifications (real Notification model)
+    app.include_router(notification_router, tags=["Notifications"])
+    # Analytics / reports (DSH screens)
+    app.include_router(analytics_router, tags=["Analytics"])

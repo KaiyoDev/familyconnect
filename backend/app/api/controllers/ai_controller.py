@@ -99,6 +99,19 @@ async def get_conversation(
         raise HTTPException(status_code=404, detail=str(exc))
 
 
+@router.get("/conversations/{conversation_id}/messages")
+async def get_messages(
+    conversation_id: UUID,
+    current_user=Depends(get_current_user),
+    service: AIService = Depends(get_ai_service),
+):
+    """Frontend aiApi.getMessages — conversation transcript (array)."""
+    try:
+        return await service.get_messages(conversation_id)
+    except NotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
+
 @router.delete("/conversations/{conversation_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_conversation(
     conversation_id: UUID,

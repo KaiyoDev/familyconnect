@@ -3,11 +3,13 @@ from uuid import UUID
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile, status
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import get_current_user, get_event_service
 from app.infrastructure.databases.database import get_db
+from app.infrastructure.models.heritage import MediaAsset
 from app.infrastructure.repositories.user_repository import UserRepository
 from app.services.event_service import EventService
 
@@ -141,3 +143,70 @@ async def get_participants(
     svc: EventService = Depends(get_event_service),
 ):
     return await svc.get_attendees(event_id, status)
+
+
+# Frontend `eventApi.sendReminder` — EVT-04 (service logs a deferred reminder; no mailer wired yet)
+@event_router.post("/{event_id}/remind")
+async def remind_event(
+    event_id: UUID,
+    current_user: dict = Depends(get_current_user),
+    svc: EventService = Depends(get_event_service),
+):
+    return await svc.send_reminder(event_id)
+
+
+# ── Event gallery (frontend EVT-05: GET/POST /events/{id}/gallery) ───────
+
+def _media_to_dict(a: MediaAsset) -> dict:
+    return {"id": str(a.id), "url": a.url, "caption": a.caption, "media_type": a.media_type,
+            "uploaded_by": str(a.uploaded_by)}
+
+
+@event_router.get("/{event_id}/gallery")
+async def list_gallery(event_id: UUID, current_user: dict = Depends(get_current_user),
+                       db: AsyncSession = Depends(get_db)):
+    rows = (await db.execute(select(MediaAsset).where(MediaAsset.event_id == event_id))).scalars().all()
+    return [_media_to_dict(a) for a in rows]
+
+
+@event_router.post("/{event_id}/gallery", status_code=status.HTTP_201_CREATED)
+async def upload_gallery(
+    event_id: UUID,
+    file: UploadFile = File(...),
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Persist the asset record; binary storage (S3/local) not wired yet, url is a placeholder."""
+    media_type = (file.content_type or "image/jpeg").split("/")[-1][:20]
+    import uuid as _uuid
+    asset = MediaAsset(
+        id=_uuid.uuid4(),
+        event_id=event_id,
+        uploaded_by=_user_id(current_user),
+        caption=file.filename or None,
+        url=f"/media/events/{event_id}/{_uuid.uuid4().hex[:8]}_{file.filename or 'upload'}",
+        media_type=media_type,
+    )
+    db.add(asset)
+    await db.commit()
+    await db.refresh(asset)
+    return _media_to_dict(asset)
+
+
+# ── Attendee export (frontend eventApi.exportAttendees — blob download) ───
+@event_router.get("/{event_id}/export")
+async def export_attendees(
+    event_id: UUID,
+    current_user: dict = Depends(get_current_user),
+    svc: EventService = Depends(get_event_service),
+):
+    """Return participants as a JSON download (CSV storage pipeline not wired yet)."""
+    import json as _json
+    event = await svc.get_event(event_id)
+    participants = await svc.get_attendees(event_id)
+    body = _json.dumps({"event": event, "participants": participants}, default=str)
+    return Response(
+        content=body,
+        media_type="application/json",
+        headers={"Content-Disposition": f'attachment; filename="event-{event_id}-participants.json"'},
+    )

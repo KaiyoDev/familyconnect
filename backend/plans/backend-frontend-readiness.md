@@ -61,7 +61,7 @@ Lưu ý: đổi prefix admin/heritage/directory là **rename path** (không phá
 - [x] P1-8: admin prefix `/api/admin` → `/admin`
 - [x] P1-9: heritage bỏ `/api` + routes documents/stories/photos
 - [x] P1-10: directory bỏ `/api`
-- [ ] Chạy lại test (test_auth, test_family) — đảm bảo không regression (đặc biệt các test đang assert login không có user → cập nhật assertion nếu cần)
+- [x] Chạy lại test (test_auth, test_family) — đảm bảo không regression (đặc biệt các test đang assert login không có user → cập nhật assertion nếu cần)
 
 ## Verification
 - `python -c "from create_app import create_app; create_app()"` OK

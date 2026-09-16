@@ -86,10 +86,12 @@ class FakeRelationshipRepository:
         return self.items.get(relationship_id)
 
     async def get_by_family_members(self, member_ids):
+        # accepts sets of str or UUID member ids
+        norm = {str(m) for m in member_ids}
         return [
             item for item in self.items.values()
-            if str(item.from_member_id) in member_ids
-            and str(item.to_member_id) in member_ids
+            if str(item.from_member_id) in norm
+            and str(item.to_member_id) in norm
         ]
 
     async def create(self, relationship):
